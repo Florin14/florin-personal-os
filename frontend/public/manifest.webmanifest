@@ -1,0 +1,9 @@
+{
+  "name": "Personal OS",
+  "short_name": "Personal OS",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0A0E16",
+  "theme_color": "#0A0E16",
+  "icons": [{ "src": "/favicon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }]
+}

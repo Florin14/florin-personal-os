@@ -1,0 +1,79 @@
+# Personal OS - development stack.
+#   cp .env.example .env   # then set ENCRYPTION_KEYS
+#   docker compose up --build
+# Every port is bound to 127.0.0.1 only.
+name: personal-os
+
+x-backend-env: &backend-env
+  APP_ENV: development
+  LOG_LEVEL: ${LOG_LEVEL:-INFO}
+  DATABASE_URL: postgresql+asyncpg://${POSTGRES_USER:-personal_os}:${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env}@db:5432/${POSTGRES_DB:-personal_os}
+  TEST_DATABASE_URL: postgresql+asyncpg://${POSTGRES_USER:-personal_os}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB:-personal_os}_test
+  ENCRYPTION_KEYS: ${ENCRYPTION_KEYS:?Set ENCRYPTION_KEYS in .env}
+  ALLOWED_ORIGINS: ${ALLOWED_ORIGINS:-http://localhost:5173}
+  # Plain HTTP on localhost during development.
+  SESSION_COOKIE_SECURE: "false"
+  AUTH_REQUIRE_MFA: ${AUTH_REQUIRE_MFA:-true}
+
+services:
+  db:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-personal_os}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB:-personal_os}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./infra/postgres/init:/docker-entrypoint-initdb.d:ro
+    ports:
+      - "127.0.0.1:${POSTGRES_HOST_PORT:-5433}:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  migrate:
+    build: { context: ./backend, target: dev }
+    image: personal-os-backend:dev
+    command: ["alembic", "upgrade", "head"]
+    environment: *backend-env
+    volumes:
+      - ./backend/app:/app/app
+    depends_on:
+      db: { condition: service_healthy }
+    restart: "no"
+
+  backend:
+    image: personal-os-backend:dev
+    environment: *backend-env
+    volumes:
+      - ./backend/app:/app/app
+      - ./backend/tests:/app/tests
+    ports:
+      - "127.0.0.1:8000:8000"
+    depends_on:
+      migrate: { condition: service_completed_successfully }
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request,sys; sys.exit(0 if urllib.request.urlopen('http://127.0.0.1:8000/healthz', timeout=3).status == 200 else 1)"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+
+  frontend:
+    build: { context: ./frontend, target: dev }
+    image: personal-os-frontend:dev
+    environment:
+      API_PROXY_TARGET: http://backend:8000
+    volumes:
+      - ./frontend/src:/app/src
+      - ./frontend/public:/app/public
+      - ./frontend/index.html:/app/index.html
+    ports:
+      - "127.0.0.1:5173:5173"
+    depends_on:
+      backend: { condition: service_healthy }
+
+volumes:
+  pgdata:

@@ -1,0 +1,83 @@
+[project]
+name = "personal-os-backend"
+version = "0.1.0"
+description = "Personal OS - modular monolith backend"
+requires-python = ">=3.13,<3.14"
+dependencies = [
+    "fastapi>=0.115",
+    "uvicorn[standard]>=0.32",
+    "pydantic>=2.9",
+    "pydantic-settings>=2.6",
+    "sqlalchemy[asyncio]>=2.0.36",
+    "asyncpg>=0.30",
+    "alembic>=1.14",
+    "argon2-cffi>=23.1",
+    "pyotp>=2.9",
+    "cryptography>=43",
+    "tzdata>=2024.2",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=8.3",
+    "pytest-asyncio>=0.24",
+    "pytest-cov>=6.0",
+    "httpx>=0.28",
+    "ruff>=0.8",
+    "mypy>=1.13",
+    "pip-audit>=2.7",
+]
+
+[tool.uv]
+# Supply-chain guard: do not resolve packages published in the last ~14 days.
+# Bump deliberately when updating dependencies.
+exclude-newer = "2026-10-24T00:00:00Z"
+package = false
+
+[tool.ruff]
+line-length = 100
+target-version = "py313"
+extend-exclude = ["app/migrations/versions"]
+
+[tool.ruff.lint]
+select = ["E", "W", "F", "I", "B", "UP", "S", "SIM", "RUF", "ASYNC", "PT", "N"]
+ignore = [
+    "S101",   # assert is fine in tests (and only tests use it)
+    "RUF012", # SQLAlchemy/Pydantic class attributes
+    "N818",   # domain errors are named after the condition (NotFound, Conflict)
+]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = ["S105", "S106", "S311"]
+"app/cli.py" = ["T201"]
+
+[tool.ruff.lint.flake8-bugbear]
+extend-immutable-calls = ["fastapi.Depends", "fastapi.Query", "fastapi.Path", "fastapi.Header", "fastapi.Cookie"]
+
+[tool.mypy]
+python_version = "3.13"
+strict = true
+plugins = ["pydantic.mypy"]
+exclude = ["app/migrations/versions/"]
+
+[[tool.mypy.overrides]]
+module = ["pyotp.*"]
+ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "session"
+asyncio_default_test_loop_scope = "session"
+testpaths = ["tests"]
+addopts = "-ra --strict-markers"
+filterwarnings = ["error::DeprecationWarning:app.*"]
+
+[tool.coverage.run]
+source = ["app"]
+# SQLAlchemy's asyncio layer runs ORM code in greenlets.
+concurrency = ["greenlet", "thread"]
+omit = ["app/migrations/versions/*"]
+
+[tool.coverage.report]
+show_missing = false
+skip_covered = true

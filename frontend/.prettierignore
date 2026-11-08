@@ -1,0 +1,9 @@
+dist
+coverage
+node_modules
+src/api/schema.d.ts
+playwright-report
+test-results
+package-lock.json
+openapi.json
+e2e/.e2e-user.json

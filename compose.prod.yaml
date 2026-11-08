@@ -1,0 +1,92 @@
+# Personal OS - production stack (single VPS, reachable only through the private network).
+#   docker compose -f compose.prod.yaml --env-file .env up -d --build
+# The database has no published port. Only `web` is published, bound to WEB_BIND_ADDRESS
+# (e.g. the WireGuard interface address). TLS is terminated in front of `web`.
+name: personal-os-prod
+
+x-logging: &logging
+  driver: json-file
+  options: { max-size: "10m", max-file: "5" }
+
+x-hardening: &hardening
+  security_opt: ["no-new-privileges:true"]
+  cap_drop: ["ALL"]
+
+x-backend-env: &backend-env
+  APP_ENV: production
+  LOG_LEVEL: ${LOG_LEVEL:-INFO}
+  DATABASE_URL: postgresql+asyncpg://${POSTGRES_USER:-personal_os}:${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB:-personal_os}
+  ENCRYPTION_KEYS: ${ENCRYPTION_KEYS:?Set ENCRYPTION_KEYS}
+  ALLOWED_ORIGINS: ${ALLOWED_ORIGINS:?Set ALLOWED_ORIGINS to the public https origin}
+  SESSION_COOKIE_SECURE: "true"
+  AUTH_REQUIRE_MFA: "true"
+
+services:
+  db:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-personal_os}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB:-personal_os}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks: [data]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    restart: unless-stopped
+    shm_size: 128mb
+    mem_limit: 512m
+    logging: *logging
+
+  migrate:
+    build: { context: ./backend, target: prod }
+    image: personal-os-backend:prod
+    command: ["alembic", "upgrade", "head"]
+    environment: *backend-env
+    networks: [data]
+    depends_on:
+      db: { condition: service_healthy }
+    restart: "no"
+    <<: *hardening
+    logging: *logging
+
+  backend:
+    image: personal-os-backend:prod
+    environment: *backend-env
+    networks: [data, edge]
+    depends_on:
+      migrate: { condition: service_completed_successfully }
+    restart: unless-stopped
+    read_only: true
+    tmpfs: ["/tmp"]
+    mem_limit: 384m
+    <<: *hardening
+    logging: *logging
+
+  web:
+    build: { context: ./frontend, target: prod }
+    image: personal-os-web:prod
+    ports:
+      - "${WEB_BIND_ADDRESS:-127.0.0.1}:${WEB_PORT:-8080}:8080"
+    networks: [edge]
+    depends_on:
+      backend: { condition: service_healthy }
+    restart: unless-stopped
+    read_only: true
+    tmpfs: ["/tmp"]
+    mem_limit: 64m
+    <<: *hardening
+    logging: *logging
+
+networks:
+  # Database traffic never leaves this network.
+  data:
+    internal: true
+  # web <-> backend; also gives the backend outbound access for future integrations.
+  edge: {}
+
+volumes:
+  pgdata:
