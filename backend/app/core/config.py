@@ -51,6 +51,8 @@ class Settings(BaseSettings):
     totp_issuer: str = "Personal OS"
     # Public (VPN) URL of the web app, used for links in chat notifications.
     public_app_url: str | None = None
+    # Private directory (Docker volume) for document files.
+    documents_dir: str = "./data/documents"
 
     # Background worker
     worker_poll_interval_seconds: float = Field(default=2.0, gt=0)

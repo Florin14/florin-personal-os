@@ -316,6 +316,40 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/integrations/google/authorize": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Authorize */
+        post: operations["authorize_api_v1_integrations_google_authorize_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/integrations/google/disconnect": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Disconnect */
+        post: operations["disconnect_api_v1_integrations_google_disconnect_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/integrations/providers": {
         parameters: {
             query?: never;
@@ -679,6 +713,77 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/workspaces/{workspace_id}/calendar/events": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Upcoming */
+        get: operations["upcoming_api_v1_workspaces__workspace_id__calendar_events_get"];
+        put?: never;
+        /** Create Event */
+        post: operations["create_event_api_v1_workspaces__workspace_id__calendar_events_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/workspaces/{workspace_id}/documents": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Documents */
+        get: operations["list_documents_api_v1_workspaces__workspace_id__documents_get"];
+        put?: never;
+        /** Upload Document */
+        post: operations["upload_document_api_v1_workspaces__workspace_id__documents_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/workspaces/{workspace_id}/documents/{document_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** Delete Document */
+        delete: operations["delete_document_api_v1_workspaces__workspace_id__documents__document_id__delete"];
+        options?: never;
+        head?: never;
+        /** Update Document */
+        patch: operations["update_document_api_v1_workspaces__workspace_id__documents__document_id__patch"];
+        trace?: never;
+    };
+    "/api/v1/workspaces/{workspace_id}/documents/{document_id}/content": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Download Document */
+        get: operations["download_document_api_v1_workspaces__workspace_id__documents__document_id__content_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/workspaces/{workspace_id}/executions": {
         parameters: {
             query?: never;
@@ -725,6 +830,59 @@ export interface paths {
         /** Cancel Execution */
         post: operations["cancel_execution_api_v1_workspaces__workspace_id__executions__execution_id__cancel_post"];
         delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/workspaces/{workspace_id}/expenses": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Expenses */
+        get: operations["list_expenses_api_v1_workspaces__workspace_id__expenses_get"];
+        put?: never;
+        /** Create Expense */
+        post: operations["create_expense_api_v1_workspaces__workspace_id__expenses_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/workspaces/{workspace_id}/expenses/summary": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Summary */
+        get: operations["summary_api_v1_workspaces__workspace_id__expenses_summary_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/workspaces/{workspace_id}/expenses/{expense_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** Update Expense */
+        put: operations["update_expense_api_v1_workspaces__workspace_id__expenses__expense_id__put"];
+        post?: never;
+        /** Delete Expense */
+        delete: operations["delete_expense_api_v1_workspaces__workspace_id__expenses__expense_id__delete"];
         options?: never;
         head?: never;
         patch?: never;
@@ -811,6 +969,59 @@ export interface paths {
         get: operations["list_invoices_api_v1_workspaces__workspace_id__invoices_get"];
         put?: never;
         post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/workspaces/{workspace_id}/tasks": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Tasks */
+        get: operations["list_tasks_api_v1_workspaces__workspace_id__tasks_get"];
+        put?: never;
+        /** Create Task */
+        post: operations["create_task_api_v1_workspaces__workspace_id__tasks_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/workspaces/{workspace_id}/tasks/{task_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** Update Task */
+        put: operations["update_task_api_v1_workspaces__workspace_id__tasks__task_id__put"];
+        post?: never;
+        /** Delete Task */
+        delete: operations["delete_task_api_v1_workspaces__workspace_id__tasks__task_id__delete"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/workspaces/{workspace_id}/tasks/{task_id}/schedule": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Schedule Task */
+        post: operations["schedule_task_api_v1_workspaces__workspace_id__tasks__task_id__schedule_post"];
         delete?: never;
         options?: never;
         head?: never;
@@ -947,6 +1158,21 @@ export interface components {
             next_step: components["schemas"]["NextStep"];
             user: components["schemas"]["UserOut"];
         };
+        /** AuthorizeIn */
+        AuthorizeIn: {
+            /** Features */
+            features: ("calendar" | "gmail" | "drive")[];
+            /**
+             * Workspace Id
+             * Format: uuid
+             */
+            workspace_id: string;
+        };
+        /** AuthorizeOut */
+        AuthorizeOut: {
+            /** Url */
+            url: string;
+        };
         /** AutomationIn */
         AutomationIn: {
             /** Definition */
@@ -1008,6 +1234,26 @@ export interface components {
             description?: string | null;
             /** Name */
             name?: string | null;
+        };
+        /** Body_upload_document_api_v1_workspaces__workspace_id__documents_post */
+        Body_upload_document_api_v1_workspaces__workspace_id__documents_post: {
+            /**
+             * Category
+             * @default other
+             * @enum {string}
+             */
+            category: "invoice" | "receipt" | "statement" | "contract" | "other";
+            /** File */
+            file: string;
+        };
+        /** CalendarOut */
+        CalendarOut: {
+            /** Connected */
+            connected: boolean;
+            /** Error */
+            error: string | null;
+            /** Events */
+            events: components["schemas"]["app__modules__calendar__router__EventOut"][];
         };
         /** ChangePasswordRequest */
         ChangePasswordRequest: {
@@ -1108,6 +1354,78 @@ export interface components {
             /** Note */
             note?: string | null;
         };
+        /** DisconnectIn */
+        DisconnectIn: {
+            /**
+             * Workspace Id
+             * Format: uuid
+             */
+            workspace_id: string;
+        };
+        /** DocumentOut */
+        DocumentOut: {
+            /** Amount */
+            amount: string | null;
+            /**
+             * Category
+             * @enum {string}
+             */
+            category: "invoice" | "receipt" | "statement" | "contract" | "other";
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /** Currency */
+            currency: string | null;
+            /** Document Date */
+            document_date: string | null;
+            /** Drive File Id */
+            drive_file_id: string | null;
+            /** Filename */
+            filename: string;
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Mime Type */
+            mime_type: string;
+            /** Notes */
+            notes: string;
+            /** Size Bytes */
+            size_bytes: number;
+            /** Source */
+            source: string;
+            status: components["schemas"]["DocumentStatus"];
+            /** Title */
+            title: string;
+            /** Vendor */
+            vendor: string | null;
+        };
+        /**
+         * DocumentStatus
+         * @enum {string}
+         */
+        DocumentStatus: "inbox" | "processed" | "archived";
+        /** DocumentUpdateIn */
+        DocumentUpdateIn: {
+            /** Amount */
+            amount?: number | string | null;
+            /** Category */
+            category?: ("invoice" | "receipt" | "statement" | "contract" | "other") | null;
+            /** Currency */
+            currency?: string | null;
+            /** Document Date */
+            document_date?: string | null;
+            /** Notes */
+            notes?: string | null;
+            status?: components["schemas"]["DocumentStatus"] | null;
+            /** Title */
+            title?: string | null;
+            /** Vendor */
+            vendor?: string | null;
+        };
         /** EmergencyStopIn */
         EmergencyStopIn: {
             /** Active */
@@ -1135,30 +1453,32 @@ export interface components {
         ErrorResponse: {
             error: components["schemas"]["ErrorBody"];
         };
-        /** EventOut */
-        EventOut: {
-            /** Actor User Id */
-            actor_user_id: string | null;
-            /** Event Type */
-            event_type: string;
+        /** EventIn */
+        EventIn: {
             /**
-             * Id
-             * Format: uuid
+             * Description
+             * @default
              */
-            id: string;
+            description: string;
             /**
-             * Occurred At
+             * Duration Minutes
+             * @default 60
+             */
+            duration_minutes: number;
+            /** Reminder Minutes */
+            reminder_minutes?: number | null;
+            /**
+             * Start
              * Format: date-time
              */
-            occurred_at: string;
-            /** Payload */
-            payload: {
-                [key: string]: unknown;
-            };
-            /** Published At */
-            published_at: string | null;
-            /** Workspace Id */
-            workspace_id: string | null;
+            start: string;
+            /** Summary */
+            summary: string;
+            /**
+             * Timezone
+             * @default Europe/Bucharest
+             */
+            timezone: string;
         };
         /** ExecutionDetailOut */
         ExecutionDetailOut: {
@@ -1245,6 +1565,102 @@ export interface components {
          * @enum {string}
          */
         ExecutionStatus: "pending" | "running" | "waiting_approval" | "waiting_delay" | "succeeded" | "failed" | "cancelled" | "rejected" | "expired";
+        /** ExpenseIn */
+        ExpenseIn: {
+            /** Amount */
+            amount: number | string;
+            /**
+             * Category
+             * @default other
+             * @enum {string}
+             */
+            category: "software" | "hardware" | "office" | "services" | "travel" | "transport" | "meals" | "utilities" | "rent" | "taxes" | "groceries" | "health" | "entertainment" | "other";
+            /**
+             * Currency
+             * @default RON
+             */
+            currency: string;
+            /**
+             * Description
+             * @default
+             */
+            description: string;
+            /** Document Id */
+            document_id?: string | null;
+            /**
+             * Expense Date
+             * Format: date
+             */
+            expense_date: string;
+            /**
+             * Notes
+             * @default
+             */
+            notes: string;
+            /**
+             * Payment Method
+             * @default card
+             * @enum {string}
+             */
+            payment_method: "card" | "transfer" | "cash" | "other";
+            /** Vat Amount */
+            vat_amount?: number | string | null;
+            /** Vendor */
+            vendor: string;
+        };
+        /** ExpenseOut */
+        ExpenseOut: {
+            /** Amount */
+            amount: string;
+            /**
+             * Category
+             * @default other
+             * @enum {string}
+             */
+            category: "software" | "hardware" | "office" | "services" | "travel" | "transport" | "meals" | "utilities" | "rent" | "taxes" | "groceries" | "health" | "entertainment" | "other";
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /**
+             * Currency
+             * @default RON
+             */
+            currency: string;
+            /**
+             * Description
+             * @default
+             */
+            description: string;
+            /** Document Id */
+            document_id?: string | null;
+            /**
+             * Expense Date
+             * Format: date
+             */
+            expense_date: string;
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /**
+             * Notes
+             * @default
+             */
+            notes: string;
+            /**
+             * Payment Method
+             * @default card
+             * @enum {string}
+             */
+            payment_method: "card" | "transfer" | "cash" | "other";
+            /** Vat Amount */
+            vat_amount?: string | null;
+            /** Vendor */
+            vendor: string;
+        };
         /** HealthResponse */
         HealthResponse: {
             /**
@@ -1675,6 +2091,14 @@ export interface components {
                 [key: string]: unknown;
             };
         };
+        /** ScheduleIn */
+        ScheduleIn: {
+            /**
+             * Timezone
+             * @default Europe/Bucharest
+             */
+            timezone: string;
+        };
         /** SessionOut */
         SessionOut: {
             auth_level: components["schemas"]["AuthLevel"];
@@ -1739,6 +2163,17 @@ export interface components {
             /** Step Type */
             step_type: string;
         };
+        /** SummaryRow */
+        SummaryRow: {
+            /** Category */
+            category: string;
+            /** Currency */
+            currency: string;
+            /** Month */
+            month: number;
+            /** Total */
+            total: string;
+        };
         /** SystemInfoResponse */
         SystemInfoResponse: {
             /** Environment */
@@ -1757,6 +2192,51 @@ export interface components {
             /** Version */
             version: string;
         };
+        /** TaskIn */
+        TaskIn: {
+            /** Due Date */
+            due_date?: string | null;
+            /**
+             * Duration Minutes
+             * @default 60
+             */
+            duration_minutes: number;
+            /**
+             * Notes
+             * @default
+             */
+            notes: string;
+            /** @default open */
+            status: components["schemas"]["TaskStatus"];
+            /** Title */
+            title: string;
+        };
+        /** TaskOut */
+        TaskOut: {
+            /** Calendar Event Id */
+            calendar_event_id: string | null;
+            /** Due Date */
+            due_date: string | null;
+            /** Duration Minutes */
+            duration_minutes: number;
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Notes */
+            notes: string;
+            /** Scheduled Start */
+            scheduled_start: string | null;
+            status: components["schemas"]["TaskStatus"];
+            /** Title */
+            title: string;
+        };
+        /**
+         * TaskStatus
+         * @enum {string}
+         */
+        TaskStatus: "open" | "done";
         /** TotpEnrollmentResponse */
         TotpEnrollmentResponse: {
             /** Provisioning Uri */
@@ -1844,6 +2324,48 @@ export interface components {
             slug: string;
             /** Timezone */
             timezone: string;
+        };
+        /** EventOut */
+        app__modules__calendar__router__EventOut: {
+            /** All Day */
+            all_day: boolean;
+            /** End */
+            end: string;
+            /** Html Link */
+            html_link: string | null;
+            /** Id */
+            id: string;
+            /** Location */
+            location: string | null;
+            /** Start */
+            start: string;
+            /** Summary */
+            summary: string;
+        };
+        /** EventOut */
+        app__modules__events__router__EventOut: {
+            /** Actor User Id */
+            actor_user_id: string | null;
+            /** Event Type */
+            event_type: string;
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /**
+             * Occurred At
+             * Format: date-time
+             */
+            occurred_at: string;
+            /** Payload */
+            payload: {
+                [key: string]: unknown;
+            };
+            /** Published At */
+            published_at: string | null;
+            /** Workspace Id */
+            workspace_id: string | null;
         };
     };
     responses: never;
@@ -2368,7 +2890,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["EventOut"][];
+                    "application/json": components["schemas"]["app__modules__events__router__EventOut"][];
                 };
             };
             /** @description Client error */
@@ -2432,6 +2954,70 @@ export interface operations {
                 content: {
                     "application/json": components["schemas"]["ConnectionOut"];
                 };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    authorize_api_v1_integrations_google_authorize_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AuthorizeIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthorizeOut"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    disconnect_api_v1_integrations_google_disconnect_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["DisconnectIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
             };
             /** @description Client error */
             "4XX": {
@@ -3198,6 +3784,241 @@ export interface operations {
             };
         };
     };
+    upcoming_api_v1_workspaces__workspace_id__calendar_events_get: {
+        parameters: {
+            query?: {
+                days?: number;
+            };
+            header?: never;
+            path: {
+                workspace_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CalendarOut"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    create_event_api_v1_workspaces__workspace_id__calendar_events_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                workspace_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["EventIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["app__modules__calendar__router__EventOut"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    list_documents_api_v1_workspaces__workspace_id__documents_get: {
+        parameters: {
+            query?: {
+                category?: ("invoice" | "receipt" | "statement" | "contract" | "other") | null;
+                status?: components["schemas"]["DocumentStatus"] | null;
+            };
+            header?: never;
+            path: {
+                workspace_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DocumentOut"][];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    upload_document_api_v1_workspaces__workspace_id__documents_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                workspace_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "multipart/form-data": components["schemas"]["Body_upload_document_api_v1_workspaces__workspace_id__documents_post"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DocumentOut"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    delete_document_api_v1_workspaces__workspace_id__documents__document_id__delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                document_id: string;
+                workspace_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    update_document_api_v1_workspaces__workspace_id__documents__document_id__patch: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                document_id: string;
+                workspace_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["DocumentUpdateIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DocumentOut"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    download_document_api_v1_workspaces__workspace_id__documents__document_id__content_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                document_id: string;
+                workspace_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
     list_executions_api_v1_workspaces__workspace_id__executions_get: {
         parameters: {
             query?: {
@@ -3285,6 +4106,174 @@ export interface operations {
                 content: {
                     "application/json": components["schemas"]["ExecutionOut"];
                 };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    list_expenses_api_v1_workspaces__workspace_id__expenses_get: {
+        parameters: {
+            query?: {
+                year?: number | null;
+                month?: number | null;
+            };
+            header?: never;
+            path: {
+                workspace_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ExpenseOut"][];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    create_expense_api_v1_workspaces__workspace_id__expenses_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                workspace_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ExpenseIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ExpenseOut"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    summary_api_v1_workspaces__workspace_id__expenses_summary_get: {
+        parameters: {
+            query: {
+                year: number;
+            };
+            header?: never;
+            path: {
+                workspace_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SummaryRow"][];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    update_expense_api_v1_workspaces__workspace_id__expenses__expense_id__put: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                expense_id: string;
+                workspace_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ExpenseIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ExpenseOut"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    delete_expense_api_v1_workspaces__workspace_id__expenses__expense_id__delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                expense_id: string;
+                workspace_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
             };
             /** @description Client error */
             "4XX": {
@@ -3519,6 +4508,176 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["InvoiceOut"][];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    list_tasks_api_v1_workspaces__workspace_id__tasks_get: {
+        parameters: {
+            query?: {
+                include_done?: boolean;
+            };
+            header?: never;
+            path: {
+                workspace_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TaskOut"][];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    create_task_api_v1_workspaces__workspace_id__tasks_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                workspace_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["TaskIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TaskOut"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    update_task_api_v1_workspaces__workspace_id__tasks__task_id__put: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                task_id: string;
+                workspace_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["TaskIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TaskOut"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    delete_task_api_v1_workspaces__workspace_id__tasks__task_id__delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                task_id: string;
+                workspace_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    schedule_task_api_v1_workspaces__workspace_id__tasks__task_id__schedule_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                task_id: string;
+                workspace_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ScheduleIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TaskOut"];
                 };
             };
             /** @description Client error */

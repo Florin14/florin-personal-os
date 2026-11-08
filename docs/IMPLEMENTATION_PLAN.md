@@ -13,7 +13,7 @@ A task is `COMPLETED` only after it is implemented **and** verified (tests/check
 | 1 | Backend/frontend foundation, database, authentication, Docker, CI, basic dashboard | IN PROGRESS (all verified locally; first GitHub Actions run pending) |
 | 2 | Automation engine, persistent jobs, scheduler, events/outbox, approvals, notifications, audit | COMPLETED |
 | 3 | Discord bot, Oblio monthly invoicing workflow | COMPLETED (live Oblio/Discord not verified: no credentials; mock verified) |
-| 4 | Google Calendar, Gmail, Drive, documents, basic expense processing | TODO |
+| 4 | Google Calendar, Gmail, Drive, documents, basic expense processing | IN PROGRESS |
 | 5 | Bank statement import, reconciliation, shopping & price tracking | TODO |
 | 6 | Freelance opportunity discovery, optional AI assistance | TODO |
 | 7 | Home Assistant, location, health, lifestyle, shared planning | TODO |
@@ -134,6 +134,16 @@ bot (signed interactions, allowlists, approvals, notifications).
 | P3-3 | `invoicing` module: invoice profiles, invoice records, monthly invoice actions + workflow template | COMPLETED |
 | P3-4 | `discord` module: signed interactions endpoint, allowlists, /status, approve/reject buttons, channel adapter | COMPLETED (live Discord not verified: no bot credentials) |
 | P3-5 | UI: Integrations page, Business & Accounting page | COMPLETED |
+
+## Phase 4 — Google, documents, expenses
+
+| ID | Task | Status |
+|---|---|---|
+| P4-1 | `google` module: OAuth app (system), PKCE authorization flow, per-workspace accounts, token refresh/revocation, Calendar/Gmail/Drive adapters + mocks | IN PROGRESS |
+| P4-2 | `calendar` module: upcoming events, create events/reminders, free/busy, tasks, actions, UI | TODO |
+| P4-3 | `documents` module: safe upload storage, metadata, Gmail receipt import, Drive archival, UI | TODO |
+| P4-4 | `expenses` module: expenses from documents, categories, monthly summary, UI | TODO |
+
 
 
 

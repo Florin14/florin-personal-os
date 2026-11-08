@@ -20,6 +20,8 @@ x-backend-env: &backend-env
   ALLOWED_ORIGINS: ${ALLOWED_ORIGINS:?Set ALLOWED_ORIGINS to the public https origin}
   SESSION_COOKIE_SECURE: "true"
   AUTH_REQUIRE_MFA: "true"
+  DOCUMENTS_DIR: /data/documents
+  PUBLIC_APP_URL: ${PUBLIC_APP_URL:-}
 
 services:
   db:
@@ -62,6 +64,7 @@ services:
     restart: unless-stopped
     read_only: true
     tmpfs: ["/tmp"]
+    volumes: ["documents:/data/documents"]
     mem_limit: 384m
     <<: *hardening
     logging: *logging
@@ -77,6 +80,7 @@ services:
     restart: unless-stopped
     read_only: true
     tmpfs: ["/tmp"]
+    volumes: ["documents:/data/documents"]
     mem_limit: 256m
     stop_grace_period: 60s
     healthcheck:
@@ -108,3 +112,4 @@ networks:
 
 volumes:
   pgdata:
+  documents:

@@ -299,3 +299,75 @@ async def is_connected(
         else IntegrationConnection.workspace_id == workspace_id,
     )
     return await session.scalar(stmt) is not None
+
+
+async def upsert_connection(
+    session: AsyncSession,
+    box: SecretBox,
+    *,
+    provider: str,
+    workspace_id: uuid.UUID | None,
+    name: str,
+    config: dict[str, Any],
+    secrets: dict[str, Any],
+    actor_user_id: uuid.UUID,
+) -> uuid.UUID:
+    """Create or replace a connection created by a provider flow (e.g. OAuth). Caller commits."""
+    stmt = select(IntegrationConnection).where(IntegrationConnection.provider == provider)
+    stmt = stmt.where(
+        IntegrationConnection.workspace_id.is_(None)
+        if workspace_id is None
+        else IntegrationConnection.workspace_id == workspace_id
+    )
+    connection = await session.scalar(stmt)
+    if connection is None:
+        connection = IntegrationConnection(
+            id=uuid.uuid4(),
+            workspace_id=workspace_id,
+            provider=provider,
+            created_by_user_id=actor_user_id,
+        )
+        session.add(connection)
+    connection.name = name[:100]
+    connection.config = config
+    connection.credentials_encrypted = box.encrypt(json.dumps(secrets))
+    connection.status = ConnectionStatus.ACTIVE.value
+    connection.last_error = None
+    return connection.id
+
+
+async def current_config(
+    session: AsyncSession, provider: str, workspace_id: uuid.UUID | None
+) -> dict[str, Any] | None:
+    stmt = select(IntegrationConnection.config).where(IntegrationConnection.provider == provider)
+    stmt = stmt.where(
+        IntegrationConnection.workspace_id.is_(None)
+        if workspace_id is None
+        else IntegrationConnection.workspace_id == workspace_id
+    )
+    result: dict[str, Any] | None = await session.scalar(stmt)
+    return result
+
+
+async def remove_connection(
+    session: AsyncSession, box: SecretBox, provider: str, workspace_id: uuid.UUID | None
+) -> tuple[uuid.UUID, dict[str, Any]] | None:
+    """Delete a connection and return (id, decrypted secrets) for provider-side revocation."""
+    stmt = select(IntegrationConnection).where(IntegrationConnection.provider == provider)
+    stmt = stmt.where(
+        IntegrationConnection.workspace_id.is_(None)
+        if workspace_id is None
+        else IntegrationConnection.workspace_id == workspace_id
+    )
+    connection = await session.scalar(stmt)
+    if connection is None:
+        return None
+    secrets: dict[str, Any] = {}
+    if connection.credentials_encrypted:
+        try:
+            secrets = json.loads(box.decrypt(connection.credentials_encrypted))
+        except DecryptionError:
+            secrets = {}
+    connection_id = connection.id
+    await session.delete(connection)
+    return connection_id, secrets

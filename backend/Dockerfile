@@ -9,7 +9,8 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
     UV_PROJECT_ENVIRONMENT=/opt/venv \
     PATH="/opt/venv/bin:$PATH"
 RUN pip install --no-cache-dir uv==0.13.5 \
-    && groupadd --system app && useradd --system --gid app --home-dir /app app
+    && groupadd --system app && useradd --system --gid app --home-dir /app app \
+    && mkdir -p /data/documents && chown app:app /data/documents
 WORKDIR /app
 
 # ---------- dev: all dependency groups, source mounted by compose ----------
@@ -32,7 +33,8 @@ FROM python:3.13-slim AS prod
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
     PATH="/opt/venv/bin:$PATH"
-RUN groupadd --system app && useradd --system --gid app --home-dir /app app
+RUN groupadd --system app && useradd --system --gid app --home-dir /app app \
+    && mkdir -p /data/documents && chown app:app /data/documents
 WORKDIR /app
 COPY --from=prod-deps /opt/venv /opt/venv
 COPY alembic.ini ./
