@@ -6,6 +6,7 @@ from app.core.module import Module
 from app.modules.approvals.module import module as approvals
 from app.modules.audit.module import module as audit
 from app.modules.automation.module import module as automation
+from app.modules.discord.module import module as discord
 from app.modules.events.module import module as events
 from app.modules.identity.module import module as identity
 from app.modules.integrations.module import module as integrations
@@ -29,6 +30,7 @@ MODULES: tuple[Module, ...] = (
     integrations,
     oblio,
     invoicing,
+    discord,
 )
 
 

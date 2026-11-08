@@ -8,6 +8,6 @@ Enqueue background work inside your own transaction::
 """
 
 from app.modules.jobs.models import JobStatus
-from app.modules.jobs.service import JobQueue
+from app.modules.jobs.service import JobQueue, count_jobs
 
-__all__ = ["JobQueue", "JobStatus"]
+__all__ = ["JobQueue", "JobStatus", "count_jobs"]

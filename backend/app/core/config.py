@@ -49,6 +49,8 @@ class Settings(BaseSettings):
     auth_max_failed_logins: int = Field(default=5, ge=1)
     auth_lockout_minutes: int = Field(default=15, ge=1)
     totp_issuer: str = "Personal OS"
+    # Public (VPN) URL of the web app, used for links in chat notifications.
+    public_app_url: str | None = None
 
     # Background worker
     worker_poll_interval_seconds: float = Field(default=2.0, gt=0)

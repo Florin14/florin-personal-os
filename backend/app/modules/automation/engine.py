@@ -479,6 +479,7 @@ class ExecutionEngine:
                 category="execution",
                 link=f"/executions/{execution.id}",
                 dedupe_key=f"execution-finished:{execution.id}",
+                external=True,
             )
 
 

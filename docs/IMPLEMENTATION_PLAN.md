@@ -132,7 +132,7 @@ bot (signed interactions, allowlists, approvals, notifications).
 | P3-1 | `integrations` module: provider registry, encrypted credentials, health checks, error normalization | COMPLETED |
 | P3-2 | Oblio adapter (REST, token cache, rate-limit aware) + mock adapter | COMPLETED |
 | P3-3 | `invoicing` module: invoice profiles, invoice records, monthly invoice actions + workflow template | COMPLETED |
-| P3-4 | `discord` module: signed interactions endpoint, allowlists, /status, approve/reject buttons, channel adapter | TODO |
+| P3-4 | `discord` module: signed interactions endpoint, allowlists, /status, approve/reject buttons, channel adapter | COMPLETED (live Discord not verified: no bot credentials) |
 | P3-5 | UI: Integrations page, Business & Accounting page | TODO |
 
 

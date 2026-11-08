@@ -285,3 +285,17 @@ class IntegrationService:
             target_id=connection.id,
             details={"provider": connection.provider, **details},
         )
+
+
+async def is_connected(
+    session: AsyncSession, provider: str, workspace_id: uuid.UUID | None
+) -> bool:
+    """True when an active connection exists for the provider/scope."""
+    stmt = select(IntegrationConnection.id).where(
+        IntegrationConnection.provider == provider,
+        IntegrationConnection.status == ConnectionStatus.ACTIVE.value,
+        IntegrationConnection.workspace_id.is_(None)
+        if workspace_id is None
+        else IntegrationConnection.workspace_id == workspace_id,
+    )
+    return await session.scalar(stmt) is not None

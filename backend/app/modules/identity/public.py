@@ -10,7 +10,7 @@ from app.modules.identity.dependencies import (
     require_admin,
     require_full_auth,
 )
-from app.modules.identity.service import AuthContext, IdentityService
+from app.modules.identity.service import AuthContext, IdentityService, user_id_by_email
 
 __all__ = [
     "AdminUser",
@@ -20,4 +20,5 @@ __all__ = [
     "IdentityServiceDep",
     "require_admin",
     "require_full_auth",
+    "user_id_by_email",
 ]

@@ -168,6 +168,7 @@ class ApprovalService:
             category="approval",
             link=f"/approvals/{approval.id}",
             dedupe_key=f"approval-requested:{approval.id}",
+            external=True,
         )
         self._audit.record(
             "approvals.requested",

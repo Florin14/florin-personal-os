@@ -15,6 +15,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.core.db import utcnow
 from app.core.errors import NotFound, ValidationFailed
 from app.core.tasks import JobContext, JobHandler, PermanentJobError
+from app.modules.integrations.public import is_connected
 from app.modules.jobs.public import JobQueue
 from app.modules.notifications.models import Channel, DeliveryStatus, Notification, Severity
 from app.modules.workspaces.public import Role, workspace_member_ids
@@ -113,10 +114,28 @@ class NotificationService:
         channels: Sequence[Channel] = (Channel.IN_APP,),
         link: str | None = None,
         dedupe_key: str | None = None,
+        external: bool = False,
     ) -> list[uuid.UUID]:
-        """Notify every member of a workspace with at least ``minimum_role``."""
+        """Notify every member of a workspace with at least ``minimum_role``.
+
+        ``external=True`` additionally posts once to the shared chat channel
+        (Discord) when that integration is connected.
+        """
         created: list[uuid.UUID] = []
-        for user_id in await workspace_member_ids(self._db, workspace_id, minimum_role):
+        members = await workspace_member_ids(self._db, workspace_id, minimum_role)
+        if external and members and await is_connected(self._db, "discord", None):
+            created += await self.notify(
+                members[0],
+                title,
+                body,
+                severity=severity,
+                category=category,
+                channels=(Channel.DISCORD,),
+                workspace_id=workspace_id,
+                link=link,
+                dedupe_key=f"{dedupe_key}:external" if dedupe_key else None,
+            )
+        for user_id in members:
             created += await self.notify(
                 user_id,
                 title,

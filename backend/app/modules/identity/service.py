@@ -470,3 +470,11 @@ class IdentityService:
         if keep is not None:
             stmt = stmt.where(UserSession.id != keep)
         await self._db.execute(stmt)
+
+
+async def user_id_by_email(session: AsyncSession, email: str) -> uuid.UUID | None:
+    """Active user id for an email (used to map external identities, e.g. Discord)."""
+    result: uuid.UUID | None = await session.scalar(
+        select(User.id).where(User.email == normalize_email(email), User.is_active.is_(True))
+    )
+    return result

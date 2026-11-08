@@ -26,8 +26,10 @@ from app.core.logging import configure_logging
 from app.core.module import Module, build_action_registry
 from app.core.security.encryption import SecretBox
 from app.core.tasks import JobHandler, PeriodicTask, WorkerContext
+from app.modules.discord.public import DiscordChannelAdapter
 from app.modules.events.service import relay_outbox
 from app.modules.jobs.service import JobRunner
+from app.modules.notifications.module import CHANNEL_ADAPTERS
 from app.modules.registry import MODULES
 
 logger = logging.getLogger("app.worker")
@@ -122,6 +124,8 @@ async def main(
         clock=utcnow,
         actions=build_action_registry(modules),
     )
+    # External channels deliver only when their integration is configured (ADR-016).
+    CHANNEL_ADAPTERS["discord"] = DiscordChannelAdapter(ctx, settings.public_app_url)
     handlers = collect_handlers(modules) | dict(extra_handlers or {})
     subscriptions = collect_subscriptions(modules, handlers)
     worker_id = f"{socket.gethostname()}:{os.getpid()}"

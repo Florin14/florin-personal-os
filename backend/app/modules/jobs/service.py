@@ -354,3 +354,7 @@ async def purge_finished_jobs(worker: WorkerContext) -> None:
             )
         )
         await db.commit()
+
+
+async def count_jobs(session: AsyncSession, status: JobStatus) -> int:
+    return int(await session.scalar(select(func.count()).where(Job.status == status.value)) or 0)

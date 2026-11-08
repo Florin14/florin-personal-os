@@ -109,6 +109,20 @@ async def reset_mfa(args: argparse.Namespace) -> None:
     await _with_session(work)
 
 
+async def discord_register_commands(args: argparse.Namespace) -> None:
+    from app.modules.discord.public import COMMANDS, DiscordClient, load_discord
+
+    async def work(session: AsyncSession) -> None:
+        settings = get_settings()
+        box = SecretBox([k.get_secret_value() for k in settings.encryption_keys])
+        loaded = await load_discord(session, box)
+        client = DiscordClient(loaded.secrets.bot_token.get_secret_value())
+        registered = await client.register_commands(loaded.config.application_id, COMMANDS)
+        print(f"Registered {len(registered)} Discord commands.")
+
+    await _with_session(work)
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="python -m app.cli", description="Personal OS admin CLI")
     sub = parser.add_subparsers(dest="command", required=True)
@@ -132,6 +146,7 @@ def build_parser() -> argparse.ArgumentParser:
 
     p_mfa = sub.add_parser("reset-mfa", help="Remove MFA for a user and revoke their sessions")
     p_mfa.add_argument("--email", required=True)
+    sub.add_parser("discord-register-commands", help="Register the bot's slash commands")
     return parser
 
 
@@ -144,6 +159,7 @@ def main(argv: list[str] | None = None) -> int:
         "create-user": create_user,
         "create-workspace": create_workspace,
         "reset-mfa": reset_mfa,
+        "discord-register-commands": discord_register_commands,
     }
     try:
         asyncio.run(commands[args.command](args))
