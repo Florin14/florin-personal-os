@@ -230,6 +230,57 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/automation/actions": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Actions */
+        get: operations["list_actions_api_v1_automation_actions_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/automation/controls": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Controls */
+        get: operations["get_controls_api_v1_automation_controls_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/automation/controls/emergency-stop": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** Set Emergency Stop */
+        put: operations["set_emergency_stop_api_v1_automation_controls_emergency_stop_put"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/events": {
         parameters: {
             query?: never;
@@ -471,10 +522,167 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/workspaces/{workspace_id}/automations": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Automations */
+        get: operations["list_automations_api_v1_workspaces__workspace_id__automations_get"];
+        put?: never;
+        /** Create Automation */
+        post: operations["create_automation_api_v1_workspaces__workspace_id__automations_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/workspaces/{workspace_id}/automations/{automation_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Automation */
+        get: operations["get_automation_api_v1_workspaces__workspace_id__automations__automation_id__get"];
+        /** Update Automation */
+        put: operations["update_automation_api_v1_workspaces__workspace_id__automations__automation_id__put"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/workspaces/{workspace_id}/automations/{automation_id}/enabled": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** Set Enabled */
+        put: operations["set_enabled_api_v1_workspaces__workspace_id__automations__automation_id__enabled_put"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/workspaces/{workspace_id}/automations/{automation_id}/run": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Run Automation */
+        post: operations["run_automation_api_v1_workspaces__workspace_id__automations__automation_id__run_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/workspaces/{workspace_id}/automations/{automation_id}/versions": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Versions */
+        get: operations["list_versions_api_v1_workspaces__workspace_id__automations__automation_id__versions_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/workspaces/{workspace_id}/executions": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Executions */
+        get: operations["list_executions_api_v1_workspaces__workspace_id__executions_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/workspaces/{workspace_id}/executions/{execution_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Execution */
+        get: operations["get_execution_api_v1_workspaces__workspace_id__executions__execution_id__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/workspaces/{workspace_id}/executions/{execution_id}/cancel": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Cancel Execution */
+        post: operations["cancel_execution_api_v1_workspaces__workspace_id__executions__execution_id__cancel_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
+        /** ActionOut */
+        ActionOut: {
+            /** Description */
+            description: string;
+            /** Name */
+            name: string;
+            /** Params Schema */
+            params_schema: {
+                [key: string]: unknown;
+            };
+            /** Requires Approval */
+            requires_approval: boolean;
+            /** Risk */
+            risk: string;
+            /** Side Effecting */
+            side_effecting: boolean;
+            /** Title */
+            title: string;
+        };
         /** ApprovalOut */
         ApprovalOut: {
             /** Action Type */
@@ -582,12 +790,83 @@ export interface components {
             next_step: components["schemas"]["NextStep"];
             user: components["schemas"]["UserOut"];
         };
+        /** AutomationIn */
+        AutomationIn: {
+            /** Definition */
+            definition: {
+                [key: string]: unknown;
+            };
+            /**
+             * Description
+             * @default
+             */
+            description: string;
+            /** Name */
+            name: string;
+        };
+        /** AutomationOut */
+        AutomationOut: {
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /** Definition */
+            definition: {
+                [key: string]: unknown;
+            };
+            /** Description */
+            description: string;
+            /** Enabled */
+            enabled: boolean;
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Name */
+            name: string;
+            /** Triggers */
+            triggers: components["schemas"]["TriggerStateOut"][];
+            /**
+             * Updated At
+             * Format: date-time
+             */
+            updated_at: string;
+            /** Version */
+            version: number;
+            /**
+             * Workspace Id
+             * Format: uuid
+             */
+            workspace_id: string;
+        };
+        /** AutomationUpdateIn */
+        AutomationUpdateIn: {
+            /** Definition */
+            definition: {
+                [key: string]: unknown;
+            };
+            /** Description */
+            description?: string | null;
+            /** Name */
+            name?: string | null;
+        };
         /** ChangePasswordRequest */
         ChangePasswordRequest: {
             /** Current Password */
             current_password: string;
             /** New Password */
             new_password: string;
+        };
+        /** ControlsOut */
+        ControlsOut: {
+            /** Changed At */
+            changed_at: string | null;
+            /** Emergency Stop */
+            emergency_stop: boolean;
+            /** Reason */
+            reason: string | null;
         };
         /**
          * Decision
@@ -601,6 +880,18 @@ export interface components {
             mfa_code?: string | null;
             /** Note */
             note?: string | null;
+        };
+        /** EmergencyStopIn */
+        EmergencyStopIn: {
+            /** Active */
+            active: boolean;
+            /** Reason */
+            reason?: string | null;
+        };
+        /** EnabledIn */
+        EnabledIn: {
+            /** Enabled */
+            enabled: boolean;
         };
         /** ErrorBody */
         ErrorBody: {
@@ -642,6 +933,91 @@ export interface components {
             /** Workspace Id */
             workspace_id: string | null;
         };
+        /** ExecutionDetailOut */
+        ExecutionDetailOut: {
+            /**
+             * Automation Id
+             * Format: uuid
+             */
+            automation_id: string;
+            /** Cancel Requested */
+            cancel_requested: boolean;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /** Current Step Key */
+            current_step_key: string | null;
+            /** Dry Run */
+            dry_run: boolean;
+            /** Error */
+            error: string | null;
+            /** Finished At */
+            finished_at: string | null;
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Started At */
+            started_at: string | null;
+            status: components["schemas"]["ExecutionStatus"];
+            /** Steps */
+            steps: components["schemas"]["StepOut"][];
+            /** Trigger Key */
+            trigger_key: string;
+            /** Trigger Payload */
+            trigger_payload: {
+                [key: string]: unknown;
+            };
+            /** Trigger Type */
+            trigger_type: string;
+            /** Version */
+            version: number;
+        };
+        /** ExecutionOut */
+        ExecutionOut: {
+            /**
+             * Automation Id
+             * Format: uuid
+             */
+            automation_id: string;
+            /** Cancel Requested */
+            cancel_requested: boolean;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /** Current Step Key */
+            current_step_key: string | null;
+            /** Dry Run */
+            dry_run: boolean;
+            /** Error */
+            error: string | null;
+            /** Finished At */
+            finished_at: string | null;
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Started At */
+            started_at: string | null;
+            status: components["schemas"]["ExecutionStatus"];
+            /** Trigger Key */
+            trigger_key: string;
+            /** Trigger Type */
+            trigger_type: string;
+            /** Version */
+            version: number;
+        };
+        /**
+         * ExecutionStatus
+         * @enum {string}
+         */
+        ExecutionStatus: "pending" | "running" | "waiting_approval" | "waiting_delay" | "succeeded" | "failed" | "cancelled" | "rejected" | "expired";
         /** HealthResponse */
         HealthResponse: {
             /**
@@ -783,6 +1159,18 @@ export interface components {
          * @enum {string}
          */
         Role: "viewer" | "member" | "admin" | "owner";
+        /** RunIn */
+        RunIn: {
+            /**
+             * Dry Run
+             * @default false
+             */
+            dry_run: boolean;
+            /** Payload */
+            payload?: {
+                [key: string]: unknown;
+            };
+        };
         /** SessionOut */
         SessionOut: {
             auth_level: components["schemas"]["AuthLevel"];
@@ -818,6 +1206,35 @@ export interface components {
          * @enum {string}
          */
         Severity: "info" | "success" | "warning" | "error";
+        /** StepOut */
+        StepOut: {
+            /** Approval Id */
+            approval_id: string | null;
+            /** Attempts */
+            attempts: number;
+            /** Error */
+            error: string | null;
+            /** Finished At */
+            finished_at: string | null;
+            /** Input */
+            input: {
+                [key: string]: unknown;
+            };
+            /** Output */
+            output: {
+                [key: string]: unknown;
+            };
+            /** Resume At */
+            resume_at: string | null;
+            /** Started At */
+            started_at: string | null;
+            /** Status */
+            status: string;
+            /** Step Key */
+            step_key: string;
+            /** Step Type */
+            step_type: string;
+        };
         /** SystemInfoResponse */
         SystemInfoResponse: {
             /** Environment */
@@ -843,6 +1260,21 @@ export interface components {
             /** Secret */
             secret: string;
         };
+        /** TriggerStateOut */
+        TriggerStateOut: {
+            /** Enabled */
+            enabled: boolean;
+            /** Event Type */
+            event_type: string | null;
+            /** Last Fired At */
+            last_fired_at: string | null;
+            /** Next Fire At */
+            next_fire_at: string | null;
+            /** Trigger Key */
+            trigger_key: string;
+            /** Trigger Type */
+            trigger_type: string;
+        };
         /** UnreadCountOut */
         UnreadCountOut: {
             /** Unread */
@@ -867,6 +1299,24 @@ export interface components {
             mfa_enabled: boolean;
             /** Timezone */
             timezone: string;
+        };
+        /** VersionOut */
+        VersionOut: {
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /** Created By User Id */
+            created_by_user_id: string | null;
+            /** Definition */
+            definition: {
+                [key: string]: unknown;
+            };
+            /** Definition Hash */
+            definition_hash: string;
+            /** Version */
+            version: number;
         };
         /**
          * WorkspaceKind
@@ -1305,6 +1755,97 @@ export interface operations {
             };
         };
     };
+    list_actions_api_v1_automation_actions_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ActionOut"][];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    get_controls_api_v1_automation_controls_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ControlsOut"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    set_emergency_stop_api_v1_automation_controls_emergency_stop_put: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["EmergencyStopIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ControlsOut"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
     list_events_api_v1_events_get: {
         parameters: {
             query?: {
@@ -1716,6 +2257,343 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["WorkspaceOut"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    list_automations_api_v1_workspaces__workspace_id__automations_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                workspace_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AutomationOut"][];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    create_automation_api_v1_workspaces__workspace_id__automations_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                workspace_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AutomationIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AutomationOut"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    get_automation_api_v1_workspaces__workspace_id__automations__automation_id__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                automation_id: string;
+                workspace_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AutomationOut"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    update_automation_api_v1_workspaces__workspace_id__automations__automation_id__put: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                automation_id: string;
+                workspace_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AutomationUpdateIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AutomationOut"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    set_enabled_api_v1_workspaces__workspace_id__automations__automation_id__enabled_put: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                automation_id: string;
+                workspace_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["EnabledIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AutomationOut"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    run_automation_api_v1_workspaces__workspace_id__automations__automation_id__run_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                automation_id: string;
+                workspace_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RunIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            202: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ExecutionOut"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    list_versions_api_v1_workspaces__workspace_id__automations__automation_id__versions_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                automation_id: string;
+                workspace_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["VersionOut"][];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    list_executions_api_v1_workspaces__workspace_id__executions_get: {
+        parameters: {
+            query?: {
+                automation_id?: string | null;
+                status?: components["schemas"]["ExecutionStatus"] | null;
+                limit?: number;
+            };
+            header?: never;
+            path: {
+                workspace_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ExecutionOut"][];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    get_execution_api_v1_workspaces__workspace_id__executions__execution_id__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                execution_id: string;
+                workspace_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ExecutionDetailOut"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    cancel_execution_api_v1_workspaces__workspace_id__executions__execution_id__cancel_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                execution_id: string;
+                workspace_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ExecutionOut"];
                 };
             };
             /** @description Client error */

@@ -15,6 +15,7 @@ from typing import Any
 
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker
 
+from app.core.actions import ActionRegistry
 from app.core.config import Settings
 from app.core.security.encryption import SecretBox
 
@@ -39,6 +40,7 @@ class WorkerContext:
     settings: Settings
     secret_box: SecretBox
     clock: Callable[[], datetime]
+    actions: ActionRegistry = field(default_factory=ActionRegistry)
 
 
 @dataclass(frozen=True, slots=True)
@@ -57,7 +59,7 @@ class JobContext:
 
 
 JobHandler = Callable[[JobContext], Awaitable[None]]
-PeriodicFunction = Callable[[WorkerContext], Awaitable[None]]
+PeriodicFunction = Callable[[WorkerContext], Awaitable[object]]
 
 
 @dataclass(frozen=True, slots=True)

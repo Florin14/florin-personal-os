@@ -12,6 +12,7 @@ from typing import Annotated
 from fastapi import Depends, Request
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.core.actions import ActionRegistry
 from app.core.config import Settings
 from app.core.db import session_scope
 from app.core.security.encryption import SecretBox
@@ -32,6 +33,12 @@ async def get_db_session(request: Request) -> AsyncIterator[AsyncSession]:
         yield session
 
 
+def get_action_registry(request: Request) -> ActionRegistry:
+    registry: ActionRegistry = request.app.state.actions
+    return registry
+
+
 SettingsDep = Annotated[Settings, Depends(get_app_settings)]
 SecretBoxDep = Annotated[SecretBox, Depends(get_secret_box)]
 DbSession = Annotated[AsyncSession, Depends(get_db_session)]
+ActionRegistryDep = Annotated[ActionRegistry, Depends(get_action_registry)]

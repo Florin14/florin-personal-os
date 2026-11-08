@@ -20,6 +20,9 @@ from app.modules.jobs.public import JobQueue
 logger = logging.getLogger(__name__)
 
 RELAY_BATCH_SIZE = 100
+WILDCARD = "*"
+# Automation lifecycle events never reach wildcard subscribers (prevents trigger loops).
+WILDCARD_EXCLUDED_PREFIX = "automation."
 
 
 @dataclass(frozen=True, slots=True)
@@ -106,7 +109,10 @@ async def relay_outbox(worker: WorkerContext, subscriptions: Mapping[str, Sequen
         )
         queue = JobQueue(db, worker.clock)
         for event in events:
-            for kind in subscriptions.get(event.event_type, ()):
+            kinds = list(subscriptions.get(event.event_type, ()))
+            if not event.event_type.startswith(WILDCARD_EXCLUDED_PREFIX):
+                kinds += [k for k in subscriptions.get(WILDCARD, ()) if k not in kinds]
+            for kind in kinds:
                 await queue.enqueue(
                     kind,
                     delivery_payload(event),

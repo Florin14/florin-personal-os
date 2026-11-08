@@ -349,6 +349,12 @@ class ApprovalService:
         stmt = stmt.order_by(ApprovalRequest.created_at.desc()).limit(limit)
         return list(await self._db.scalars(stmt))
 
+    async def get(self, approval_id: uuid.UUID) -> ApprovalRequest:
+        approval = await self._db.get(ApprovalRequest, approval_id)
+        if approval is None:
+            raise NotFound("Approval not found.")
+        return approval
+
     async def get_for_user(self, user_id: uuid.UUID, approval_id: uuid.UUID) -> ApprovalRequest:
         approval = await self._db.get(ApprovalRequest, approval_id)
         if approval is None:

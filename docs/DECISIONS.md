@@ -106,3 +106,18 @@ Do not edit an accepted ADR's decision silently. Add a new ADR that supersedes i
 * **Status:** Accepted (2026-11-08)
 * **Decision:** The notifications module owns delivery (status, retries, dedupe) and defines the `ChannelAdapter` protocol. Concrete adapters (e.g. Discord, Phase 3) live in their integration module and are registered into `CHANNEL_ADAPTERS` by the worker composition root only when the integration is configured. Unconfigured channels fail visibly (`status=failed`, permanent job failure) instead of silently dropping messages.
 * **Consequences:** notifications never imports integration modules; disabling an integration only removes its adapter.
+
+## ADR-017 — Workflow definition language and execution engine
+
+* **Status:** Accepted (2026-11-08)
+* **Context:** Workflows must be user-editable, versioned, approvable and safe; the spec forbids executing user-provided code or unrestricted HTTP.
+* **Decision:**
+  * Definitions are JSON validated by Pydantic: triggers (`manual`, `cron` with IANA timezone, `interval`, `event`) and steps (`condition`, `delay`, `notify`, `approval`, `action`). Workflows must be acyclic (DAG); the engine also caps steps per execution.
+  * `action` steps reference **registered, typed actions** (`app.core.actions.ActionDefinition`) declared by modules. Templates only substitute context values (`{{ trigger.x }}`); conditions use a fixed operator set with Decimal arithmetic that fails closed.
+  * Every save that changes the definition creates an immutable `automation_versions` row; executions pin the version they started with.
+  * The engine processes one step per transaction while holding a row lock on the execution. Side-effecting actions receive the idempotency key `execution:<id>:<step>`; transient errors retry the step via the job system (at-least-once); provider adapters must deduplicate.
+  * Approval-gated actions request an approval bound to the rendered params hash and version; the approval is consumed in the same transaction as the side effect.
+  * Dry-run renders and validates everything, calls each action's `plan` instead of its handler, skips delays and approvals.
+  * A global emergency stop (`automation_controls`) blocks side-effecting actions; it is admin-only and audited.
+  * Schedules coalesce missed runs into one execution; idempotency keys per (trigger, slot) prevent duplicates. Event triggers use a wildcard subscription that never receives `automation.*` events (no loops).
+* **Consequences:** + safe by construction, testable, resumable. − No loops/iteration constructs; long-running provider calls hold a row lock for their duration (acceptable at personal scale). Webhook triggers are deferred to Phase 3 (they need signature verification per provider).

@@ -7,6 +7,7 @@ from dataclasses import dataclass, field
 
 from fastapi import APIRouter
 
+from app.core.actions import ActionDefinition, ActionRegistry
 from app.core.tasks import JobHandler, PeriodicTask
 
 
@@ -21,6 +22,8 @@ class Module:
     * ``event_subscriptions`` map a domain event type to job kinds that must
       run for it (each delivery becomes an idempotent job).
     * ``periodic_tasks`` run in the worker process.
+    * ``actions`` are typed automation actions other modules' workflows may invoke.
+      ``event_subscriptions`` may use ``"*"`` to receive every event.
     """
 
     name: str
@@ -30,3 +33,8 @@ class Module:
     job_handlers: Mapping[str, JobHandler] = field(default_factory=dict)
     event_subscriptions: Mapping[str, Sequence[str]] = field(default_factory=dict)
     periodic_tasks: Sequence[PeriodicTask] = field(default_factory=tuple)
+    actions: Sequence[ActionDefinition] = field(default_factory=tuple)
+
+
+def build_action_registry(modules: Sequence[Module]) -> ActionRegistry:
+    return ActionRegistry(action for module in modules for action in module.actions)

@@ -23,7 +23,7 @@ from sqlalchemy.ext.asyncio import AsyncEngine
 from app.core.config import Settings, get_settings
 from app.core.db import create_engine, create_session_factory, utcnow
 from app.core.logging import configure_logging
-from app.core.module import Module
+from app.core.module import Module, build_action_registry
 from app.core.security.encryption import SecretBox
 from app.core.tasks import JobHandler, PeriodicTask, WorkerContext
 from app.modules.events.service import relay_outbox
@@ -120,6 +120,7 @@ async def main(
         settings=settings,
         secret_box=SecretBox([k.get_secret_value() for k in settings.encryption_keys]),
         clock=utcnow,
+        actions=build_action_registry(modules),
     )
     handlers = collect_handlers(modules) | dict(extra_handlers or {})
     subscriptions = collect_subscriptions(modules, handlers)

@@ -5,6 +5,7 @@ from __future__ import annotations
 from app.core.module import Module
 from app.modules.approvals.module import module as approvals
 from app.modules.audit.module import module as audit
+from app.modules.automation.module import module as automation
 from app.modules.events.module import module as events
 from app.modules.identity.module import module as identity
 from app.modules.jobs.module import module as jobs
@@ -21,6 +22,7 @@ MODULES: tuple[Module, ...] = (
     events,
     notifications,
     approvals,
+    automation,
 )
 
 
@@ -31,6 +33,7 @@ def import_all_models() -> None:
     """
     import app.modules.approvals.models
     import app.modules.audit.models
+    import app.modules.automation.models
     import app.modules.events.models
     import app.modules.identity.models
     import app.modules.jobs.models
