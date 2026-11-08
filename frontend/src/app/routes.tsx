@@ -13,6 +13,8 @@ import { ExecutionsPage } from '@/features/executions/ExecutionsPage';
 import { ComingSoonPage } from '@/features/placeholder/ComingSoonPage';
 import { SettingsPage } from '@/features/settings/SettingsPage';
 
+import { NetworkRoute, WorkflowBuilderRoute } from './lazyPages';
+
 const plannedAreas: RouteObject[] = NAV_ITEMS.filter((item) => !isAvailable(item)).map((item) => ({
   path: item.path,
   element: <ComingSoonPage item={item} />,
@@ -30,6 +32,9 @@ export const routes: RouteObject[] = [
         children: [
           { index: true, element: <OverviewPage /> },
           { path: '/settings', element: <SettingsPage /> },
+          { path: '/network', element: <NetworkRoute /> },
+          { path: '/workflows', element: <WorkflowBuilderRoute /> },
+          { path: '/workflows/:automationId', element: <WorkflowBuilderRoute /> },
           { path: '/approvals', element: <ApprovalInboxPage /> },
           { path: '/approvals/:approvalId', element: <ApprovalInboxPage /> },
           { path: '/executions', element: <ExecutionsPage /> },

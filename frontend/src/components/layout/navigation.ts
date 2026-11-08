@@ -28,7 +28,14 @@ export interface NavSection {
 }
 
 /** Areas with a working implementation; all others show a "planned" page. */
-export const IMPLEMENTED_PATHS = new Set(['/', '/approvals', '/executions', '/settings']);
+export const IMPLEMENTED_PATHS = new Set([
+  '/',
+  '/network',
+  '/workflows',
+  '/approvals',
+  '/executions',
+  '/settings',
+]);
 
 export const NAV_SECTIONS: NavSection[] = [
   {

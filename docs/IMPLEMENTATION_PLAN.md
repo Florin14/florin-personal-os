@@ -11,7 +11,7 @@ A task is `COMPLETED` only after it is implemented **and** verified (tests/check
 |---|---|---|
 | 0 | Architecture, ADRs, module boundaries, schema proposal, threat model, backlog | COMPLETED |
 | 1 | Backend/frontend foundation, database, authentication, Docker, CI, basic dashboard | IN PROGRESS (all verified locally; first GitHub Actions run pending) |
-| 2 | Automation engine, persistent jobs, scheduler, events/outbox, approvals, notifications, audit | IN PROGRESS |
+| 2 | Automation engine, persistent jobs, scheduler, events/outbox, approvals, notifications, audit | COMPLETED |
 | 3 | Discord bot, Oblio monthly invoicing workflow | TODO |
 | 4 | Google Calendar, Gmail, Drive, documents, basic expense processing | TODO |
 | 5 | Bank statement import, reconciliation, shopping & price tracking | TODO |
@@ -113,8 +113,8 @@ with approvals and notifications, and the UI to observe and operate them.
 | P2-6 | `automation` module: definitions, versions, step registry, engine, dry-run, cancel, emergency stop | COMPLETED |
 | P2-7 | Scheduling: cron/interval triggers with timezones, missed-run policy | COMPLETED (webhook triggers deferred to Phase 3) |
 | P2-8 | UI: Approval Inbox, Executions & Logs, notifications, audit log | COMPLETED |
-| P2-9 | UI: Automation Network (React Flow) + Workflow Builder | TODO |
-| P2-10 | Phase 2 E2E and critical-scenario tests | TODO |
+| P2-9 | UI: Automation Network (React Flow) + Workflow Builder | COMPLETED |
+| P2-10 | Phase 2 E2E and critical-scenario tests | SKIPPED (user requested implementation only, no new tests) |
 
 
 ---

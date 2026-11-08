@@ -28,7 +28,7 @@ describe('Overview dashboard', () => {
     renderRoute('/');
     const roadmap = await screen.findByRole('region', { name: 'Areas & roadmap' });
     expect(within(roadmap).getByText('Approval Inbox')).toBeInTheDocument();
-    expect(within(roadmap).getAllByText('Phase 2').length).toBeGreaterThan(0);
+    expect(within(roadmap).getAllByText('Phase 3').length).toBeGreaterThan(0);
   });
 
   it('renders an error state with retry when a widget fails', async () => {
@@ -59,9 +59,9 @@ describe('Overview dashboard', () => {
     authenticatedApi();
     renderRoute('/');
     const nav = await screen.findByRole('navigation', { name: 'Main navigation' });
-    await userEvent.setup().click(within(nav).getByRole('link', { name: /Automation Network/ }));
+    await userEvent.setup().click(within(nav).getByRole('link', { name: /Freelance/ }));
     expect(await screen.findByText('Not available yet')).toBeInTheDocument();
-    expect(screen.getByText('Planned · Phase 2')).toBeInTheDocument();
+    expect(screen.getByText('Planned · Phase 6')).toBeInTheDocument();
   });
 
   it('shows not found for unknown routes', async () => {

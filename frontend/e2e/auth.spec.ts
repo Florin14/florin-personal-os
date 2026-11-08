@@ -1,35 +1,15 @@
-import { readFileSync } from 'node:fs';
+import { expect, test } from '@playwright/test';
 
-import { expect, test, type Page } from '@playwright/test';
-import { TOTP } from 'otpauth';
+import {
+  codeForNewStep,
+  currentStep,
+  loadCredentials,
+  signIn,
+  signInAndEnroll,
+  totpFor,
+} from './helpers';
 
-import { CREDENTIALS_FILE } from './global-setup';
-
-interface Credentials {
-  email: string;
-  password: string;
-}
-
-const credentials = JSON.parse(readFileSync(CREDENTIALS_FILE, 'utf-8')) as Credentials;
-const STEP_SECONDS = 30;
-
-function currentStep(): number {
-  return Math.floor(Date.now() / 1000 / STEP_SECONDS);
-}
-
-/** The server rejects reuse of a time step, so wait for a fresh one when needed. */
-async function codeForNewStep(page: Page, totp: TOTP, usedStep: number): Promise<string> {
-  while (currentStep() <= usedStep) {
-    await page.waitForTimeout(1000);
-  }
-  return totp.generate();
-}
-
-async function signIn(page: Page, password = credentials.password): Promise<void> {
-  await page.getByLabel('Email').fill(credentials.email);
-  await page.getByLabel('Password').fill(password);
-  await page.getByRole('button', { name: 'Sign in' }).click();
-}
+const credentials = loadCredentials().auth;
 
 test.describe.serial('authentication', () => {
   let secret = '';
@@ -38,26 +18,14 @@ test.describe.serial('authentication', () => {
   test('rejects a wrong password', async ({ page }) => {
     await page.goto('/');
     await expect(page).toHaveURL(/\/login$/);
-    await signIn(page, 'definitely-not-the-password');
+    await signIn(page, credentials, 'definitely-not-the-password');
     await expect(page.getByText('Invalid email or password.')).toBeVisible();
   });
 
   test('first login enforces TOTP enrollment and opens the dashboard', async ({ page }) => {
-    await page.goto('/');
-    await signIn(page);
-
-    await expect(
-      page.getByRole('heading', { name: 'Set up two-factor authentication' }),
-    ).toBeVisible();
-    await page.getByRole('button', { name: 'Set up authenticator app' }).click();
-    await expect(page.getByAltText('QR code for authenticator app setup')).toBeVisible();
-    secret = (await page.getByTestId('totp-secret').textContent())?.trim() ?? '';
-    expect(secret).toMatch(/^[A-Z2-7]+$/);
-
-    const totp = new TOTP({ secret, digits: 6, period: STEP_SECONDS });
-    lastUsedStep = currentStep();
-    await page.getByLabel('6-digit code').fill(totp.generate());
-    await page.getByRole('button', { name: 'Enable two-factor authentication' }).click();
+    const enrolled = await signInAndEnroll(page, credentials);
+    secret = enrolled.secret;
+    lastUsedStep = enrolled.usedStep;
 
     await expect(page.getByRole('heading', { level: 1, name: /E2E Tester/ })).toBeVisible();
     const workspaces = page.getByRole('region', { name: 'Workspaces' });
@@ -71,11 +39,10 @@ test.describe.serial('authentication', () => {
   test('sign out, then sign in again with a TOTP code', async ({ page }) => {
     expect(secret, 'enrollment test must run first').not.toBe('');
     await page.goto('/');
-    await signIn(page);
+    await signIn(page, credentials);
     await expect(page.getByRole('heading', { name: 'Two-factor verification' })).toBeVisible();
 
-    const totp = new TOTP({ secret, digits: 6, period: STEP_SECONDS });
-    const code = await codeForNewStep(page, totp, lastUsedStep);
+    const code = await codeForNewStep(page, totpFor(secret), lastUsedStep);
     lastUsedStep = currentStep();
     await page.getByLabel('6-digit code').fill(code);
     await page.getByRole('button', { name: 'Verify' }).click();

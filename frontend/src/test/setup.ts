@@ -17,6 +17,14 @@ Object.defineProperty(window, 'matchMedia', {
     }) as unknown as MediaQueryList,
 });
 
+// jsdom lacks ResizeObserver (used by React Flow).
+class ResizeObserverStub {
+  observe(): void {}
+  unobserve(): void {}
+  disconnect(): void {}
+}
+Object.defineProperty(window, 'ResizeObserver', { writable: true, value: ResizeObserverStub });
+
 beforeEach(() => {
   localStorage.clear();
   document.cookie.split(';').forEach((c) => {
