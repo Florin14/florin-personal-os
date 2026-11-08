@@ -66,22 +66,29 @@ invoicing (profiles, duplicate-safe monthly invoices, SPV) · discord (signed in
 ## In progress: frontend redesign (owner request 2026-11-08)
 
 Owner asked to replace MUI with Tailwind v4 + shadcn-style Radix primitives + Motion + Lucide +
-Recharts + React Flow, with a "neural command center" look (morphcanvas.com reference). Owner
-company: FLOZITECH SRL (single employee = owner = administrator).
+Recharts + React Flow ("neural command center", morphcanvas.com reference). Owner company:
+FLOZITECH SRL (single employee = owner = administrator).
 
-Done so far (uncommitted until migration compiles):
-- `src/styles/globals.css` design tokens; `src/lib/cn.ts`; `src/components/ui/{button,form,overlay,surface}.tsx`
-- Rewritten in Tailwind: StateViews, StatusChip, KeyValueView, PageHeader, DashboardCard (Panel),
-  navigation (lucide icons, new /ai and /health areas, /finance + /calendar implemented),
-  AppShell (collapsible sidebar, Ctrl+K CommandPalette, health, notifications, profile),
-  WorkspaceSelector, NotificationsBell, ConnectionBanner, BrandMark, providers (no MUI theme).
+**Stable checkpoint (2026-11-08, end of day):** typecheck 0 errors, production build OK, all
+routes smoke-tested in Chromium without runtime errors (desktop + mobile).
 
-Remaining: migrate every file still importing `@mui` (`grep -rln @mui frontend/src`), build the
-neural-network Command Center dashboard (React Flow, 9 module nodes, right context panel,
-secondary sections), redesign Workflow Builder with custom nodes, add /finance (documents +
-expenses) and /calendar routes, Google connect UI, then remove MUI deps, fix existing Vitest
-tests for the new markup, lint/typecheck/build, update docs, commit.
+Done (new design):
+- Design system: `src/styles/globals.css` tokens, `src/components/ui/{button,form,overlay,surface,alert}.tsx`
+- Shell: collapsible sidebar, Ctrl+K command palette, health, notifications, profile, mobile drawer
+- Command Center (`src/features/command/*`): neural React Flow map of 9 modules with real data,
+  context panel, approvals / upcoming / finance chart / activity / system status sections
+- Migrated: auth, settings, approvals, executions (+jobs, emergency stop), business, integrations
+  (+Google OAuth connect), calendar & tasks, NEW finance page (documents upload + expenses),
+  placeholders, 404.
 
-## Next actions (after redesign)
-
-1. Phase 4 remainder verified via UI; Phase 5: bank CSV import, reconciliation, shopping/price tracking.
+Remaining (resume here):
+1. Workflow Builder redesign: `src/features/workflows/builderModel.ts` is written (model, new
+   step/trigger helpers, successors). Still to do: custom React Flow node component (trigger /
+   condition / action / approval / notify / delay / integration), inspector panel with typed
+   forms synced to JSON, execution-state overlay; then rewrite `WorkflowBuilderPage.tsx`,
+   `WorkflowEditor.tsx`, `FlowCanvas.tsx`, `NetworkPage.tsx` (these 4 still use MUI).
+2. Remove `@mui/*` and `@emotion/*` deps once `grep -rln @mui frontend/src` is empty.
+3. Update existing Vitest tests to the new markup (they were written for MUI and are not
+   expected to pass yet); run ESLint/Prettier on the whole frontend.
+4. Docs: ARCHITECTURE §4.4 + ADR-010 superseded by new ADR for the Tailwind/shadcn stack.
+5. Then continue Phase 5 (bank CSV import, reconciliation, shopping/price tracking).

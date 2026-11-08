@@ -9,7 +9,9 @@ import { MfaVerifyPage } from '@/features/auth/MfaVerifyPage';
 import { RequireAuth } from '@/features/auth/RequireAuth';
 import { NotFoundPage } from '@/features/errors/NotFoundPage';
 import { BusinessPage } from '@/features/business/BusinessPage';
+import { CalendarPage } from '@/features/calendar/CalendarPage';
 import { ExecutionsPage } from '@/features/executions/ExecutionsPage';
+import { FinancePage } from '@/features/finance/FinancePage';
 import { IntegrationsPage } from '@/features/integrations/IntegrationsPage';
 import { ComingSoonPage } from '@/features/placeholder/ComingSoonPage';
 import { SettingsPage } from '@/features/settings/SettingsPage';
@@ -35,6 +37,8 @@ export const routes: RouteObject[] = [
           { path: '/settings', element: <SettingsPage /> },
           { path: '/integrations', element: <IntegrationsPage /> },
           { path: '/business', element: <BusinessPage /> },
+          { path: '/finance', element: <FinancePage /> },
+          { path: '/calendar', element: <CalendarPage /> },
           { path: '/network', element: <NetworkRoute /> },
           { path: '/workflows', element: <WorkflowBuilderRoute /> },
           { path: '/workflows/:automationId', element: <WorkflowBuilderRoute /> },

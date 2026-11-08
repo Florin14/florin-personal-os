@@ -1,22 +1,6 @@
-import ExtensionOutlined from '@mui/icons-material/ExtensionOutlined';
-import {
-  Alert,
-  Button,
-  Card,
-  CardActions,
-  CardContent,
-  Chip,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  Grid,
-  Link,
-  Stack,
-  TextField,
-  Typography,
-} from '@mui/material';
+import { ExternalLink, Plug } from 'lucide-react';
 import { useState } from 'react';
+import { useSearchParams } from 'react-router';
 
 import { useAuthState } from '@/api/auth';
 import { errorMessage } from '@/api/client';
@@ -30,18 +14,22 @@ import {
   type Connection,
   type Provider,
 } from '@/api/integrations';
+import { useGoogleAuthorize, useGoogleDisconnect } from '@/api/workspaceData';
 import { dateTime } from '@/components/data/format';
 import { StatusChip } from '@/components/data/StatusChip';
 import { EmptyState, ErrorState, LoadingState } from '@/components/feedback/StateViews';
 import { PageHeader } from '@/components/layout/PageHeader';
+import { Alert } from '@/components/ui/alert';
+import { Button } from '@/components/ui/button';
+import { Checkbox, Field, Input } from '@/components/ui/form';
+import { Modal } from '@/components/ui/overlay';
+import { Badge, Panel } from '@/components/ui/surface';
 import { useCurrentWorkspace } from '@/hooks/useCurrentWorkspace';
 
 import { SchemaFields } from './SchemaFields';
 import { initialValues, toPayload, type FieldValues, type ObjectSchema } from './schemaValues';
 
-type DialogMode =
-  | { kind: 'connect'; provider: Provider }
-  | { kind: 'edit'; provider: Provider; connection: Connection };
+type DialogMode = { kind: 'connect'; provider: Provider } | { kind: 'edit'; provider: Provider; connection: Connection };
 
 function ConnectionDialog({ mode, onClose }: { mode: DialogMode; onClose: () => void }) {
   const workspace = useCurrentWorkspace();
@@ -49,9 +37,7 @@ function ConnectionDialog({ mode, onClose }: { mode: DialogMode; onClose: () => 
   const update = useUpdateConnection();
   const schema = mode.provider.config_schema as ObjectSchema;
   const editing = mode.kind === 'edit';
-  const [values, setValues] = useState<FieldValues>(() =>
-    initialValues(schema, editing ? mode.connection.config : undefined),
-  );
+  const [values, setValues] = useState<FieldValues>(() => initialValues(schema, editing ? mode.connection.config : undefined));
   const [secrets, setSecrets] = useState<Record<string, string>>({});
   const [localError, setLocalError] = useState<string | null>(null);
   const mutation = editing ? update : create;
@@ -66,187 +52,154 @@ function ConnectionDialog({ mode, onClose }: { mode: DialogMode; onClose: () => 
       setLocalError('One of the JSON fields is not valid JSON.');
       return;
     }
-    const filledSecrets = Object.fromEntries(Object.entries(secrets).filter(([, v]) => v !== ''));
-    const done = { onSuccess: onClose };
+    const filled = Object.fromEntries(Object.entries(secrets).filter(([, v]) => v !== ''));
     if (editing) {
-      update.mutate(
-        {
-          id: mode.connection.id,
-          config,
-          secrets: Object.keys(filledSecrets).length ? filledSecrets : null,
-        },
-        done,
-      );
+      update.mutate({ id: mode.connection.id, config, secrets: Object.keys(filled).length ? filled : null }, { onSuccess: onClose });
     } else {
       create.mutate(
-        {
-          provider: mode.provider.key,
-          workspace_id: systemScope ? null : (workspace?.id ?? null),
-          name: mode.provider.title,
-          config,
-          secrets: filledSecrets,
-        },
-        done,
+        { provider: mode.provider.key, workspace_id: systemScope ? null : (workspace?.id ?? null), name: mode.provider.title, config, secrets: filled },
+        { onSuccess: onClose },
       );
     }
   };
 
   return (
-    <Dialog open onClose={onClose} fullWidth maxWidth="sm" aria-labelledby="connection-title">
-      <DialogTitle id="connection-title">
-        {editing ? `Edit ${mode.provider.title}` : `Connect ${mode.provider.title}`}
-      </DialogTitle>
-      <DialogContent>
-        <Stack spacing={2} sx={{ pt: 1 }}>
-          <Typography variant="body2" color="text.secondary">
-            {systemScope
-              ? 'System-wide integration (administrators only).'
-              : `Connected to the workspace “${workspace?.name ?? ''}”.`}{' '}
-            Secrets are encrypted and can never be read back.
-          </Typography>
-          <SchemaFields
-            schema={schema}
-            values={values}
-            onChange={(k, v) => setValues((s) => ({ ...s, [k]: v }))}
-          />
-          {mode.provider.secret_fields.map((field) => (
-            <TextField
-              key={field}
-              type="password"
-              autoComplete="off"
-              label={editing ? `${field} (leave empty to keep)` : field}
-              value={secrets[field] ?? ''}
-              onChange={(e) => setSecrets((s) => ({ ...s, [field]: e.target.value }))}
-              required={!editing}
-            />
-          ))}
-          {(localError ?? mutation.error) && (
-            <Alert severity="error">{localError ?? errorMessage(mutation.error)}</Alert>
-          )}
-        </Stack>
-      </DialogContent>
-      <DialogActions>
-        <Button onClick={onClose}>Cancel</Button>
-        <Button variant="contained" onClick={submit} loading={mutation.isPending}>
-          {editing ? 'Save' : 'Connect'}
-        </Button>
-      </DialogActions>
-    </Dialog>
+    <Modal
+      open
+      onOpenChange={(o) => !o && onClose()}
+      title={editing ? `Edit ${mode.provider.title}` : `Connect ${mode.provider.title}`}
+      description={`${systemScope ? 'System-wide integration (administrators only).' : `Connected to “${workspace?.name ?? ''}”.`} Secrets are encrypted and can never be read back.`}
+      footer={
+        <>
+          <Button variant="ghost" onClick={onClose}>Cancel</Button>
+          <Button variant="primary" onClick={submit} loading={mutation.isPending}>{editing ? 'Save' : 'Connect'}</Button>
+        </>
+      }
+    >
+      <div className="space-y-3">
+        <SchemaFields schema={schema} values={values} onChange={(k, v) => setValues((s) => ({ ...s, [k]: v }))} />
+        {mode.provider.secret_fields.map((field) => (
+          <Field key={field} label={editing ? `${field} (leave empty to keep)` : field} required={!editing}>
+            {(p) => (
+              <Input {...p} type="password" autoComplete="off" value={secrets[field] ?? ''} onChange={(e) => setSecrets((s) => ({ ...s, [field]: e.target.value }))} />
+            )}
+          </Field>
+        ))}
+        {(localError ?? mutation.error) && <Alert tone="danger">{localError ?? errorMessage(mutation.error)}</Alert>}
+      </div>
+    </Modal>
   );
 }
 
-function ProviderCard({
-  provider,
-  connection,
-  canManage,
-  onOpen,
-}: {
-  provider: Provider;
-  connection: Connection | undefined;
-  canManage: boolean;
-  onOpen: (mode: DialogMode) => void;
-}) {
+const FEATURES = [
+  { key: 'calendar', label: 'Calendar (events, reminders, free/busy)' },
+  { key: 'gmail', label: 'Gmail (read-only: invoice/receipt attachments)' },
+  { key: 'drive', label: 'Drive (only files created by Personal OS)' },
+] as const;
+
+function GoogleConnect({ connection }: { connection: Connection | undefined }) {
+  const workspace = useCurrentWorkspace();
+  const authorize = useGoogleAuthorize();
+  const disconnect = useGoogleDisconnect();
+  const [features, setFeatures] = useState<('calendar' | 'gmail' | 'drive')[]>(['calendar']);
+  if (!workspace) return null;
+  if (connection) {
+    const cfg = connection.config as { account_email?: string; features?: string[]; mock?: boolean };
+    return (
+      <div className="space-y-2">
+        <p className="text-sm text-ink-muted">
+          {cfg.account_email} · {(cfg.features ?? []).join(', ')} {cfg.mock && <Badge tone="violet">mock</Badge>}
+        </p>
+        <Button size="sm" variant="danger" onClick={() => disconnect.mutate(workspace.id)} loading={disconnect.isPending}>
+          Disconnect & revoke
+        </Button>
+      </div>
+    );
+  }
+  return (
+    <div className="space-y-3">
+      <fieldset className="space-y-2">
+        <legend className="label-caps mb-1">Grant access to</legend>
+        {FEATURES.map((f) => (
+          <label key={f.key} className="flex items-center gap-2 text-sm text-ink-muted">
+            <Checkbox
+              checked={features.includes(f.key)}
+              onCheckedChange={(v) => setFeatures((s) => (v ? [...s, f.key] : s.filter((x) => x !== f.key)))}
+            />
+            {f.label}
+          </label>
+        ))}
+      </fieldset>
+      {authorize.isError && <Alert tone="danger">{errorMessage(authorize.error)}</Alert>}
+      <Button
+        variant="primary"
+        size="sm"
+        disabled={features.length === 0}
+        loading={authorize.isPending}
+        onClick={() =>
+          authorize.mutate(
+            { workspace_id: workspace.id, features },
+            { onSuccess: (r) => window.location.assign(r.url) },
+          )
+        }
+      >
+        Connect with Google
+      </Button>
+    </div>
+  );
+}
+
+function ProviderCard({ provider, connection, canManage, onOpen }: { provider: Provider; connection: Connection | undefined; canManage: boolean; onOpen: (m: DialogMode) => void }) {
   const check = useCheckConnection();
   const update = useUpdateConnection();
   const remove = useDeleteConnection();
   const [confirmDelete, setConfirmDelete] = useState(false);
   const error = check.error ?? update.error ?? remove.error;
-
+  const isGoogleAccount = provider.key === 'google';
   return (
-    <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
-      <CardContent sx={{ flexGrow: 1 }}>
-        <Stack direction="row" spacing={1} sx={{ alignItems: 'center', mb: 1 }}>
-          <ExtensionOutlined color="primary" aria-hidden />
-          <Typography variant="h6" component="h2" sx={{ flexGrow: 1 }}>
-            {provider.title}
-          </Typography>
-          {connection ? (
-            <StatusChip
-              status={
-                connection.status === 'active'
-                  ? 'succeeded'
-                  : connection.status === 'error'
-                    ? 'failed'
-                    : 'cancelled'
-              }
-              prefix={connection.status}
-            />
-          ) : (
-            <Chip size="small" label="Not connected" variant="outlined" />
-          )}
-        </Stack>
-        <Typography variant="body2" color="text.secondary" sx={{ mb: 1.5 }}>
-          {provider.description}
-        </Typography>
-        <Stack direction="row" spacing={0.5} sx={{ flexWrap: 'wrap', gap: 0.5, mb: 1.5 }}>
-          <Chip size="small" label={provider.scope === 'system' ? 'System' : 'Workspace'} />
-          {provider.capabilities.map((c) => (
-            <Chip key={c} size="small" variant="outlined" label={c} />
-          ))}
-        </Stack>
-        {connection && (
-          <Typography variant="body2" color="text.secondary">
-            Last checked: {dateTime(connection.last_checked_at)}
-          </Typography>
-        )}
-        {connection?.last_error && (
-          <Alert severity="warning" sx={{ mt: 1 }}>
-            {connection.last_error}
-          </Alert>
-        )}
-        {error && (
-          <Alert severity="error" sx={{ mt: 1 }}>
-            {errorMessage(error)}
-          </Alert>
-        )}
-        {provider.docs_url && (
-          <Link href={provider.docs_url} target="_blank" rel="noopener noreferrer" variant="body2">
-            Provider documentation
-          </Link>
-        )}
-      </CardContent>
+    <Panel
+      title={provider.title}
+      icon={<Plug />}
+      action={connection ? <StatusChip status={connection.status} /> : <Badge>not connected</Badge>}
+    >
+      <p className="text-sm text-ink-muted">{provider.description}</p>
+      <div className="my-3 flex flex-wrap gap-1.5">
+        <Badge tone={provider.scope === 'system' ? 'violet' : 'electric'}>{provider.scope}</Badge>
+        {provider.capabilities.map((c) => <Badge key={c}>{c}</Badge>)}
+      </div>
+      {connection && <p className="text-xs text-ink-dim">Last checked {dateTime(connection.last_checked_at)}</p>}
+      {connection?.last_error && <Alert tone="warning" className="mt-2">{connection.last_error}</Alert>}
+      {error && <Alert tone="danger" className="mt-2">{errorMessage(error)}</Alert>}
+      {provider.docs_url && (
+        <a href={provider.docs_url} target="_blank" rel="noopener noreferrer" className="mt-2 inline-flex items-center gap-1 text-xs text-cyan hover:underline">
+          Provider documentation <ExternalLink className="size-3" aria-hidden />
+        </a>
+      )}
       {canManage && (
-        <CardActions sx={{ flexWrap: 'wrap', gap: 1 }}>
-          {!connection ? (
-            <Button variant="contained" onClick={() => onOpen({ kind: 'connect', provider })}>
-              Connect
-            </Button>
+        <div className="mt-4 border-t border-line pt-3">
+          {isGoogleAccount ? (
+            <GoogleConnect connection={connection} />
+          ) : !connection ? (
+            <Button variant="primary" size="sm" onClick={() => onOpen({ kind: 'connect', provider })}>Connect</Button>
           ) : confirmDelete ? (
-            <>
-              <Typography variant="body2">Disconnect and delete credentials?</Typography>
-              <Button
-                color="error"
-                onClick={() => remove.mutate(connection.id)}
-                loading={remove.isPending}
-              >
-                Disconnect
-              </Button>
-              <Button onClick={() => setConfirmDelete(false)}>Keep</Button>
-            </>
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="text-sm">Disconnect and delete credentials?</span>
+              <Button size="sm" variant="danger" onClick={() => remove.mutate(connection.id)} loading={remove.isPending}>Disconnect</Button>
+              <Button size="sm" variant="ghost" onClick={() => setConfirmDelete(false)}>Keep</Button>
+            </div>
           ) : (
-            <>
-              <Button onClick={() => check.mutate(connection.id)} loading={check.isPending}>
-                Test connection
-              </Button>
-              <Button onClick={() => onOpen({ kind: 'edit', provider, connection })}>
-                Edit / rotate
-              </Button>
-              <Button
-                onClick={() =>
-                  update.mutate({ id: connection.id, enabled: connection.status === 'disabled' })
-                }
-                loading={update.isPending}
-              >
+            <div className="flex flex-wrap gap-2">
+              <Button size="sm" onClick={() => check.mutate(connection.id)} loading={check.isPending}>Test connection</Button>
+              <Button size="sm" onClick={() => onOpen({ kind: 'edit', provider, connection })}>Edit / rotate</Button>
+              <Button size="sm" variant="outline" onClick={() => update.mutate({ id: connection.id, enabled: connection.status === 'disabled' })} loading={update.isPending}>
                 {connection.status === 'disabled' ? 'Enable' : 'Disable'}
               </Button>
-              <Button color="error" onClick={() => setConfirmDelete(true)}>
-                Disconnect
-              </Button>
-            </>
+              <Button size="sm" variant="danger" onClick={() => setConfirmDelete(true)}>Disconnect</Button>
+            </div>
           )}
-        </CardActions>
+        </div>
       )}
-    </Card>
+    </Panel>
   );
 }
 
@@ -255,23 +208,19 @@ export function IntegrationsPage() {
   const connections = useConnections();
   const workspace = useCurrentWorkspace();
   const { data: auth } = useAuthState();
+  const [params] = useSearchParams();
   const [dialog, setDialog] = useState<DialogMode | null>(null);
   const isAdmin = auth?.user.is_admin ?? false;
   const workspaceAdmin = workspace?.role === 'owner' || workspace?.role === 'admin';
-
+  const googleResult = params.get('google');
   const connectionFor = (p: Provider) =>
-    connections.data?.find(
-      (c) =>
-        c.provider === p.key &&
-        (p.scope === 'system' ? c.workspace_id === null : c.workspace_id === workspace?.id),
-    );
-
+    connections.data?.find((c) => c.provider === p.key && (p.scope === 'system' ? c.workspace_id === null : c.workspace_id === workspace?.id));
   return (
-    <Stack spacing={3}>
-      <PageHeader
-        title="Integrations"
-        subtitle="Connect external services. Credentials are encrypted at rest and never shown again."
-      />
+    <div className="space-y-5">
+      <PageHeader eyebrow="System" title="Integrations" subtitle="Connect external services. Credentials are encrypted at rest and never shown again." />
+      {googleResult === 'connected' && <Alert tone="success">Google account connected.</Alert>}
+      {googleResult === 'denied' && <Alert tone="warning">Google access was not granted.</Alert>}
+      {googleResult === 'failed' && <Alert tone="danger">Connecting Google failed. Check the OAuth app settings and try again.</Alert>}
       {providers.isPending || connections.isPending ? (
         <LoadingState />
       ) : providers.isError ? (
@@ -279,20 +228,13 @@ export function IntegrationsPage() {
       ) : providers.data.length === 0 ? (
         <EmptyState title="No integrations available" />
       ) : (
-        <Grid container spacing={2.5}>
+        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
           {providers.data.map((p) => (
-            <Grid key={p.key} size={{ xs: 12, md: 6 }}>
-              <ProviderCard
-                provider={p}
-                connection={connectionFor(p)}
-                canManage={p.scope === 'system' ? isAdmin : workspaceAdmin}
-                onOpen={setDialog}
-              />
-            </Grid>
+            <ProviderCard key={p.key} provider={p} connection={connectionFor(p)} canManage={p.scope === 'system' ? isAdmin : workspaceAdmin} onOpen={setDialog} />
           ))}
-        </Grid>
+        </div>
       )}
       {dialog && <ConnectionDialog mode={dialog} onClose={() => setDialog(null)} />}
-    </Stack>
+    </div>
   );
 }
