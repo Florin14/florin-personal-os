@@ -34,6 +34,8 @@ export const IMPLEMENTED_PATHS = new Set([
   '/workflows',
   '/approvals',
   '/executions',
+  '/business',
+  '/integrations',
   '/settings',
 ]);
 

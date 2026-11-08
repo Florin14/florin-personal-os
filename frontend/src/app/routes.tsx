@@ -9,7 +9,9 @@ import { MfaVerifyPage } from '@/features/auth/MfaVerifyPage';
 import { RequireAuth } from '@/features/auth/RequireAuth';
 import { OverviewPage } from '@/features/dashboard/OverviewPage';
 import { NotFoundPage } from '@/features/errors/NotFoundPage';
+import { BusinessPage } from '@/features/business/BusinessPage';
 import { ExecutionsPage } from '@/features/executions/ExecutionsPage';
+import { IntegrationsPage } from '@/features/integrations/IntegrationsPage';
 import { ComingSoonPage } from '@/features/placeholder/ComingSoonPage';
 import { SettingsPage } from '@/features/settings/SettingsPage';
 
@@ -32,6 +34,8 @@ export const routes: RouteObject[] = [
         children: [
           { index: true, element: <OverviewPage /> },
           { path: '/settings', element: <SettingsPage /> },
+          { path: '/integrations', element: <IntegrationsPage /> },
+          { path: '/business', element: <BusinessPage /> },
           { path: '/network', element: <NetworkRoute /> },
           { path: '/workflows', element: <WorkflowBuilderRoute /> },
           { path: '/workflows/:automationId', element: <WorkflowBuilderRoute /> },

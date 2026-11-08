@@ -121,3 +121,16 @@ Do not edit an accepted ADR's decision silently. Add a new ADR that supersedes i
   * A global emergency stop (`automation_controls`) blocks side-effecting actions; it is admin-only and audited.
   * Schedules coalesce missed runs into one execution; idempotency keys per (trigger, slot) prevent duplicates. Event triggers use a wildcard subscription that never receives `automation.*` events (no loops).
 * **Consequences:** + safe by construction, testable, resumable. − No loops/iteration constructs; long-running provider calls hold a row lock for their duration (acceptable at personal scale). Webhook triggers are deferred to Phase 3 (they need signature verification per provider).
+
+## ADR-018 — Invoice duplicate prevention with Oblio
+
+* **Status:** Accepted (2026-11-08)
+* **Context:** "A restarted worker must not issue duplicate invoices." Oblio documents an `idempotencyKey` "to avoid duplication" but not what a repeated key returns.
+* **Decision:** Three layers: (1) `invoices` has a unique `(profile_id, period_start)`; the intent row is committed *before* calling Oblio. (2) Every call for that row uses the same `idempotencyKey` (`pos-<profile>-<YYYY-MM>`), so a retry after an unknown outcome (timeout/crash) is deduplicated by Oblio. (3) A row marked `issued` is never sent again. A row left `pending` after the last retry is shown as "outcome unknown — verify in Oblio" (manual reconciliation) instead of being retried blindly.
+* **Additional guard:** issuance is approval-gated (high risk → in-app + fresh TOTP) and re-validates that the profile still produces the approved client/amount/currency; otherwise it fails.
+* **To verify with live credentials:** Oblio's behaviour on a repeated `idempotencyKey` (sandbox/support).
+
+## ADR-019 — Discord webhook exposure
+
+* **Status:** Accepted (2026-11-08)
+* **Decision:** Only `POST /api/v1/integrations/discord/interactions` may be exposed outside the VPN (Discord must reach it). It accepts only Ed25519-signed requests (5-minute timestamp window), never uses sessions, maps Discord users to accounts through an explicit allowlist, restricts channels, and inherits the approval risk policy (high-risk actions cannot be approved from Discord). Messages contain no confidential titles/amounts unless `include_titles` is enabled.

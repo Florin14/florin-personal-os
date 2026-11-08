@@ -79,3 +79,21 @@ filesystems where possible and `no-new-privileges`.
 A Raspberry Pi or mini PC running Home Assistant joins the same WireGuard network as a
 peer. Personal OS will reach its local API over the tunnel (Phase 7); no Home Assistant
 port is exposed to the internet.
+
+## Discord bot (optional)
+
+1. Create an application + bot in the Discord Developer Portal; invite it to a private server.
+2. In Personal OS → Integrations → Discord (admin): application id, public key, notification
+   channel id, allowed channel ids, and the user mapping `[{"discord_user_id": "...", "email": "you@..."}]`;
+   the bot token is stored encrypted.
+3. Expose **only** `/api/v1/integrations/discord/interactions` publicly (e.g. a separate
+   reverse-proxy location on a public hostname); everything else stays VPN-only. Set the
+   Interactions Endpoint URL in the Developer Portal to that address.
+4. Register slash commands: `docker compose -f compose.prod.yaml exec backend python -m app.cli discord-register-commands`.
+5. Set `PUBLIC_APP_URL` (VPN URL of the app) so chat messages link back to the app.
+
+## Oblio (optional)
+
+Integrations → Oblio (workspace admin, business workspace): company CIF, mode `live`, account
+email and the API secret from Oblio → Setări → Date cont. Use mode `mock` to try invoicing
+workflows without credentials (in-memory simulator, nothing is sent to ANAF).
