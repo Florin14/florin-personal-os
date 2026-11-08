@@ -2,12 +2,14 @@ import type { RouteObject } from 'react-router';
 
 import { AppShell } from '@/components/layout/AppShell';
 import { isAvailable, NAV_ITEMS } from '@/components/layout/navigation';
+import { ApprovalInboxPage } from '@/features/approvals/ApprovalInboxPage';
 import { LoginPage } from '@/features/auth/LoginPage';
 import { MfaEnrollPage } from '@/features/auth/MfaEnrollPage';
 import { MfaVerifyPage } from '@/features/auth/MfaVerifyPage';
 import { RequireAuth } from '@/features/auth/RequireAuth';
 import { OverviewPage } from '@/features/dashboard/OverviewPage';
 import { NotFoundPage } from '@/features/errors/NotFoundPage';
+import { ExecutionsPage } from '@/features/executions/ExecutionsPage';
 import { ComingSoonPage } from '@/features/placeholder/ComingSoonPage';
 import { SettingsPage } from '@/features/settings/SettingsPage';
 
@@ -28,6 +30,10 @@ export const routes: RouteObject[] = [
         children: [
           { index: true, element: <OverviewPage /> },
           { path: '/settings', element: <SettingsPage /> },
+          { path: '/approvals', element: <ApprovalInboxPage /> },
+          { path: '/approvals/:approvalId', element: <ApprovalInboxPage /> },
+          { path: '/executions', element: <ExecutionsPage /> },
+          { path: '/executions/:executionId', element: <ExecutionsPage /> },
           ...plannedAreas,
           { path: '*', element: <NotFoundPage /> },
         ],

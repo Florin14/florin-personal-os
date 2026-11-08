@@ -139,6 +139,10 @@ export function authenticatedApi(overrides: Record<string, unknown> = {}) {
     'GET /api/v1/system/info': systemInfo,
     'GET /api/v1/workspaces': workspaces,
     'GET /api/v1/auth/sessions': sessions,
+    'GET /api/v1/notifications/unread-count': { unread: 0 },
+    'GET /api/v1/notifications': [],
+    'GET /api/v1/automation/controls': { emergency_stop: false, changed_at: null, reason: null },
+    'GET /api/v1/audit': [],
     ...overrides,
   });
 }

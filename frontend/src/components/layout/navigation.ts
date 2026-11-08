@@ -27,8 +27,8 @@ export interface NavSection {
   items: NavItem[];
 }
 
-/** Phase in which this release is. Areas with a higher phase show a "planned" page. */
-export const CURRENT_PHASE = 1;
+/** Areas with a working implementation; all others show a "planned" page. */
+export const IMPLEMENTED_PATHS = new Set(['/', '/approvals', '/executions', '/settings']);
 
 export const NAV_SECTIONS: NavSection[] = [
   {
@@ -142,5 +142,5 @@ export const NAV_SECTIONS: NavSection[] = [
 export const NAV_ITEMS: NavItem[] = NAV_SECTIONS.flatMap((section) => section.items);
 
 export function isAvailable(item: NavItem): boolean {
-  return item.phase <= CURRENT_PHASE;
+  return IMPLEMENTED_PATHS.has(item.path);
 }

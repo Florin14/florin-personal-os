@@ -59,7 +59,7 @@ describe('Overview dashboard', () => {
     authenticatedApi();
     renderRoute('/');
     const nav = await screen.findByRole('navigation', { name: 'Main navigation' });
-    await userEvent.setup().click(within(nav).getByRole('link', { name: /Approval Inbox/ }));
+    await userEvent.setup().click(within(nav).getByRole('link', { name: /Automation Network/ }));
     expect(await screen.findByText('Not available yet')).toBeInTheDocument();
     expect(screen.getByText('Planned · Phase 2')).toBeInTheDocument();
   });

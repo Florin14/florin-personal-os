@@ -31,6 +31,7 @@ import { ConnectionBanner } from '@/components/feedback/ConnectionBanner';
 import { useUiStore } from '@/stores/uiStore';
 
 import { BrandMark } from './BrandMark';
+import { NotificationsBell } from './NotificationsBell';
 import { isAvailable, NAV_SECTIONS } from './navigation';
 import { WorkspaceSelector } from './WorkspaceSelector';
 
@@ -228,6 +229,7 @@ export function AppShell() {
               </IconButton>
             )}
             <Box sx={{ flexGrow: 1 }} />
+            <NotificationsBell />
             <ThemeToggle />
             <UserMenu />
           </Toolbar>

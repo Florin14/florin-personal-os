@@ -112,7 +112,7 @@ with approvals and notifications, and the UI to observe and operate them.
 | P2-5 | `approvals` module: risk policy, payload hash/version binding, expiry, step-up MFA | COMPLETED |
 | P2-6 | `automation` module: definitions, versions, step registry, engine, dry-run, cancel, emergency stop | COMPLETED |
 | P2-7 | Scheduling: cron/interval triggers with timezones, missed-run policy | COMPLETED (webhook triggers deferred to Phase 3) |
-| P2-8 | UI: Approval Inbox, Executions & Logs, notifications, audit log | TODO |
+| P2-8 | UI: Approval Inbox, Executions & Logs, notifications, audit log | COMPLETED |
 | P2-9 | UI: Automation Network (React Flow) + Workflow Builder | TODO |
 | P2-10 | Phase 2 E2E and critical-scenario tests | TODO |
 
