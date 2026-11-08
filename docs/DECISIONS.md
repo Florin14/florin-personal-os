@@ -93,3 +93,16 @@ Do not edit an accepted ADR's decision silently. Add a new ADR that supersedes i
 * **Context:** Latest majors at implementation time: React 19, MUI 9, React Router 8, Vite 8, Vitest 5, FastAPI 0.16x, Starlette 1.x, SQLAlchemy 2.1, Python 3.13.
 * **Decision:** Use current majors, except where the tool chain is not yet compatible: TypeScript **5.9** (openapi-typescript and typescript-eslint do not support TS 6/7 yet) and ESLint **9** (eslint-plugin-jsx-a11y does not support ESLint 10 yet). Revisit when those plugins release support.
 * **Consequences:** MUI 9 removed system props on layout components; layout props are passed through `sx`.
+
+## ADR-015 — Domain events are delivered as jobs
+
+* **Status:** Accepted (2026-11-08)
+* **Context:** Modules must react to each other's state changes without direct coupling, reliably and with retries.
+* **Decision:** Publishers write `outbox_events` in their own transaction. A worker relay (every `EVENT_RELAY_INTERVAL_SECONDS`) converts each unpublished event into one job per subscriber (`Module.event_subscriptions`) with idempotency key `event:{event_id}:{job_kind}`, and marks the event published in the same transaction. Retries, timeouts, dead-lettering and inspection are therefore shared with all other background work.
+* **Consequences:** + one reliability mechanism, no message broker, at-least-once delivery that survives crashes. − Delivery latency ≈ relay interval + job poll interval (seconds). Handlers must be idempotent.
+
+## ADR-016 — External notification channel adapters
+
+* **Status:** Accepted (2026-11-08)
+* **Decision:** The notifications module owns delivery (status, retries, dedupe) and defines the `ChannelAdapter` protocol. Concrete adapters (e.g. Discord, Phase 3) live in their integration module and are registered into `CHANNEL_ADAPTERS` by the worker composition root only when the integration is configured. Unconfigured channels fail visibly (`status=failed`, permanent job failure) instead of silently dropping messages.
+* **Consequences:** notifications never imports integration modules; disabling an integration only removes its adapter.

@@ -13,6 +13,7 @@ from app.modules.workspaces.service import (
     WorkspaceAccess,
     WorkspaceService,
     accessible_workspace_ids,
+    workspace_member_ids,
 )
 
 __all__ = [
@@ -22,4 +23,5 @@ __all__ = [
     "WorkspaceService",
     "accessible_workspace_ids",
     "require_workspace_access",
+    "workspace_member_ids",
 ]

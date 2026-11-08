@@ -143,3 +143,16 @@ async def accessible_workspace_ids(
         )
     )
     return list(result)
+
+
+async def workspace_member_ids(
+    session: AsyncSession, workspace_id: uuid.UUID, minimum_role: Role = Role.VIEWER
+) -> list[uuid.UUID]:
+    """Ids of users holding at least ``minimum_role`` in the workspace."""
+    roles = [r.value for r in Role if r.allows(minimum_role)]
+    result = await session.scalars(
+        select(WorkspaceMembership.user_id).where(
+            WorkspaceMembership.workspace_id == workspace_id, WorkspaceMembership.role.in_(roles)
+        )
+    )
+    return list(result)
