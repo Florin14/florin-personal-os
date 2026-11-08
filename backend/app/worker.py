@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import asyncio
 import contextlib
+import functools
 import hashlib
 import logging
 import os
@@ -25,6 +26,7 @@ from app.core.logging import configure_logging
 from app.core.module import Module
 from app.core.security.encryption import SecretBox
 from app.core.tasks import JobHandler, PeriodicTask, WorkerContext
+from app.modules.events.service import relay_outbox
 from app.modules.jobs.service import JobRunner
 from app.modules.registry import MODULES
 
@@ -41,8 +43,33 @@ def collect_handlers(modules: Sequence[Module]) -> dict[str, JobHandler]:
     return handlers
 
 
-def collect_periodic_tasks(modules: Sequence[Module]) -> list[PeriodicTask]:
-    return [task for module in modules for task in module.periodic_tasks]
+def collect_subscriptions(
+    modules: Sequence[Module], handlers: Mapping[str, JobHandler]
+) -> dict[str, list[str]]:
+    """Event type -> subscriber job kinds. Every subscriber must have a handler."""
+    subscriptions: dict[str, list[str]] = {}
+    for module in modules:
+        for event_type, kinds in module.event_subscriptions.items():
+            for kind in kinds:
+                if kind not in handlers:
+                    raise RuntimeError(f"Subscriber {kind!r} for {event_type!r} has no handler")
+                subscriptions.setdefault(event_type, []).append(kind)
+    return subscriptions
+
+
+def collect_periodic_tasks(
+    modules: Sequence[Module], settings: Settings, subscriptions: Mapping[str, Sequence[str]]
+) -> list[PeriodicTask]:
+    relay = PeriodicTask(
+        "events.relay_outbox",
+        settings.event_relay_interval_seconds,
+        functools.partial(_relay, subscriptions=subscriptions),
+    )
+    return [relay, *(task for module in modules for task in module.periodic_tasks)]
+
+
+async def _relay(ctx: WorkerContext, *, subscriptions: Mapping[str, Sequence[str]]) -> None:
+    await relay_outbox(ctx, subscriptions)
 
 
 def advisory_key(name: str) -> int:
@@ -95,6 +122,7 @@ async def main(
         clock=utcnow,
     )
     handlers = collect_handlers(modules) | dict(extra_handlers or {})
+    subscriptions = collect_subscriptions(modules, handlers)
     worker_id = f"{socket.gethostname()}:{os.getpid()}"
     runner = JobRunner(ctx, handlers, worker_id=worker_id)
 
@@ -107,7 +135,7 @@ async def main(
     tasks = [asyncio.create_task(run_jobs(runner, settings, stop), name="jobs")]
     tasks += [
         asyncio.create_task(run_periodic(t, ctx, engine, stop), name=t.name)
-        for t in collect_periodic_tasks(modules)
+        for t in collect_periodic_tasks(modules, settings, subscriptions)
     ]
     logger.info("worker_started", extra={"worker_id": worker_id, "handlers": sorted(handlers)})
     try:

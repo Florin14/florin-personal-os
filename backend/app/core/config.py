@@ -53,6 +53,7 @@ class Settings(BaseSettings):
     # Background worker
     worker_poll_interval_seconds: float = Field(default=2.0, gt=0)
     worker_batch_size: int = Field(default=5, ge=1, le=100)
+    event_relay_interval_seconds: float = Field(default=1.0, gt=0)
 
     # Retention
     job_retention_days: int = Field(default=30, ge=1)
