@@ -47,6 +47,7 @@ def create_app(settings: Settings | None = None, modules: Sequence[Module] = MOD
     app.state.secret_box = SecretBox([k.get_secret_value() for k in settings.encryption_keys])
     app.state.modules = tuple(modules)
     app.state.actions = build_action_registry(modules)
+    app.state.integrations = [p for m in modules for p in m.integrations]
 
     # Starlette runs the last-added middleware first.
     app.add_middleware(OriginCheckMiddleware, allowed_origins=settings.allowed_origins)

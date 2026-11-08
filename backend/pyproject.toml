@@ -16,6 +16,7 @@ dependencies = [
     "cryptography>=43",
     "tzdata>=2024.2",
     "cronsim>=2.6",
+    "httpx>=0.28",
 ]
 
 [dependency-groups]

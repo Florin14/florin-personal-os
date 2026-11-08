@@ -298,6 +298,76 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/integrations": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Connections */
+        get: operations["list_connections_api_v1_integrations_get"];
+        put?: never;
+        /** Create Connection */
+        post: operations["create_connection_api_v1_integrations_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/integrations/providers": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Providers */
+        get: operations["list_providers_api_v1_integrations_providers_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/integrations/{connection_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** Delete Connection */
+        delete: operations["delete_connection_api_v1_integrations__connection_id__delete"];
+        options?: never;
+        head?: never;
+        /** Update Connection */
+        patch: operations["update_connection_api_v1_integrations__connection_id__patch"];
+        trace?: never;
+    };
+    "/api/v1/integrations/{connection_id}/check": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Check Connection */
+        post: operations["check_connection_api_v1_integrations__connection_id__check_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/jobs": {
         parameters: {
             query?: never;
@@ -660,6 +730,93 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/workspaces/{workspace_id}/invoice-profiles": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Profiles */
+        get: operations["list_profiles_api_v1_workspaces__workspace_id__invoice_profiles_get"];
+        put?: never;
+        /** Create Profile */
+        post: operations["create_profile_api_v1_workspaces__workspace_id__invoice_profiles_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/workspaces/{workspace_id}/invoice-profiles/{profile_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** Update Profile */
+        put: operations["update_profile_api_v1_workspaces__workspace_id__invoice_profiles__profile_id__put"];
+        post?: never;
+        /** Delete Profile */
+        delete: operations["delete_profile_api_v1_workspaces__workspace_id__invoice_profiles__profile_id__delete"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/workspaces/{workspace_id}/invoice-profiles/{profile_id}/preview": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Preview */
+        get: operations["preview_api_v1_workspaces__workspace_id__invoice_profiles__profile_id__preview_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/workspaces/{workspace_id}/invoice-profiles/{profile_id}/workflow-template": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Workflow Template */
+        get: operations["workflow_template_api_v1_workspaces__workspace_id__invoice_profiles__profile_id__workflow_template_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/workspaces/{workspace_id}/invoices": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Invoices */
+        get: operations["list_invoices_api_v1_workspaces__workspace_id__invoices_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -859,6 +1016,76 @@ export interface components {
             /** New Password */
             new_password: string;
         };
+        /** ConnectionIn */
+        ConnectionIn: {
+            /** Config */
+            config?: {
+                [key: string]: unknown;
+            };
+            /**
+             * Name
+             * @default
+             */
+            name: string;
+            /** Provider */
+            provider: string;
+            /** Secrets */
+            secrets: {
+                [key: string]: unknown;
+            };
+            /** Workspace Id */
+            workspace_id?: string | null;
+        };
+        /** ConnectionOut */
+        ConnectionOut: {
+            /** Config */
+            config: {
+                [key: string]: unknown;
+            };
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /** Has Credentials */
+            has_credentials: boolean;
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Last Checked At */
+            last_checked_at: string | null;
+            /** Last Error */
+            last_error: string | null;
+            /** Name */
+            name: string;
+            /** Provider */
+            provider: string;
+            status: components["schemas"]["ConnectionStatus"];
+            /** Workspace Id */
+            workspace_id: string | null;
+        };
+        /**
+         * ConnectionStatus
+         * @enum {string}
+         */
+        ConnectionStatus: "active" | "disabled" | "error";
+        /** ConnectionUpdateIn */
+        ConnectionUpdateIn: {
+            /** Config */
+            config?: {
+                [key: string]: unknown;
+            } | null;
+            /** Enabled */
+            enabled?: boolean | null;
+            /** Name */
+            name?: string | null;
+            /** Secrets */
+            secrets?: {
+                [key: string]: unknown;
+            } | null;
+        };
         /** ControlsOut */
         ControlsOut: {
             /** Changed At */
@@ -1031,6 +1258,62 @@ export interface components {
              */
             status: "ok" | "degraded";
         };
+        /** InvoiceOut */
+        InvoiceOut: {
+            /** Client Name */
+            client_name: string;
+            /** Currency */
+            currency: string;
+            /** Description */
+            description: string;
+            /**
+             * Due Date
+             * Format: date
+             */
+            due_date: string;
+            /** Einvoice Code */
+            einvoice_code: number | null;
+            /** Einvoice Text */
+            einvoice_text: string | null;
+            /** Error */
+            error: string | null;
+            /** Execution Id */
+            execution_id: string | null;
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /**
+             * Issue Date
+             * Format: date
+             */
+            issue_date: string;
+            /** Issued At */
+            issued_at: string | null;
+            /** Link */
+            link: string | null;
+            /** Net Amount */
+            net_amount: string;
+            /** Number */
+            number: string | null;
+            /**
+             * Period End
+             * Format: date
+             */
+            period_end: string;
+            /**
+             * Period Start
+             * Format: date
+             */
+            period_start: string;
+            /** Profile Id */
+            profile_id: string | null;
+            /** Series Name */
+            series_name: string;
+            /** Status */
+            status: string;
+        };
         /** JobOut */
         JobOut: {
             /** Attempts */
@@ -1148,6 +1431,227 @@ export interface components {
             title: string;
             /** Workspace Id */
             workspace_id: string | null;
+        };
+        /** ProfileIn */
+        ProfileIn: {
+            /**
+             * Billing Period
+             * @default previous_month
+             * @enum {string}
+             */
+            billing_period: "previous_month" | "current_month";
+            /** Client Address */
+            client_address?: string | null;
+            /** Client Cif */
+            client_cif?: string | null;
+            /** Client City */
+            client_city?: string | null;
+            /** Client Country */
+            client_country?: string | null;
+            /** Client Email */
+            client_email?: string | null;
+            /** Client Name */
+            client_name: string;
+            /** Client Rc */
+            client_rc?: string | null;
+            /** Client State */
+            client_state?: string | null;
+            /**
+             * Client Vat Payer
+             * @default false
+             */
+            client_vat_payer: boolean;
+            /**
+             * Currency
+             * @default RON
+             */
+            currency: string;
+            /** Description */
+            description: string;
+            /**
+             * Due Days
+             * @default 15
+             */
+            due_days: number;
+            /**
+             * Enabled
+             * @default true
+             */
+            enabled: boolean;
+            /**
+             * Language
+             * @default RO
+             * @enum {string}
+             */
+            language: "RO" | "EN" | "FR" | "DE" | "IT" | "ES" | "HU";
+            /**
+             * Measuring Unit
+             * @default buc
+             */
+            measuring_unit: string;
+            /** Mentions */
+            mentions?: string | null;
+            /** Name */
+            name: string;
+            /**
+             * Quantity
+             * @default 1
+             */
+            quantity: number | string;
+            /**
+             * Send Email
+             * @default false
+             */
+            send_email: boolean;
+            /** Series Name */
+            series_name: string;
+            /**
+             * Timezone
+             * @default Europe/Bucharest
+             */
+            timezone: string;
+            /** Unit Price */
+            unit_price: number | string;
+            /**
+             * Vat Included
+             * @default false
+             */
+            vat_included: boolean;
+            /** Vat Name */
+            vat_name?: string | null;
+            /** Vat Percentage */
+            vat_percentage?: number | string | null;
+        };
+        /** ProfileOut */
+        ProfileOut: {
+            /**
+             * Billing Period
+             * @default previous_month
+             * @enum {string}
+             */
+            billing_period: "previous_month" | "current_month";
+            /** Client Address */
+            client_address?: string | null;
+            /** Client Cif */
+            client_cif?: string | null;
+            /** Client City */
+            client_city?: string | null;
+            /** Client Country */
+            client_country?: string | null;
+            /** Client Email */
+            client_email?: string | null;
+            /** Client Name */
+            client_name: string;
+            /** Client Rc */
+            client_rc?: string | null;
+            /** Client State */
+            client_state?: string | null;
+            /**
+             * Client Vat Payer
+             * @default false
+             */
+            client_vat_payer: boolean;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /**
+             * Currency
+             * @default RON
+             */
+            currency: string;
+            /** Description */
+            description: string;
+            /**
+             * Due Days
+             * @default 15
+             */
+            due_days: number;
+            /**
+             * Enabled
+             * @default true
+             */
+            enabled: boolean;
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /**
+             * Language
+             * @default RO
+             * @enum {string}
+             */
+            language: "RO" | "EN" | "FR" | "DE" | "IT" | "ES" | "HU";
+            /**
+             * Measuring Unit
+             * @default buc
+             */
+            measuring_unit: string;
+            /** Mentions */
+            mentions?: string | null;
+            /** Name */
+            name: string;
+            /**
+             * Quantity
+             * @default 1
+             */
+            quantity: string;
+            /**
+             * Send Email
+             * @default false
+             */
+            send_email: boolean;
+            /** Series Name */
+            series_name: string;
+            /**
+             * Timezone
+             * @default Europe/Bucharest
+             */
+            timezone: string;
+            /** Unit Price */
+            unit_price: string;
+            /**
+             * Updated At
+             * Format: date-time
+             */
+            updated_at: string;
+            /**
+             * Vat Included
+             * @default false
+             */
+            vat_included: boolean;
+            /** Vat Name */
+            vat_name?: string | null;
+            /** Vat Percentage */
+            vat_percentage?: string | null;
+            /**
+             * Workspace Id
+             * Format: uuid
+             */
+            workspace_id: string;
+        };
+        /** ProviderOut */
+        ProviderOut: {
+            /** Capabilities */
+            capabilities: string[];
+            /** Config Schema */
+            config_schema: {
+                [key: string]: unknown;
+            };
+            /** Description */
+            description: string;
+            /** Docs Url */
+            docs_url: string | null;
+            /** Key */
+            key: string;
+            /** Scope */
+            scope: string;
+            /** Secret Fields */
+            secret_fields: string[];
+            /** Title */
+            title: string;
         };
         /**
          * RiskLevel
@@ -1878,6 +2382,192 @@ export interface operations {
             };
         };
     };
+    list_connections_api_v1_integrations_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ConnectionOut"][];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    create_connection_api_v1_integrations_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ConnectionIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ConnectionOut"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    list_providers_api_v1_integrations_providers_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProviderOut"][];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    delete_connection_api_v1_integrations__connection_id__delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                connection_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    update_connection_api_v1_integrations__connection_id__patch: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                connection_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ConnectionUpdateIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ConnectionOut"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    check_connection_api_v1_integrations__connection_id__check_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                connection_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ConnectionOut"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
     list_jobs_api_v1_jobs_get: {
         parameters: {
             query?: {
@@ -2594,6 +3284,241 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ExecutionOut"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    list_profiles_api_v1_workspaces__workspace_id__invoice_profiles_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                workspace_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProfileOut"][];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    create_profile_api_v1_workspaces__workspace_id__invoice_profiles_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                workspace_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ProfileIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProfileOut"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    update_profile_api_v1_workspaces__workspace_id__invoice_profiles__profile_id__put: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                profile_id: string;
+                workspace_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ProfileIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProfileOut"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    delete_profile_api_v1_workspaces__workspace_id__invoice_profiles__profile_id__delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                profile_id: string;
+                workspace_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    preview_api_v1_workspaces__workspace_id__invoice_profiles__profile_id__preview_get: {
+        parameters: {
+            query?: {
+                period?: string | null;
+            };
+            header?: never;
+            path: {
+                profile_id: string;
+                workspace_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        [key: string]: unknown;
+                    };
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    workflow_template_api_v1_workspaces__workspace_id__invoice_profiles__profile_id__workflow_template_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                profile_id: string;
+                workspace_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        [key: string]: unknown;
+                    };
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    list_invoices_api_v1_workspaces__workspace_id__invoices_get: {
+        parameters: {
+            query?: {
+                limit?: number;
+            };
+            header?: never;
+            path: {
+                workspace_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["InvoiceOut"][];
                 };
             };
             /** @description Client error */

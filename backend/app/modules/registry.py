@@ -8,8 +8,11 @@ from app.modules.audit.module import module as audit
 from app.modules.automation.module import module as automation
 from app.modules.events.module import module as events
 from app.modules.identity.module import module as identity
+from app.modules.integrations.module import module as integrations
+from app.modules.invoicing.module import module as invoicing
 from app.modules.jobs.module import module as jobs
 from app.modules.notifications.module import module as notifications
+from app.modules.oblio.module import module as oblio
 from app.modules.system.module import module as system
 from app.modules.workspaces.module import module as workspaces
 
@@ -23,6 +26,9 @@ MODULES: tuple[Module, ...] = (
     notifications,
     approvals,
     automation,
+    integrations,
+    oblio,
+    invoicing,
 )
 
 
@@ -36,6 +42,8 @@ def import_all_models() -> None:
     import app.modules.automation.models
     import app.modules.events.models
     import app.modules.identity.models
+    import app.modules.integrations.models
+    import app.modules.invoicing.models
     import app.modules.jobs.models
     import app.modules.notifications.models
     import app.modules.workspaces.models  # noqa: F401

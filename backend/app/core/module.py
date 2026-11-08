@@ -8,6 +8,7 @@ from dataclasses import dataclass, field
 from fastapi import APIRouter
 
 from app.core.actions import ActionDefinition, ActionRegistry
+from app.core.integrations import IntegrationProvider
 from app.core.tasks import JobHandler, PeriodicTask
 
 
@@ -34,6 +35,7 @@ class Module:
     event_subscriptions: Mapping[str, Sequence[str]] = field(default_factory=dict)
     periodic_tasks: Sequence[PeriodicTask] = field(default_factory=tuple)
     actions: Sequence[ActionDefinition] = field(default_factory=tuple)
+    integrations: Sequence[IntegrationProvider] = field(default_factory=tuple)
 
 
 def build_action_registry(modules: Sequence[Module]) -> ActionRegistry:

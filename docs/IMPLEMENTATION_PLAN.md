@@ -12,7 +12,7 @@ A task is `COMPLETED` only after it is implemented **and** verified (tests/check
 | 0 | Architecture, ADRs, module boundaries, schema proposal, threat model, backlog | COMPLETED |
 | 1 | Backend/frontend foundation, database, authentication, Docker, CI, basic dashboard | IN PROGRESS (all verified locally; first GitHub Actions run pending) |
 | 2 | Automation engine, persistent jobs, scheduler, events/outbox, approvals, notifications, audit | COMPLETED |
-| 3 | Discord bot, Oblio monthly invoicing workflow | TODO |
+| 3 | Discord bot, Oblio monthly invoicing workflow | IN PROGRESS |
 | 4 | Google Calendar, Gmail, Drive, documents, basic expense processing | TODO |
 | 5 | Bank statement import, reconciliation, shopping & price tracking | TODO |
 | 6 | Freelance opportunity discovery, optional AI assistance | TODO |
@@ -115,6 +115,26 @@ with approvals and notifications, and the UI to observe and operate them.
 | P2-8 | UI: Approval Inbox, Executions & Logs, notifications, audit log | COMPLETED |
 | P2-9 | UI: Automation Network (React Flow) + Workflow Builder | COMPLETED |
 | P2-10 | Phase 2 E2E and critical-scenario tests | SKIPPED (user requested implementation only, no new tests) |
+
+## Phase 3 — Integrations, Oblio, Discord
+
+### Scope
+
+Provider-adapter framework with encrypted credentials; Oblio invoicing
+(real adapter per official API docs + mock); recurring monthly invoice
+workflow with mandatory approval and duplicate prevention; private Discord
+bot (signed interactions, allowlists, approvals, notifications).
+
+### Tasks
+
+| ID | Task | Status |
+|---|---|---|
+| P3-1 | `integrations` module: provider registry, encrypted credentials, health checks, error normalization | COMPLETED |
+| P3-2 | Oblio adapter (REST, token cache, rate-limit aware) + mock adapter | COMPLETED |
+| P3-3 | `invoicing` module: invoice profiles, invoice records, monthly invoice actions + workflow template | COMPLETED |
+| P3-4 | `discord` module: signed interactions endpoint, allowlists, /status, approve/reject buttons, channel adapter | TODO |
+| P3-5 | UI: Integrations page, Business & Accounting page | TODO |
+
 
 
 ---
