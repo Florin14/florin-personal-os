@@ -42,3 +42,24 @@ export function statusLabel(status: string): string {
   const text = status.replace(/_/g, ' ');
   return text.charAt(0).toUpperCase() + text.slice(1);
 }
+
+/** Exact sum of decimal strings (money) using integer cents — never floating point. */
+export function sumMoney(values: string[]): string {
+  let cents = 0n;
+  for (const value of values) {
+    const negative = value.trim().startsWith('-');
+    const [whole = '0', fraction = ''] = value.trim().replace('-', '').split('.');
+    const amount = BigInt(whole || '0') * 100n + BigInt((fraction + '00').slice(0, 2));
+    cents += negative ? -amount : amount;
+  }
+  const sign = cents < 0n ? '-' : '';
+  const abs = cents < 0n ? -cents : cents;
+  return `${sign}${(abs / 100n).toString()}.${(abs % 100n).toString().padStart(2, '0')}`;
+}
+
+/** "12 345,60 RON" — formats a decimal string without converting to float first. */
+export function formatMoney(amount: string, currency: string): string {
+  const [whole = '0', fraction = '00'] = amount.split('.');
+  const grouped = whole.replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+  return `${grouped},${fraction.padEnd(2, '0').slice(0, 2)} ${currency}`;
+}

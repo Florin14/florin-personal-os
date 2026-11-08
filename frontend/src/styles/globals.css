@@ -1,0 +1,153 @@
+@import 'tailwindcss';
+
+/* ------------------------------------------------------------------------
+ * Personal OS design tokens — "neural command center".
+ * Deep navy surfaces, electric blue / cyan / violet signal colors.
+ * Every component uses these semantic tokens, never raw hex values.
+ * --------------------------------------------------------------------- */
+@theme {
+  --font-sans: 'Inter Variable', 'Inter', ui-sans-serif, system-ui, sans-serif;
+  --font-display: 'Space Grotesk Variable', 'Space Grotesk', 'Inter Variable', ui-sans-serif, sans-serif;
+  --font-mono: 'JetBrains Mono Variable', 'JetBrains Mono', ui-monospace, monospace;
+
+  --color-void: #04060c;
+  --color-base: #070b16;
+  --color-surface: #0b1120;
+  --color-surface-2: #10182c;
+  --color-surface-3: #16203a;
+  --color-line: rgb(120 150 255 / 0.12);
+  --color-line-strong: rgb(120 150 255 / 0.24);
+
+  --color-ink: #e8edff;
+  --color-ink-muted: #9aa5c7;
+  --color-ink-dim: #6b7698;
+
+  --color-electric: #4f7dff;
+  --color-electric-soft: #7fa2ff;
+  --color-cyan: #2fd6f0;
+  --color-violet: #9b7bff;
+  --color-success: #3ee0a1;
+  --color-warning: #ffc35a;
+  --color-danger: #ff6b81;
+
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+
+  --shadow-glow: 0 0 0 1px rgb(79 125 255 / 0.35), 0 0 24px -4px rgb(79 125 255 / 0.55);
+  --shadow-glow-cyan: 0 0 0 1px rgb(47 214 240 / 0.35), 0 0 24px -4px rgb(47 214 240 / 0.5);
+  --shadow-panel: 0 1px 0 0 rgb(255 255 255 / 0.03) inset, 0 20px 40px -24px rgb(0 0 0 / 0.8);
+
+  --animate-pulse-soft: pulse-soft 2.4s ease-in-out infinite;
+  --animate-flow: flow 1.6s linear infinite;
+}
+
+@keyframes pulse-soft {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.45;
+  }
+}
+
+@keyframes flow {
+  to {
+    stroke-dashoffset: -20;
+  }
+}
+
+@layer base {
+  :root {
+    color-scheme: dark;
+  }
+  html,
+  body,
+  #root {
+    min-height: 100%;
+  }
+  body {
+    @apply bg-void font-sans text-ink antialiased;
+    background-image:
+      radial-gradient(1200px 700px at 15% -10%, rgb(79 125 255 / 0.14), transparent 60%),
+      radial-gradient(900px 600px at 110% 10%, rgb(155 123 255 / 0.1), transparent 55%),
+      radial-gradient(800px 500px at 50% 120%, rgb(47 214 240 / 0.07), transparent 60%);
+    background-attachment: fixed;
+  }
+  ::selection {
+    background: rgb(79 125 255 / 0.35);
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-cyan);
+    outline-offset: 2px;
+  }
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: rgb(120 150 255 / 0.25) transparent;
+  }
+}
+
+@layer components {
+  /* Translucent panel used for every surface. Restrained blur keeps it cheap. */
+  .glass {
+    background: linear-gradient(180deg, rgb(16 24 44 / 0.78), rgb(11 17 32 / 0.72));
+    border: 1px solid var(--color-line);
+    box-shadow: var(--shadow-panel);
+    backdrop-filter: blur(14px);
+  }
+  .glass-strong {
+    background: linear-gradient(180deg, rgb(22 32 58 / 0.92), rgb(11 17 32 / 0.92));
+    border: 1px solid var(--color-line-strong);
+    backdrop-filter: blur(18px);
+  }
+  /* Dotted grid for canvases. */
+  .neural-grid {
+    background-image: radial-gradient(rgb(120 150 255 / 0.16) 1px, transparent 1px);
+    background-size: 22px 22px;
+  }
+  .text-gradient {
+    background: linear-gradient(90deg, var(--color-electric-soft), var(--color-cyan) 60%, var(--color-violet));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .label-caps {
+    @apply font-mono text-[10.5px] tracking-[0.18em] text-ink-dim uppercase;
+  }
+}
+
+/* Users who prefer reduced motion get a static interface. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+
+/* React Flow theming (graph pages). */
+.react-flow {
+  --xy-background-color: transparent;
+  --xy-edge-stroke: rgb(127 162 255 / 0.45);
+  --xy-edge-stroke-selected: var(--color-cyan);
+  --xy-controls-button-background-color: var(--color-surface-2);
+  --xy-controls-button-background-color-hover: var(--color-surface-3);
+  --xy-controls-button-color: var(--color-ink);
+  --xy-controls-button-border-color: var(--color-line);
+  --xy-minimap-background-color: var(--color-surface);
+  --xy-attribution-background-color: transparent;
+}
+.react-flow__attribution a {
+  color: var(--color-ink-dim);
+}
+.react-flow__edge-textbg {
+  fill: var(--color-base);
+}
+.react-flow__edge-text {
+  fill: var(--color-ink-muted);
+  font-family: var(--font-mono);
+  font-size: 10px;
+}

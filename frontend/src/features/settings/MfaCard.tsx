@@ -1,32 +1,33 @@
-import KeyOutlined from '@mui/icons-material/KeyOutlined';
-import { Alert, Button, Stack, Typography } from '@mui/material';
-import { Link as RouterLink } from 'react-router';
+import { KeyRound } from 'lucide-react';
+import { Link } from 'react-router';
 
 import { useAuthState } from '@/api/auth';
-import { DashboardCard } from '@/features/dashboard/DashboardCard';
+import { Alert } from '@/components/ui/alert';
+import { Button } from '@/components/ui/button';
+import { Panel } from '@/components/ui/surface';
 
 export function MfaCard() {
   const { data } = useAuthState();
   const enabled = data?.user.mfa_enabled ?? false;
   return (
-    <DashboardCard title="Two-factor authentication" icon={<KeyOutlined color="primary" />}>
-      <Stack spacing={2}>
+    <Panel title="Two-factor authentication" icon={<KeyRound />}>
+      <div className="space-y-3">
         {enabled ? (
-          <Alert severity="success">An authenticator app (TOTP) protects your account.</Alert>
+          <Alert tone="success">An authenticator app (TOTP) protects your account.</Alert>
         ) : (
-          <Alert severity="warning">Two-factor authentication is not enabled.</Alert>
+          <Alert tone="warning">Two-factor authentication is not enabled.</Alert>
         )}
-        <Typography variant="body2" color="text.secondary">
-          Lost your device? An administrator can reset MFA on the server with{' '}
-          <code>python -m app.cli reset-mfa --email &lt;email&gt;</code>. Passkeys and recovery
-          codes are planned.
-        </Typography>
+        <p className="text-sm text-ink-muted">
+          Lost your device? Reset MFA on the server with{' '}
+          <code className="font-mono text-xs text-cyan">python -m app.cli reset-mfa --email &lt;email&gt;</code>.
+          Passkeys and recovery codes are planned.
+        </p>
         {!enabled && (
-          <Button component={RouterLink} to="/setup/mfa" variant="contained">
-            Enable two-factor authentication
+          <Button asChild variant="primary">
+            <Link to="/setup/mfa">Enable two-factor authentication</Link>
           </Button>
         )}
-      </Stack>
-    </DashboardCard>
+      </div>
+    </Panel>
   );
 }

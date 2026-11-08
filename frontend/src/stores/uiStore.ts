@@ -1,28 +1,30 @@
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 
-export type ThemePreference = 'dark' | 'light' | 'system';
-
 interface UiState {
-  themePreference: ThemePreference;
+  sidebarCollapsed: boolean;
   mobileNavOpen: boolean;
-  setThemePreference: (preference: ThemePreference) => void;
+  commandOpen: boolean;
+  setSidebarCollapsed: (collapsed: boolean) => void;
   setMobileNavOpen: (open: boolean) => void;
+  setCommandOpen: (open: boolean) => void;
 }
 
-/** Shared UI preferences. Only the theme preference is persisted. */
+/** Shared UI preferences. Only the sidebar state is persisted. */
 export const useUiStore = create<UiState>()(
   persist(
     (set) => ({
-      themePreference: 'dark',
+      sidebarCollapsed: false,
       mobileNavOpen: false,
-      setThemePreference: (themePreference) => set({ themePreference }),
+      commandOpen: false,
+      setSidebarCollapsed: (sidebarCollapsed) => set({ sidebarCollapsed }),
       setMobileNavOpen: (mobileNavOpen) => set({ mobileNavOpen }),
+      setCommandOpen: (commandOpen) => set({ commandOpen }),
     }),
     {
       name: 'pos-ui',
       storage: createJSONStorage(() => localStorage),
-      partialize: (state) => ({ themePreference: state.themePreference }),
+      partialize: (state) => ({ sidebarCollapsed: state.sidebarCollapsed }),
     },
   ),
 );

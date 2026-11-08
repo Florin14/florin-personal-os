@@ -1,29 +1,24 @@
-import { Card, CardContent, CardHeader } from '@mui/material';
 import type { ReactNode } from 'react';
 
-/** Consistent card frame for dashboard widgets. */
+import { Panel } from '@/components/ui/surface';
+
+/** Titled glass panel used for dashboard and settings widgets. */
 export function DashboardCard({
   title,
   icon,
   action,
   children,
+  className,
 }: {
   title: string;
   icon?: ReactNode;
   action?: ReactNode;
   children: ReactNode;
+  className?: string;
 }) {
-  const headingId = `card-${title.toLowerCase().replace(/\W+/g, '-')}`;
   return (
-    <Card component="section" aria-labelledby={headingId} sx={{ height: '100%' }}>
-      <CardHeader
-        avatar={icon}
-        action={action}
-        title={title}
-        slotProps={{ title: { id: headingId, variant: 'h6', component: 'h2' } }}
-        sx={{ pb: 0 }}
-      />
-      <CardContent>{children}</CardContent>
-    </Card>
+    <Panel title={title} icon={icon} action={action} className={className ?? 'h-full'}>
+      {children}
+    </Panel>
   );
 }

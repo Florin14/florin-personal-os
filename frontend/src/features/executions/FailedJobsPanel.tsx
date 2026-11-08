@@ -1,98 +1,62 @@
-import {
-  Alert,
-  Button,
-  Card,
-  CardContent,
-  Grid,
-  Stack,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Typography,
-} from '@mui/material';
-
 import { errorMessage } from '@/api/client';
 import { useJobs, useJobStats, useRetryJob } from '@/api/automation';
 import { relativeTime } from '@/components/data/format';
 import { EmptyState, ErrorState, LoadingState } from '@/components/feedback/StateViews';
+import { Alert } from '@/components/ui/alert';
+import { Button } from '@/components/ui/button';
+import { Metric, Panel, Table, Td, Th, Tr } from '@/components/ui/surface';
 
 /** Administrators can inspect and retry dead-lettered background jobs. */
 export function FailedJobsPanel() {
   const stats = useJobStats(true);
   const jobs = useJobs('failed', true);
   const retry = useRetryJob();
-
   return (
-    <Stack spacing={2.5}>
-      <Grid container spacing={2}>
+    <div className="space-y-4">
+      <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
         {(['queued', 'running', 'succeeded', 'failed'] as const).map((key) => (
-          <Grid key={key} size={{ xs: 6, md: 3 }}>
-            <Card>
-              <CardContent>
-                <Typography variant="overline" color="text.secondary">
-                  {key}
-                </Typography>
-                <Typography variant="h5" component="p">
-                  {stats.data ? stats.data[key] : '—'}
-                </Typography>
-              </CardContent>
-            </Card>
-          </Grid>
+          <Metric key={key} label={key} value={stats.data ? stats.data[key] : '—'} tone={key === 'failed' && (stats.data?.failed ?? 0) > 0 ? 'danger' : 'neutral'} />
         ))}
-      </Grid>
-      {retry.isError && <Alert severity="error">{errorMessage(retry.error)}</Alert>}
-      {jobs.isPending ? (
-        <LoadingState />
-      ) : jobs.isError ? (
-        <ErrorState error={jobs.error} onRetry={() => void jobs.refetch()} />
-      ) : jobs.data.length === 0 ? (
-        <EmptyState title="No failed jobs" description="Background work is healthy." />
-      ) : (
-        <Card>
-          <TableContainer>
-            <Table size="small" aria-label="Failed jobs">
-              <TableHead>
-                <TableRow>
-                  <TableCell>Kind</TableCell>
-                  <TableCell>Failure</TableCell>
-                  <TableCell>Error</TableCell>
-                  <TableCell>Attempts</TableCell>
-                  <TableCell>Updated</TableCell>
-                  <TableCell />
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {jobs.data.map((job) => (
-                  <TableRow key={job.id}>
-                    <TableCell sx={{ fontFamily: 'monospace' }}>{job.kind}</TableCell>
-                    <TableCell>{job.failure_class ?? '—'}</TableCell>
-                    <TableCell sx={{ maxWidth: 360, wordBreak: 'break-word' }}>
-                      {job.last_error ?? '—'}
-                    </TableCell>
-                    <TableCell>
-                      {job.attempts}/{job.max_attempts}
-                    </TableCell>
-                    <TableCell>{relativeTime(job.updated_at)}</TableCell>
-                    <TableCell>
-                      <Button
-                        size="small"
-                        onClick={() => retry.mutate(job.id)}
-                        loading={retry.isPending && retry.variables === job.id}
-                        aria-label={`Retry job ${job.kind}`}
-                      >
-                        Retry
-                      </Button>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
-        </Card>
-      )}
-    </Stack>
+      </div>
+      {retry.isError && <Alert tone="danger">{errorMessage(retry.error)}</Alert>}
+      <Panel title="Failed jobs">
+        {jobs.isPending ? (
+          <LoadingState compact />
+        ) : jobs.isError ? (
+          <ErrorState compact error={jobs.error} onRetry={() => void jobs.refetch()} />
+        ) : jobs.data.length === 0 ? (
+          <EmptyState compact title="No failed jobs" description="Background work is healthy." />
+        ) : (
+          <Table aria-label="Failed jobs">
+            <thead>
+              <tr>
+                <Th>Kind</Th>
+                <Th>Failure</Th>
+                <Th>Error</Th>
+                <Th>Attempts</Th>
+                <Th>Updated</Th>
+                <Th />
+              </tr>
+            </thead>
+            <tbody>
+              {jobs.data.map((job) => (
+                <Tr key={job.id}>
+                  <Td className="font-mono text-xs">{job.kind}</Td>
+                  <Td>{job.failure_class ?? '—'}</Td>
+                  <Td className="max-w-sm break-words text-ink-muted">{job.last_error ?? '—'}</Td>
+                  <Td className="font-mono">{job.attempts}/{job.max_attempts}</Td>
+                  <Td className="text-ink-dim">{relativeTime(job.updated_at)}</Td>
+                  <Td>
+                    <Button size="sm" onClick={() => retry.mutate(job.id)} loading={retry.isPending && retry.variables === job.id} aria-label={`Retry job ${job.kind}`}>
+                      Retry
+                    </Button>
+                  </Td>
+                </Tr>
+              ))}
+            </tbody>
+          </Table>
+        )}
+      </Panel>
+    </div>
   );
 }

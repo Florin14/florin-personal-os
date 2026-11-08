@@ -1,19 +1,13 @@
-import PanToolOutlined from '@mui/icons-material/PanToolOutlined';
-import {
-  Alert,
-  Button,
-  Chip,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
-  TextField,
-} from '@mui/material';
+import { OctagonX } from 'lucide-react';
 import { useState } from 'react';
 
 import { errorMessage } from '@/api/client';
 import { useControls, useSetEmergencyStop } from '@/api/automation';
+import { Alert } from '@/components/ui/alert';
+import { Button } from '@/components/ui/button';
+import { Field, Input } from '@/components/ui/form';
+import { Modal } from '@/components/ui/overlay';
+import { Badge } from '@/components/ui/surface';
 
 /** Shows the emergency stop state; administrators can toggle it (with confirmation). */
 export function EmergencyStopControl({ canChange }: { canChange: boolean }) {
@@ -23,11 +17,7 @@ export function EmergencyStopControl({ canChange }: { canChange: boolean }) {
   const [reason, setReason] = useState('');
   const active = controls.data?.emergency_stop ?? false;
 
-  if (!canChange) {
-    return active ? (
-      <Chip color="error" icon={<PanToolOutlined />} label="Emergency stop active" />
-    ) : null;
-  }
+  if (!canChange) return active ? <Badge tone="danger" dot>Emergency stop active</Badge> : null;
 
   const confirm = () => {
     setStop.mutate(
@@ -43,45 +33,34 @@ export function EmergencyStopControl({ canChange }: { canChange: boolean }) {
 
   return (
     <>
-      <Button
-        color={active ? 'success' : 'error'}
-        variant={active ? 'contained' : 'outlined'}
-        startIcon={<PanToolOutlined />}
-        onClick={() => setOpen(true)}
-        disabled={controls.isPending}
-      >
-        {active ? 'Release emergency stop' : 'Emergency stop'}
+      <Button variant={active ? 'success' : 'danger'} onClick={() => setOpen(true)} disabled={controls.isPending}>
+        <OctagonX /> {active ? 'Release emergency stop' : 'Emergency stop'}
       </Button>
-      <Dialog open={open} onClose={() => setOpen(false)} aria-labelledby="estop-title">
-        <DialogTitle id="estop-title">
-          {active ? 'Release the emergency stop?' : 'Stop all side-effecting automations?'}
-        </DialogTitle>
-        <DialogContent>
-          <DialogContentText sx={{ mb: 2 }}>
-            {active
-              ? 'Automations will be able to perform external actions again.'
-              : 'Steps that change external systems (invoices, messages, devices) will fail until released. Read-only steps keep working.'}
-          </DialogContentText>
-          {setStop.isError && <Alert severity="error">{errorMessage(setStop.error)}</Alert>}
-          <TextField
-            label="Reason"
-            value={reason}
-            onChange={(e) => setReason(e.target.value)}
-            slotProps={{ htmlInput: { maxLength: 500 } }}
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setOpen(false)}>Cancel</Button>
-          <Button
-            color={active ? 'success' : 'error'}
-            variant="contained"
-            onClick={confirm}
-            loading={setStop.isPending}
-          >
-            {active ? 'Release' : 'Activate stop'}
-          </Button>
-        </DialogActions>
-      </Dialog>
+      <Modal
+        open={open}
+        onOpenChange={setOpen}
+        title={active ? 'Release the emergency stop?' : 'Stop all side-effecting automations?'}
+        description={
+          active
+            ? 'Automations will be able to perform external actions again.'
+            : 'Steps that change external systems (invoices, messages, devices) fail until released. Read-only steps keep working.'
+        }
+        footer={
+          <>
+            <Button variant="ghost" onClick={() => setOpen(false)}>Cancel</Button>
+            <Button variant={active ? 'success' : 'danger'} onClick={confirm} loading={setStop.isPending}>
+              {active ? 'Release' : 'Activate stop'}
+            </Button>
+          </>
+        }
+      >
+        <div className="space-y-3">
+          {setStop.isError && <Alert tone="danger">{errorMessage(setStop.error)}</Alert>}
+          <Field label="Reason">
+            {(p) => <Input {...p} value={reason} onChange={(e) => setReason(e.target.value)} maxLength={500} />}
+          </Field>
+        </div>
+      </Modal>
     </>
   );
 }

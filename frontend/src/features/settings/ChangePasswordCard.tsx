@@ -1,10 +1,12 @@
-import PasswordOutlined from '@mui/icons-material/PasswordOutlined';
-import { Alert, Button, Stack, TextField } from '@mui/material';
+import { LockKeyhole } from 'lucide-react';
 import { useState, type SubmitEvent } from 'react';
 
 import { useChangePassword } from '@/api/auth';
 import { errorMessage } from '@/api/client';
-import { DashboardCard } from '@/features/dashboard/DashboardCard';
+import { Alert } from '@/components/ui/alert';
+import { Button } from '@/components/ui/button';
+import { Field, Input } from '@/components/ui/form';
+import { Panel } from '@/components/ui/surface';
 
 export const MIN_PASSWORD_LENGTH = 12;
 
@@ -33,44 +35,34 @@ export function ChangePasswordCard() {
   };
 
   return (
-    <DashboardCard title="Change password" icon={<PasswordOutlined color="primary" />}>
-      <Stack component="form" spacing={2} onSubmit={handleSubmit}>
-        {change.isSuccess && (
-          <Alert severity="success">Password changed. Other sessions were signed out.</Alert>
-        )}
-        {change.isError && <Alert severity="error">{errorMessage(change.error)}</Alert>}
-        <TextField
-          label="Current password"
-          type="password"
-          autoComplete="current-password"
-          value={current}
-          onChange={(e) => setCurrent(e.target.value)}
-          required
-        />
-        <TextField
+    <Panel title="Change password" icon={<LockKeyhole />}>
+      <form className="space-y-3" onSubmit={handleSubmit}>
+        {change.isSuccess && <Alert tone="success">Password changed. Other sessions were signed out.</Alert>}
+        {change.isError && <Alert tone="danger">{errorMessage(change.error)}</Alert>}
+        <Field label="Current password" required>
+          {(p) => (
+            <Input {...p} type="password" autoComplete="current-password" value={current} onChange={(e) => setCurrent(e.target.value)} required />
+          )}
+        </Field>
+        <Field
           label="New password"
-          type="password"
-          autoComplete="new-password"
-          value={next}
-          onChange={(e) => setNext(e.target.value)}
-          error={tooShort}
-          helperText={`At least ${MIN_PASSWORD_LENGTH} characters. A passphrase works well.`}
           required
-        />
-        <TextField
-          label="Confirm new password"
-          type="password"
-          autoComplete="new-password"
-          value={confirm}
-          onChange={(e) => setConfirm(e.target.value)}
-          error={mismatch}
-          helperText={mismatch ? 'Passwords do not match.' : ' '}
-          required
-        />
-        <Button type="submit" variant="contained" disabled={!canSubmit} loading={change.isPending}>
+          help={`At least ${String(MIN_PASSWORD_LENGTH)} characters. A passphrase works well.`}
+          error={tooShort ? `Use at least ${String(MIN_PASSWORD_LENGTH)} characters.` : null}
+        >
+          {(p) => (
+            <Input {...p} type="password" autoComplete="new-password" value={next} onChange={(e) => setNext(e.target.value)} required />
+          )}
+        </Field>
+        <Field label="Confirm new password" required error={mismatch ? 'Passwords do not match.' : null}>
+          {(p) => (
+            <Input {...p} type="password" autoComplete="new-password" value={confirm} onChange={(e) => setConfirm(e.target.value)} required />
+          )}
+        </Field>
+        <Button type="submit" variant="primary" disabled={!canSubmit} loading={change.isPending}>
           Update password
         </Button>
-      </Stack>
-    </DashboardCard>
+      </form>
+    </Panel>
   );
 }

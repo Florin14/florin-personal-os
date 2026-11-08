@@ -1,28 +1,26 @@
-import { Box, Stack, Typography } from '@mui/material';
 import type { ReactNode } from 'react';
 
 export function PageHeader({
   title,
   subtitle,
   actions,
+  eyebrow,
 }: {
   title: string;
   subtitle?: string;
   actions?: ReactNode;
+  eyebrow?: string;
 }) {
   return (
-    <Stack
-      direction={{ xs: 'column', sm: 'row' }}
-      spacing={2}
-      sx={{ justifyContent: 'space-between', alignItems: { xs: 'flex-start', sm: 'center' } }}
-    >
-      <Box>
-        <Typography variant="h4" component="h1">
+    <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+      <div>
+        {eyebrow && <p className="label-caps mb-1.5">{eyebrow}</p>}
+        <h1 className="font-display text-2xl font-semibold tracking-tight sm:text-[28px]">
           {title}
-        </Typography>
-        {subtitle && <Typography color="text.secondary">{subtitle}</Typography>}
-      </Box>
-      {actions && <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>{actions}</Box>}
-    </Stack>
+        </h1>
+        {subtitle && <p className="mt-1 max-w-2xl text-sm text-ink-muted">{subtitle}</p>}
+      </div>
+      {actions && <div className="flex flex-wrap gap-2">{actions}</div>}
+    </div>
   );
 }

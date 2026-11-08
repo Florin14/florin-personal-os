@@ -1,10 +1,12 @@
-import { Alert, Button, Stack, TextField } from '@mui/material';
 import { useState, type SubmitEvent } from 'react';
 import { Navigate, useNavigate } from 'react-router';
 
 import { useAuthState, useLogin } from '@/api/auth';
 import { errorMessage } from '@/api/client';
 import { LoadingState } from '@/components/feedback/StateViews';
+import { Alert } from '@/components/ui/alert';
+import { Button } from '@/components/ui/button';
+import { Field, Input } from '@/components/ui/form';
 
 import { AuthLayout } from './AuthLayout';
 import { routeForAuthState, ROUTES } from './authRouting';
@@ -34,28 +36,42 @@ export function LoginPage() {
 
   return (
     <AuthLayout title="Sign in" subtitle="Personal OS command center">
-      <Stack component="form" spacing={2} onSubmit={handleSubmit}>
-        {login.isError && <Alert severity="error">{errorMessage(login.error)}</Alert>}
-        <TextField
-          label="Email"
-          type="email"
-          autoComplete="username"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-        />
-        <TextField
-          label="Password"
-          type="password"
-          autoComplete="current-password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-        />
-        <Button type="submit" variant="contained" size="large" loading={login.isPending}>
+      <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
+        {login.isError && <Alert tone="danger">{errorMessage(login.error)}</Alert>}
+        <Field label="Email" required>
+          {(props) => (
+            <Input
+              {...props}
+              type="email"
+              autoComplete="username"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+          )}
+        </Field>
+        <Field label="Password" required>
+          {(props) => (
+            <Input
+              {...props}
+              type="password"
+              autoComplete="current-password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+          )}
+        </Field>
+        <Button
+          type="submit"
+          variant="primary"
+          size="lg"
+          loading={login.isPending}
+          className="mt-1"
+        >
           Sign in
         </Button>
-      </Stack>
+      </form>
     </AuthLayout>
   );
 }

@@ -1,43 +1,41 @@
-import ErrorOutlineRounded from '@mui/icons-material/ErrorOutlineRounded';
-import InboxOutlined from '@mui/icons-material/InboxOutlined';
-import LockOutlined from '@mui/icons-material/LockOutlined';
-import { Box, Button, CircularProgress, Stack, Typography } from '@mui/material';
+import { AlertTriangle, Inbox, Loader2, Lock } from 'lucide-react';
 import type { ReactNode } from 'react';
 
 import { ApiError, errorMessage } from '@/api/client';
+import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/cn';
 
-interface FrameProps {
+function StateFrame({
+  icon,
+  title,
+  description,
+  action,
+  compact = false,
+}: {
   icon?: ReactNode;
   title: string;
   description?: string;
   action?: ReactNode;
   compact?: boolean;
-}
-
-function StateFrame({ icon, title, description, action, compact = false }: FrameProps) {
+}) {
   return (
-    <Stack
-      spacing={1.5}
-      sx={{
-        alignItems: 'center',
-        justifyContent: 'center',
-        py: compact ? 3 : 8,
-        px: 2,
-        textAlign: 'center',
-        color: 'text.secondary',
-      }}
-    >
-      {icon}
-      <Typography variant={compact ? 'subtitle1' : 'h6'} color="text.primary">
-        {title}
-      </Typography>
-      {description && (
-        <Typography variant="body2" sx={{ maxWidth: 420 }}>
-          {description}
-        </Typography>
+    <div
+      className={cn(
+        'flex flex-col items-center justify-center gap-2 px-4 text-center',
+        compact ? 'py-6' : 'py-14',
       )}
-      {action}
-    </Stack>
+    >
+      {icon && (
+        <div className="mb-1 flex size-10 items-center justify-center rounded-full border border-line bg-surface-2 text-ink-dim [&_svg]:size-5">
+          {icon}
+        </div>
+      )}
+      <p className={cn('font-display font-medium text-ink', compact ? 'text-sm' : 'text-base')}>
+        {title}
+      </p>
+      {description && <p className="max-w-md text-sm text-ink-muted">{description}</p>}
+      {action && <div className="mt-2">{action}</div>}
+    </div>
   );
 }
 
@@ -49,22 +47,17 @@ export function LoadingState({
   compact?: boolean;
 }) {
   return (
-    <Box
+    <div
       role="status"
       aria-live="polite"
-      sx={{
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        gap: 2,
-        py: compact ? 3 : 8,
-      }}
+      className={cn(
+        'flex items-center justify-center gap-3 text-sm text-ink-muted',
+        compact ? 'py-6' : 'py-14',
+      )}
     >
-      <CircularProgress size={compact ? 20 : 28} aria-hidden />
-      <Typography variant="body2" color="text.secondary">
-        {label}
-      </Typography>
-    </Box>
+      <Loader2 className="size-4 animate-spin text-cyan" aria-hidden />
+      {label}
+    </div>
   );
 }
 
@@ -79,21 +72,18 @@ export function ErrorState({
   onRetry?: () => void;
   compact?: boolean;
 }) {
-  if (error instanceof ApiError && error.status === 403) {
+  if (error instanceof ApiError && error.status === 403)
     return <UnauthorizedState compact={compact} />;
-  }
   return (
     <div role="alert">
       <StateFrame
         compact={compact}
-        icon={
-          <ErrorOutlineRounded color="error" fontSize={compact ? 'medium' : 'large'} aria-hidden />
-        }
+        icon={<AlertTriangle className="text-danger" />}
         title={title}
         description={errorMessage(error)}
         action={
           onRetry && (
-            <Button variant="outlined" onClick={onRetry}>
+            <Button variant="outline" size="sm" onClick={onRetry}>
               Try again
             </Button>
           )
@@ -117,7 +107,7 @@ export function EmptyState({
   return (
     <StateFrame
       compact={compact}
-      icon={<InboxOutlined fontSize={compact ? 'medium' : 'large'} aria-hidden />}
+      icon={<Inbox />}
       title={title}
       {...(description !== undefined && { description })}
       {...(action !== undefined && { action })}
@@ -129,7 +119,7 @@ export function UnauthorizedState({ compact = false }: { compact?: boolean }) {
   return (
     <StateFrame
       compact={compact}
-      icon={<LockOutlined color="warning" fontSize={compact ? 'medium' : 'large'} aria-hidden />}
+      icon={<Lock className="text-warning" />}
       title="Access restricted"
       description="Your account does not have permission to view this content."
     />

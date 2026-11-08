@@ -1,56 +1,43 @@
-import BusinessRounded from '@mui/icons-material/BusinessRounded';
-import PersonRounded from '@mui/icons-material/PersonRounded';
-import {
-  FormControl,
-  InputLabel,
-  ListItemIcon,
-  MenuItem,
-  Select,
-  Skeleton,
-  Typography,
-} from '@mui/material';
+import { Building2, User } from 'lucide-react';
 
 import { useWorkspaces } from '@/api/workspaces';
+import { Select } from '@/components/ui/form';
+import { Skeleton } from '@/components/ui/surface';
 import { useCurrentWorkspace } from '@/hooks/useCurrentWorkspace';
 import { useWorkspaceStore } from '@/stores/workspaceStore';
 
-/** Switches between personal and business workspaces. */
-export function WorkspaceSelector() {
+/** Switches between the personal and business (e.g. FLOZITECH SRL) workspaces. */
+export function WorkspaceSelector({ compact = false }: { compact?: boolean }) {
   const { data, isPending, isError } = useWorkspaces();
   const current = useCurrentWorkspace();
   const setCurrent = useWorkspaceStore((s) => s.setCurrentWorkspaceId);
 
-  if (isPending) return <Skeleton variant="rounded" height={40} />;
-  if (isError || !data.length || !current) {
+  if (isPending) return <Skeleton className="h-9 w-full" />;
+  if (isError || !current || !data.length) {
     return (
-      <Typography variant="body2" color="text.secondary">
-        {isError ? 'Workspaces unavailable' : 'No workspace yet'}
-      </Typography>
+      <p className="text-xs text-ink-dim">{isError ? 'Workspaces unavailable' : 'No workspace'}</p>
     );
   }
-
+  const Icon = current.kind === 'business' ? Building2 : User;
   return (
-    <FormControl size="small" fullWidth>
-      <InputLabel id="workspace-select-label">Workspace</InputLabel>
+    <div className="relative">
+      <Icon
+        className="pointer-events-none absolute top-1/2 left-2.5 size-4 -translate-y-1/2 text-cyan"
+        aria-hidden
+      />
       <Select
-        labelId="workspace-select-label"
-        label="Workspace"
+        aria-label="Workspace"
         value={current.id}
         onChange={(e) => setCurrent(e.target.value)}
+        className={compact ? 'h-9 pl-8 text-xs' : 'h-9 pl-8'}
       >
         {data.map((w) => (
-          <MenuItem key={w.id} value={w.id}>
-            <ListItemIcon sx={{ minWidth: 28, verticalAlign: 'middle' }}>
-              {w.kind === 'business' ? (
-                <BusinessRounded fontSize="small" aria-label="Business" />
-              ) : (
-                <PersonRounded fontSize="small" aria-label="Personal" />
-              )}
-            </ListItemIcon>
+          <option key={w.id} value={w.id}>
             {w.name}
-          </MenuItem>
+            {w.kind === 'business' ? ' · Business' : ''}
+          </option>
         ))}
       </Select>
-    </FormControl>
+    </div>
   );
 }

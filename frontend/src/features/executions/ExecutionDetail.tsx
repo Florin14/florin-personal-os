@@ -1,23 +1,6 @@
-import ArrowBackRounded from '@mui/icons-material/ArrowBackRounded';
-import CheckCircleRounded from '@mui/icons-material/CheckCircleRounded';
-import ErrorRounded from '@mui/icons-material/ErrorRounded';
-import HourglassTopRounded from '@mui/icons-material/HourglassTopRounded';
-import RemoveCircleOutlineRounded from '@mui/icons-material/RemoveCircleOutlineRounded';
-import {
-  Accordion,
-  AccordionDetails,
-  AccordionSummary,
-  Alert,
-  Box,
-  Button,
-  Card,
-  CardContent,
-  Chip,
-  Grid,
-  Stack,
-  Typography,
-} from '@mui/material';
-import { Link as RouterLink } from 'react-router';
+import { ArrowLeft, CheckCircle2, ChevronDown, CircleDashed, Hourglass, XCircle } from 'lucide-react';
+import { useState } from 'react';
+import { Link } from 'react-router';
 
 import { errorMessage } from '@/api/client';
 import { isActive, useCancelExecution, useExecution } from '@/api/automation';
@@ -26,50 +9,59 @@ import { dateTime, duration, statusLabel } from '@/components/data/format';
 import { KeyValueView } from '@/components/data/KeyValueView';
 import { StatusChip } from '@/components/data/StatusChip';
 import { ErrorState, LoadingState } from '@/components/feedback/StateViews';
+import { Alert } from '@/components/ui/alert';
+import { Button } from '@/components/ui/button';
+import { Badge, Panel } from '@/components/ui/surface';
 import { useCurrentWorkspace } from '@/hooks/useCurrentWorkspace';
+import { cn } from '@/lib/cn';
 
 function StepIcon({ status }: { status: string }) {
-  if (status === 'succeeded') return <CheckCircleRounded color="success" aria-hidden />;
-  if (status === 'failed') return <ErrorRounded color="error" aria-hidden />;
-  if (status === 'skipped') return <RemoveCircleOutlineRounded color="disabled" aria-hidden />;
-  return <HourglassTopRounded color="warning" aria-hidden />;
+  if (status === 'succeeded') return <CheckCircle2 className="size-4 text-success" aria-hidden />;
+  if (status === 'failed') return <XCircle className="size-4 text-danger" aria-hidden />;
+  if (status === 'skipped') return <CircleDashed className="size-4 text-ink-dim" aria-hidden />;
+  return <Hourglass className="size-4 text-warning" aria-hidden />;
 }
 
 function StepItem({ step }: { step: StepRun }) {
+  const [open, setOpen] = useState(step.status === 'failed');
   return (
-    <Accordion disableGutters>
-      <AccordionSummary aria-controls={`step-${step.step_key}`}>
-        <Stack direction="row" spacing={1.5} sx={{ alignItems: 'center', width: '100%' }}>
-          <StepIcon status={step.status} />
-          <Typography sx={{ fontWeight: 600 }}>{step.step_key}</Typography>
-          <Chip size="small" label={step.step_type} variant="outlined" />
-          <Box sx={{ flexGrow: 1 }} />
-          <Typography variant="body2" color="text.secondary">
-            {statusLabel(step.status)}
-            {step.attempts > 1 ? ` · ${step.attempts} attempts` : ''}
-          </Typography>
-        </Stack>
-      </AccordionSummary>
-      <AccordionDetails id={`step-${step.step_key}`}>
-        <Stack spacing={1.5}>
-          {step.error && <Alert severity="error">{step.error}</Alert>}
+    <li className="relative pl-7">
+      <span className="absolute top-3 left-2 h-full w-px bg-line" aria-hidden />
+      <span className="absolute top-2.5 left-0 rounded-full bg-base p-0.5"><StepIcon status={step.status} /></span>
+      <button
+        type="button"
+        onClick={() => setOpen(!open)}
+        aria-expanded={open}
+        aria-controls={`step-${step.step_key}`}
+        className="flex w-full items-center gap-2 rounded-md px-2 py-2 text-left hover:bg-white/[0.03]"
+      >
+        <span className="font-medium">{step.step_key}</span>
+        <Badge>{step.step_type}</Badge>
+        <span className="ml-auto text-xs text-ink-dim">
+          {statusLabel(step.status)}
+          {step.attempts > 1 ? ` · ${String(step.attempts)} attempts` : ''}
+        </span>
+        <ChevronDown className={cn('size-4 text-ink-dim transition-transform', open && 'rotate-180')} aria-hidden />
+      </button>
+      {open && (
+        <div id={`step-${step.step_key}`} className="mb-3 space-y-3 rounded-md border border-line bg-base/50 p-3">
+          {step.error && <Alert tone="danger">{step.error}</Alert>}
           {step.approval_id && (
-            <Button
-              component={RouterLink}
-              to={`/approvals/${step.approval_id}`}
-              size="small"
-              sx={{ alignSelf: 'flex-start' }}
-            >
-              View approval
+            <Button asChild size="sm" variant="outline">
+              <Link to={`/approvals/${step.approval_id}`}>View approval</Link>
             </Button>
           )}
-          <Typography variant="subtitle2">Input</Typography>
-          <KeyValueView data={step.input} emptyLabel="No input" label="Step input" />
-          <Typography variant="subtitle2">Output</Typography>
-          <KeyValueView data={step.output} emptyLabel="No output" label="Step output" />
-        </Stack>
-      </AccordionDetails>
-    </Accordion>
+          <div>
+            <p className="label-caps mb-1">Input</p>
+            <KeyValueView data={step.input} emptyLabel="No input" label="Step input" />
+          </div>
+          <div>
+            <p className="label-caps mb-1">Output</p>
+            <KeyValueView data={step.output} emptyLabel="No output" label="Step output" />
+          </div>
+        </div>
+      )}
+    </li>
   );
 }
 
@@ -77,94 +69,61 @@ export function ExecutionDetail({ id }: { id: string }) {
   const workspace = useCurrentWorkspace();
   const execution = useExecution(workspace?.id, id);
   const cancel = useCancelExecution(workspace?.id);
-
   if (execution.isPending) return <LoadingState />;
-  if (execution.isError) {
-    return <ErrorState error={execution.error} onRetry={() => void execution.refetch()} />;
-  }
+  if (execution.isError) return <ErrorState error={execution.error} onRetry={() => void execution.refetch()} />;
   const e = execution.data;
   const active = isActive(e.status);
-
   return (
-    <Stack spacing={3}>
-      <Button
-        component={RouterLink}
-        to="/executions"
-        startIcon={<ArrowBackRounded />}
-        sx={{ alignSelf: 'flex-start' }}
-      >
-        All executions
+    <div className="space-y-5">
+      <Button asChild variant="ghost" size="sm">
+        <Link to="/executions"><ArrowLeft /> All executions</Link>
       </Button>
-      <Stack direction="row" spacing={1.5} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
-        <Typography variant="h4" component="h1">
-          Execution
-        </Typography>
+      <div className="flex flex-wrap items-center gap-3">
+        <h1 className="font-display text-2xl font-semibold">Execution</h1>
         <StatusChip status={e.status} />
-        {e.dry_run && <Chip label="Dry run" />}
-        <Box sx={{ flexGrow: 1 }} />
+        {e.dry_run && <Badge tone="violet">dry run</Badge>}
         {active && (
-          <Button
-            color="error"
-            variant="outlined"
-            onClick={() => cancel.mutate(e.id)}
-            disabled={e.cancel_requested}
-            loading={cancel.isPending}
-          >
+          <Button className="ml-auto" variant="danger" onClick={() => cancel.mutate(e.id)} disabled={e.cancel_requested} loading={cancel.isPending}>
             {e.cancel_requested ? 'Cancelling…' : 'Cancel execution'}
           </Button>
         )}
-      </Stack>
-      {cancel.isError && <Alert severity="error">{errorMessage(cancel.error)}</Alert>}
-      {e.error && <Alert severity="error">{e.error}</Alert>}
+      </div>
+      {cancel.isError && <Alert tone="danger">{errorMessage(cancel.error)}</Alert>}
+      {e.error && <Alert tone="danger">{e.error}</Alert>}
       {e.status === 'waiting_approval' && (
-        <Alert severity="warning">
-          Waiting for an approval. Review it in the{' '}
-          <RouterLink to="/approvals">Approval Inbox</RouterLink>.
+        <Alert tone="warning">
+          Waiting for an approval. Review it in the <Link className="text-cyan underline" to="/approvals">Approval Inbox</Link>.
         </Alert>
       )}
-      <Grid container spacing={2.5}>
-        <Grid size={{ xs: 12, md: 4 }}>
-          <Card>
-            <CardContent>
-              <KeyValueView
-                label="Execution summary"
-                data={{
-                  version: e.version,
-                  trigger: `${e.trigger_type} (${e.trigger_key})`,
-                  started: dateTime(e.started_at),
-                  finished: dateTime(e.finished_at),
-                  duration: duration(e.started_at, e.finished_at),
-                  'current step': e.current_step_key,
-                }}
-              />
-            </CardContent>
-          </Card>
-          <Card sx={{ mt: 2.5 }}>
-            <CardContent>
-              <Typography variant="subtitle2" gutterBottom>
-                Trigger payload
-              </Typography>
-              <KeyValueView data={e.trigger_payload} emptyLabel="Empty" label="Trigger payload" />
-            </CardContent>
-          </Card>
-        </Grid>
-        <Grid size={{ xs: 12, md: 8 }}>
-          <Typography variant="h6" component="h2" gutterBottom>
-            Steps
-          </Typography>
+      <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,2fr)]">
+        <div className="space-y-4">
+          <Panel title="Summary">
+            <KeyValueView
+              label="Execution summary"
+              data={{
+                version: e.version,
+                trigger: `${e.trigger_type} (${e.trigger_key})`,
+                started: dateTime(e.started_at),
+                finished: dateTime(e.finished_at),
+                duration: duration(e.started_at, e.finished_at),
+                'current step': e.current_step_key,
+              }}
+            />
+          </Panel>
+          <Panel title="Trigger payload">
+            <KeyValueView data={e.trigger_payload} emptyLabel="Empty" label="Trigger payload" />
+          </Panel>
+        </div>
+        <Panel title="Steps">
           {e.steps.length === 0 ? (
-            <Typography color="text.secondary">
-              {active ? 'Starting…' : 'No steps were executed.'}
-            </Typography>
+            <p className="text-sm text-ink-dim">{active ? 'Starting…' : 'No steps were executed.'}</p>
           ) : (
-            <Box>
-              {e.steps.map((s) => (
-                <StepItem key={s.step_key} step={s} />
-              ))}
-            </Box>
+            <ol className="space-y-1">
+              {e.steps.map((s) => <StepItem key={s.step_key} step={s} />)}
+            </ol>
           )}
-        </Grid>
-      </Grid>
-    </Stack>
+        </Panel>
+      </div>
+    </div>
   );
 }

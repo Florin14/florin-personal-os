@@ -63,8 +63,25 @@ invoicing (profiles, duplicate-safe monthly invoices, SPV) · discord (signed in
 | Live Discord | No bot credentials | Signature/flow implemented per docs; untested live |
 | Google APIs (Phase 4) | No OAuth client credentials | Implement OAuth + adapters per docs, mock mode |
 
-## Next actions
+## In progress: frontend redesign (owner request 2026-11-08)
 
-1. Phase 4: Google OAuth framework (integrations), Calendar adapter + events/reminders, Gmail
-   receipt discovery, Drive archival, documents module (metadata + storage volume), basic expenses.
-2. Phase 5: bank CSV import, reconciliation, shopping/price tracking.
+Owner asked to replace MUI with Tailwind v4 + shadcn-style Radix primitives + Motion + Lucide +
+Recharts + React Flow, with a "neural command center" look (morphcanvas.com reference). Owner
+company: FLOZITECH SRL (single employee = owner = administrator).
+
+Done so far (uncommitted until migration compiles):
+- `src/styles/globals.css` design tokens; `src/lib/cn.ts`; `src/components/ui/{button,form,overlay,surface}.tsx`
+- Rewritten in Tailwind: StateViews, StatusChip, KeyValueView, PageHeader, DashboardCard (Panel),
+  navigation (lucide icons, new /ai and /health areas, /finance + /calendar implemented),
+  AppShell (collapsible sidebar, Ctrl+K CommandPalette, health, notifications, profile),
+  WorkspaceSelector, NotificationsBell, ConnectionBanner, BrandMark, providers (no MUI theme).
+
+Remaining: migrate every file still importing `@mui` (`grep -rln @mui frontend/src`), build the
+neural-network Command Center dashboard (React Flow, 9 module nodes, right context panel,
+secondary sections), redesign Workflow Builder with custom nodes, add /finance (documents +
+expenses) and /calendar routes, Google connect UI, then remove MUI deps, fix existing Vitest
+tests for the new markup, lint/typecheck/build, update docs, commit.
+
+## Next actions (after redesign)
+
+1. Phase 4 remainder verified via UI; Phase 5: bank CSV import, reconciliation, shopping/price tracking.

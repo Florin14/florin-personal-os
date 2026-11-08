@@ -1,4 +1,3 @@
-import { Alert, Box, Button, Stack, Typography } from '@mui/material';
 import QRCode from 'qrcode';
 import { useState, type SubmitEvent } from 'react';
 import { Navigate, useNavigate } from 'react-router';
@@ -7,6 +6,8 @@ import { useAuthState, useBeginTotpEnrollment, useConfirmTotpEnrollment } from '
 import { errorMessage } from '@/api/client';
 import type { TotpEnrollment } from '@/api/types';
 import { LoadingState } from '@/components/feedback/StateViews';
+import { Alert } from '@/components/ui/alert';
+import { Button } from '@/components/ui/button';
 
 import { AuthLayout } from './AuthLayout';
 import { CodeField } from './CodeField';
@@ -37,7 +38,7 @@ export function MfaEnrollPage() {
         // The QR code is rendered locally; the secret is never sent to third parties.
         QRCode.toDataURL(data.provisioning_uri, { margin: 1, width: 220 })
           .then((qrDataUrl) => setEnrollment({ ...data, qrDataUrl }))
-          .catch(() => undefined); // manual key entry remains available
+          .catch(() => undefined);
       },
     });
   };
@@ -59,51 +60,50 @@ export function MfaEnrollPage() {
       subtitle="Protect your account with an authenticator app (TOTP)."
     >
       {!enrollment ? (
-        <Stack spacing={2}>
-          {begin.isError && <Alert severity="error">{errorMessage(begin.error)}</Alert>}
-          <Typography variant="body2" color="text.secondary">
-            Two-factor authentication is required. You need an authenticator app such as Aegis,
-            2FAS, Google Authenticator or 1Password.
-          </Typography>
-          <Button variant="contained" size="large" onClick={start} loading={begin.isPending}>
+        <div className="flex flex-col gap-4">
+          {begin.isError && <Alert tone="danger">{errorMessage(begin.error)}</Alert>}
+          <p className="text-sm text-ink-muted">
+            You need an authenticator app such as Aegis, 2FAS, Google Authenticator or 1Password.
+          </p>
+          <Button variant="primary" size="lg" onClick={start} loading={begin.isPending}>
             Set up authenticator app
           </Button>
-        </Stack>
-      ) : (
-        <Stack component="form" spacing={2} onSubmit={handleSubmit}>
-          {confirm.isError && <Alert severity="error">{errorMessage(confirm.error)}</Alert>}
-          <Typography variant="body2">1. Scan this QR code with your authenticator app.</Typography>
-          {enrollment.qrDataUrl && (
-            <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-              <Box
-                component="img"
-                src={enrollment.qrDataUrl}
-                alt="QR code for authenticator app setup"
-                sx={{ width: 220, height: 220, borderRadius: 2, bgcolor: '#fff', p: 1 }}
-              />
-            </Box>
+          {voluntary && (
+            <Button variant="ghost" onClick={() => void navigate(ROUTES.home)}>
+              Not now
+            </Button>
           )}
-          <Typography variant="body2" color="text.secondary">
-            Cannot scan? Enter this key manually:
-          </Typography>
-          <Typography
+        </div>
+      ) : (
+        <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
+          {confirm.isError && <Alert tone="danger">{errorMessage(confirm.error)}</Alert>}
+          <p className="text-sm">1. Scan this QR code with your authenticator app.</p>
+          {enrollment.qrDataUrl && (
+            <img
+              src={enrollment.qrDataUrl}
+              alt="QR code for authenticator app setup"
+              className="mx-auto size-52 rounded-md bg-white p-2"
+            />
+          )}
+          <p className="text-xs text-ink-muted">Cannot scan? Enter this key manually:</p>
+          <p
             data-testid="totp-secret"
-            sx={{ fontFamily: 'monospace', wordBreak: 'break-all', textAlign: 'center' }}
+            className="text-center font-mono text-sm break-all text-cyan"
           >
             {enrollment.secret}
-          </Typography>
-          <Typography variant="body2">2. Enter the 6-digit code the app shows.</Typography>
+          </p>
+          <p className="text-sm">2. Enter the 6-digit code the app shows.</p>
           <CodeField value={code} onChange={setCode} />
           <Button
             type="submit"
-            variant="contained"
-            size="large"
+            variant="primary"
+            size="lg"
             disabled={code.length !== 6}
             loading={confirm.isPending}
           >
             Enable two-factor authentication
           </Button>
-        </Stack>
+        </form>
       )}
     </AuthLayout>
   );

@@ -1,254 +1,281 @@
-import DarkModeOutlined from '@mui/icons-material/DarkModeOutlined';
-import LightModeOutlined from '@mui/icons-material/LightModeOutlined';
-import LogoutRounded from '@mui/icons-material/LogoutRounded';
-import MenuRounded from '@mui/icons-material/MenuRounded';
-import {
-  AppBar,
-  Avatar,
-  Box,
-  Chip,
-  Divider,
-  Drawer,
-  IconButton,
-  List,
-  ListItemButton,
-  ListItemIcon,
-  ListItemText,
-  ListSubheader,
-  Menu,
-  MenuItem,
-  Toolbar,
-  Tooltip,
-  Typography,
-  useMediaQuery,
-  useTheme,
-} from '@mui/material';
-import { useState } from 'react';
+import { ChevronsLeft, ChevronsRight, LogOut, Menu, Search, Settings } from 'lucide-react';
 import { NavLink, Outlet, useNavigate } from 'react-router';
 
 import { useAuthState, useLogout } from '@/api/auth';
+import { useHealth } from '@/api/system';
 import { ConnectionBanner } from '@/components/feedback/ConnectionBanner';
+import { Button } from '@/components/ui/button';
+import {
+  Drawer,
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+  Tooltip,
+  TooltipProvider,
+} from '@/components/ui/overlay';
+import { Badge, StatusDot } from '@/components/ui/surface';
+import { cn } from '@/lib/cn';
 import { useUiStore } from '@/stores/uiStore';
 
 import { BrandMark } from './BrandMark';
-import { NotificationsBell } from './NotificationsBell';
+import { CommandPalette } from './CommandPalette';
 import { isAvailable, NAV_SECTIONS } from './navigation';
+import { NotificationsBell } from './NotificationsBell';
 import { WorkspaceSelector } from './WorkspaceSelector';
 
-const DRAWER_WIDTH = 272;
-
-function NavigationList({ onNavigate }: { onNavigate?: () => void }) {
+function Wordmark() {
   return (
-    <Box
-      component="nav"
-      aria-label="Main navigation"
-      sx={{ px: 1.5, pb: 2, overflowY: 'auto', flexGrow: 1, minHeight: 0 }}
-    >
+    <span className="font-display text-[15px] font-semibold tracking-[0.08em]">
+      PERSONAL<span className="text-gradient"> OS</span>
+    </span>
+  );
+}
+
+function NavigationList({
+  collapsed,
+  onNavigate,
+}: {
+  collapsed: boolean;
+  onNavigate?: () => void;
+}) {
+  return (
+    <nav aria-label="Main navigation" className="flex-1 overflow-y-auto px-2.5 pb-4">
       {NAV_SECTIONS.map((section) => (
-        <List
-          key={section.title}
-          dense
-          subheader={
-            <ListSubheader disableSticky sx={{ bgcolor: 'transparent', lineHeight: '36px' }}>
-              {section.title}
-            </ListSubheader>
-          }
-        >
-          {section.items.map((item) => {
-            const Icon = item.icon;
-            return (
-              <ListItemButton
-                key={item.path}
-                component={NavLink}
-                to={item.path}
-                end={item.path === '/'}
-                onClick={onNavigate}
-                sx={{ mb: 0.25 }}
-              >
-                <ListItemIcon sx={{ minWidth: 36 }}>
-                  <Icon fontSize="small" />
-                </ListItemIcon>
-                <ListItemText primary={item.label} />
-                {!isAvailable(item) && (
-                  <Chip
-                    label={`P${item.phase}`}
-                    size="small"
-                    variant="outlined"
-                    aria-label={`Planned for phase ${item.phase}`}
-                    sx={{ height: 20, fontSize: 11 }}
-                  />
-                )}
-              </ListItemButton>
-            );
-          })}
-        </List>
+        <div key={section.title} className="mt-4 first:mt-2">
+          {!collapsed && <p className="label-caps px-2.5 pb-1.5">{section.title}</p>}
+          <ul className="space-y-0.5">
+            {section.items.map((item) => {
+              const Icon = item.icon;
+              const available = isAvailable(item);
+              const link = (
+                <NavLink
+                  to={item.path}
+                  end={item.path === '/'}
+                  {...(onNavigate ? { onClick: onNavigate } : {})}
+                  aria-label={collapsed ? item.label : undefined}
+                  className={({ isActive }) =>
+                    cn(
+                      'group relative flex items-center gap-3 rounded-md px-2.5 py-2 text-sm transition-colors',
+                      collapsed && 'justify-center px-0',
+                      isActive
+                        ? 'bg-electric/12 text-ink shadow-[inset_0_0_0_1px_rgb(79_125_255/0.35)]'
+                        : 'text-ink-muted hover:bg-white/[0.04] hover:text-ink',
+                      !available && 'opacity-60',
+                    )
+                  }
+                >
+                  {({ isActive }) => (
+                    <>
+                      {isActive && (
+                        <span
+                          aria-hidden
+                          className="absolute top-1.5 bottom-1.5 left-0 w-0.5 rounded-full bg-cyan shadow-[0_0_10px_var(--color-cyan)]"
+                        />
+                      )}
+                      <Icon
+                        className={cn(
+                          'size-4 shrink-0',
+                          isActive ? 'text-cyan' : 'group-hover:text-electric-soft',
+                        )}
+                      />
+                      {!collapsed && <span className="flex-1 truncate">{item.label}</span>}
+                      {!collapsed && !available && (
+                        <span
+                          className="font-mono text-[9.5px] text-ink-dim"
+                          aria-label={`Planned for phase ${String(item.phase)}`}
+                        >
+                          P{item.phase}
+                        </span>
+                      )}
+                    </>
+                  )}
+                </NavLink>
+              );
+              return (
+                <li key={item.path}>
+                  {collapsed ? <Tooltip content={item.label}>{link}</Tooltip> : link}
+                </li>
+              );
+            })}
+          </ul>
+        </div>
       ))}
-    </Box>
+    </nav>
   );
 }
 
-function DrawerContent({ onNavigate }: { onNavigate?: () => void }) {
+function SystemHealth() {
+  const health = useHealth();
+  const ok = health.data?.status === 'ok';
+  const tone = health.isError ? 'danger' : ok ? 'success' : 'warning';
+  const label = health.isError ? 'Offline' : ok ? 'All systems nominal' : 'Checking';
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
-      <Toolbar sx={{ gap: 1.5 }}>
-        <BrandMark />
-        <Typography variant="h6" component="span" noWrap>
-          Personal OS
-        </Typography>
-      </Toolbar>
-      <Box sx={{ px: 2, pb: 1 }}>
-        <WorkspaceSelector />
-      </Box>
-      <Divider sx={{ mx: 2, my: 1 }} />
-      <NavigationList {...(onNavigate && { onNavigate })} />
-    </Box>
+    <div
+      className="hidden items-center gap-2 rounded-md border border-line bg-base/60 px-2.5 py-1.5 lg:flex"
+      role="status"
+      aria-label={`System health: ${label}`}
+    >
+      <StatusDot tone={tone} pulse={ok} />
+      <span className="font-mono text-[11px] text-ink-muted">{label}</span>
+    </div>
   );
 }
 
-function ThemeToggle() {
-  const theme = useTheme();
-  const setPreference = useUiStore((s) => s.setThemePreference);
-  const isDark = theme.palette.mode === 'dark';
-  const label = isDark ? 'Switch to light mode' : 'Switch to dark mode';
-  return (
-    <Tooltip title={label}>
-      <IconButton
-        aria-label={label}
-        onClick={() => setPreference(isDark ? 'light' : 'dark')}
-        color="inherit"
-      >
-        {isDark ? <LightModeOutlined /> : <DarkModeOutlined />}
-      </IconButton>
-    </Tooltip>
-  );
-}
-
-function UserMenu() {
+function ProfileMenu() {
   const { data } = useAuthState();
   const logout = useLogout();
   const navigate = useNavigate();
-  const [anchor, setAnchor] = useState<HTMLElement | null>(null);
   const name = data?.user.display_name ?? '';
-
-  const handleLogout = () => {
-    setAnchor(null);
-    logout.mutate(undefined, { onSettled: () => void navigate('/login', { replace: true }) });
-  };
-
   return (
-    <>
-      <Tooltip title="Account">
-        <IconButton
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <button
+          type="button"
           aria-label="Open account menu"
-          aria-haspopup="menu"
-          aria-expanded={anchor ? 'true' : undefined}
-          onClick={(e) => setAnchor(e.currentTarget)}
+          className="flex size-9 items-center justify-center rounded-full bg-gradient-to-br from-electric to-violet font-display text-sm font-semibold text-white shadow-glow"
         >
-          <Avatar sx={{ width: 32, height: 32, bgcolor: 'primary.main', fontSize: 14 }}>
-            {name.slice(0, 1).toUpperCase() || '?'}
-          </Avatar>
-        </IconButton>
-      </Tooltip>
-      <Menu
-        anchorEl={anchor}
-        open={Boolean(anchor)}
-        onClose={() => setAnchor(null)}
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-        transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-      >
-        <Box sx={{ px: 2, py: 1 }}>
-          <Typography variant="subtitle2">{name}</Typography>
-          <Typography variant="body2" color="text.secondary">
-            {data?.user.email}
-          </Typography>
-        </Box>
-        <Divider />
-        <MenuItem onClick={handleLogout} disabled={logout.isPending}>
-          <ListItemIcon>
-            <LogoutRounded fontSize="small" />
-          </ListItemIcon>
-          Sign out
-        </MenuItem>
-      </Menu>
-    </>
+          {name.slice(0, 1).toUpperCase() || '?'}
+        </button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end">
+        <div className="px-2.5 py-2">
+          <p className="text-sm font-medium text-ink">{name}</p>
+          <p className="text-xs text-ink-dim">{data?.user.email}</p>
+          {data?.user.is_admin && (
+            <Badge tone="violet" className="mt-1.5">
+              Administrator
+            </Badge>
+          )}
+        </div>
+        <DropdownMenuSeparator />
+        <DropdownMenuItem onSelect={() => void navigate('/settings')}>
+          <Settings /> Settings & security
+        </DropdownMenuItem>
+        <DropdownMenuItem
+          onSelect={() =>
+            logout.mutate(undefined, {
+              onSettled: () => void navigate('/login', { replace: true }),
+            })
+          }
+        >
+          <LogOut /> Sign out
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 }
 
-/** Authenticated application frame: responsive navigation drawer + top bar. */
+/** Command-center frame: collapsible sidebar, top bar, contextual content. */
 export function AppShell() {
-  const theme = useTheme();
-  const isDesktop = useMediaQuery(theme.breakpoints.up('md'));
+  const collapsed = useUiStore((s) => s.sidebarCollapsed);
+  const setCollapsed = useUiStore((s) => s.setSidebarCollapsed);
   const mobileOpen = useUiStore((s) => s.mobileNavOpen);
   const setMobileOpen = useUiStore((s) => s.setMobileNavOpen);
+  const setCommandOpen = useUiStore((s) => s.setCommandOpen);
 
   return (
-    <Box sx={{ display: 'flex', minHeight: '100vh' }}>
-      <Box
-        component="a"
-        href="#main-content"
-        sx={{
-          position: 'absolute',
-          left: -9999,
-          '&:focus': { left: 16, top: 16, zIndex: 2000, bgcolor: 'background.paper', p: 1 },
-        }}
-      >
-        Skip to content
-      </Box>
-
-      {isDesktop ? (
-        <Drawer
-          variant="permanent"
-          sx={{ width: DRAWER_WIDTH, flexShrink: 0, '& .MuiDrawer-paper': { width: DRAWER_WIDTH } }}
+    <TooltipProvider>
+      <div className="flex min-h-screen">
+        <a
+          href="#main-content"
+          className="sr-only z-[100] rounded-md bg-surface-3 px-3 py-2 focus:not-sr-only focus:fixed focus:top-3 focus:left-3"
         >
-          <DrawerContent />
-        </Drawer>
-      ) : (
-        <Drawer
-          variant="temporary"
-          open={mobileOpen}
-          onClose={() => setMobileOpen(false)}
-          ModalProps={{ keepMounted: true }}
-          sx={{ '& .MuiDrawer-paper': { width: DRAWER_WIDTH } }}
-        >
-          <DrawerContent onNavigate={() => setMobileOpen(false)} />
-        </Drawer>
-      )}
+          Skip to content
+        </a>
 
-      <Box sx={{ flexGrow: 1, minWidth: 0, display: 'flex', flexDirection: 'column' }}>
-        <AppBar position="sticky">
-          <ConnectionBanner />
-          <Toolbar sx={{ gap: 1 }}>
-            {!isDesktop && (
-              <IconButton
-                edge="start"
+        <aside
+          className={cn(
+            'sticky top-0 hidden h-screen shrink-0 flex-col border-r border-line bg-base/70 backdrop-blur-xl transition-[width] duration-200 md:flex',
+            collapsed ? 'w-[68px]' : 'w-64',
+          )}
+        >
+          <div
+            className={cn(
+              'flex h-14 items-center gap-2.5 px-4',
+              collapsed && 'justify-center px-0',
+            )}
+          >
+            <BrandMark size={26} />
+            {!collapsed && <Wordmark />}
+          </div>
+          {!collapsed && (
+            <div className="px-3">
+              <WorkspaceSelector compact />
+            </div>
+          )}
+          <NavigationList collapsed={collapsed} />
+          <div className="border-t border-line p-2.5">
+            <Button
+              variant="ghost"
+              size="sm"
+              className={cn('w-full', collapsed ? 'justify-center' : 'justify-start')}
+              onClick={() => setCollapsed(!collapsed)}
+              aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+            >
+              {collapsed ? <ChevronsRight /> : <ChevronsLeft />}
+              {!collapsed && 'Collapse'}
+            </Button>
+          </div>
+        </aside>
+
+        <Drawer open={mobileOpen} onOpenChange={setMobileOpen} title="Navigation">
+          <div className="flex h-14 items-center gap-2.5 px-4">
+            <BrandMark size={26} />
+            <Wordmark />
+          </div>
+          <div className="px-3">
+            <WorkspaceSelector compact />
+          </div>
+          <NavigationList collapsed={false} onNavigate={() => setMobileOpen(false)} />
+        </Drawer>
+
+        <div className="flex min-w-0 flex-1 flex-col">
+          <header className="sticky top-0 z-40 border-b border-line bg-void/70 backdrop-blur-xl">
+            <ConnectionBanner />
+            <div className="flex h-14 items-center gap-2 px-3 sm:px-5">
+              <Button
+                variant="ghost"
+                size="icon"
+                className="md:hidden"
                 aria-label="Open navigation"
                 onClick={() => setMobileOpen(true)}
-                color="inherit"
               >
-                <MenuRounded />
-              </IconButton>
-            )}
-            <Box sx={{ flexGrow: 1 }} />
-            <NotificationsBell />
-            <ThemeToggle />
-            <UserMenu />
-          </Toolbar>
-        </AppBar>
-        <Box
-          component="main"
-          id="main-content"
-          tabIndex={-1}
-          sx={{
-            flexGrow: 1,
-            p: { xs: 2, sm: 3, lg: 4 },
-            maxWidth: 1440,
-            width: '100%',
-            mx: 'auto',
-          }}
-        >
-          <Outlet />
-        </Box>
-      </Box>
-    </Box>
+                <Menu />
+              </Button>
+              <span className="md:hidden">
+                <Wordmark />
+              </span>
+              <button
+                type="button"
+                onClick={() => setCommandOpen(true)}
+                className="ml-auto flex h-9 items-center gap-2.5 rounded-md border border-line bg-base/60 px-3 text-sm text-ink-dim transition-colors hover:border-line-strong hover:text-ink-muted sm:w-full sm:max-w-sm md:ml-0"
+                aria-label="Search (Control K)"
+              >
+                <Search className="size-4" aria-hidden />
+                <span className="hidden flex-1 text-left sm:block">Search Personal OS…</span>
+                <kbd className="hidden rounded-sm border border-line px-1.5 font-mono text-[10px] sm:block">
+                  Ctrl K
+                </kbd>
+              </button>
+              <div className="ml-auto flex items-center gap-2">
+                <SystemHealth />
+                <NotificationsBell />
+                <ProfileMenu />
+              </div>
+            </div>
+          </header>
+          <main
+            id="main-content"
+            tabIndex={-1}
+            className="mx-auto w-full max-w-[1680px] flex-1 px-3 py-5 focus:outline-none sm:px-6 sm:py-6"
+          >
+            <Outlet />
+          </main>
+        </div>
+        <CommandPalette />
+      </div>
+    </TooltipProvider>
   );
 }

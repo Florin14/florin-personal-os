@@ -1,41 +1,40 @@
-import { Chip, type ChipProps } from '@mui/material';
+import { Badge, type Tone } from '@/components/ui/surface';
 
 import { statusLabel } from './format';
 
-type Color = NonNullable<ChipProps['color']>;
-
-const COLORS: Record<string, Color> = {
-  // executions / jobs / steps
-  pending: 'default',
-  queued: 'default',
+const TONES: Record<string, Tone> = {
+  pending: 'neutral',
+  queued: 'neutral',
   running: 'info',
   waiting_approval: 'warning',
   waiting_delay: 'info',
   waiting: 'warning',
   succeeded: 'success',
   delivered: 'success',
-  failed: 'error',
-  cancelled: 'default',
-  rejected: 'error',
-  expired: 'default',
-  skipped: 'default',
-  // approvals
+  issued: 'success',
+  active: 'success',
   approved: 'success',
-  // risk
+  failed: 'danger',
+  error: 'danger',
+  rejected: 'danger',
+  cancelled: 'neutral',
+  disabled: 'neutral',
+  expired: 'neutral',
+  skipped: 'neutral',
   low: 'success',
   medium: 'warning',
-  high: 'error',
+  high: 'danger',
 };
 
-/** Consistent colored label for statuses and risk levels across the app. */
+export function toneFor(status: string): Tone {
+  return TONES[status] ?? 'neutral';
+}
+
+/** Consistent label for statuses and risk levels across the app. */
 export function StatusChip({ status, prefix }: { status: string; prefix?: string }) {
   return (
-    <Chip
-      size="small"
-      variant="outlined"
-      color={COLORS[status] ?? 'default'}
-      label={prefix ? `${prefix}: ${statusLabel(status)}` : statusLabel(status)}
-      sx={{ fontWeight: 600 }}
-    />
+    <Badge tone={toneFor(status)} dot>
+      {prefix ? `${prefix} · ${statusLabel(status)}` : statusLabel(status)}
+    </Badge>
   );
 }
