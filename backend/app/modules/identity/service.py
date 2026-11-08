@@ -30,6 +30,7 @@ from app.core.errors import (
 from app.core.security import passwords, totp
 from app.core.security.encryption import SecretBox
 from app.core.security.tokens import generate_token, hash_token
+from app.modules.audit.public import ActorType, AuditRecorder, Outcome
 from app.modules.identity.models import AuthLevel, User, UserSession
 
 logger = logging.getLogger(__name__)
@@ -110,11 +111,39 @@ class IdentityService:
         self._settings = settings
         self._secret_box = secret_box
         self._now = clock
+        self._audit = AuditRecorder(session)
+
+    def _record(
+        self,
+        action: str,
+        user_id: uuid.UUID | None,
+        *,
+        outcome: Outcome = Outcome.SUCCESS,
+        ip_address: str | None = None,
+        actor_type: ActorType = ActorType.USER,
+        **details: object,
+    ) -> None:
+        self._audit.record(
+            action,
+            outcome=outcome,
+            actor_type=actor_type,
+            actor_user_id=user_id,
+            target_type="user",
+            target_id=user_id,
+            ip_address=ip_address,
+            details=dict(details),
+        )
 
     # ------------------------------------------------------------------ users
 
     async def create_user(
-        self, email: str, display_name: str, password: str, timezone: str = "Europe/Bucharest"
+        self,
+        email: str,
+        display_name: str,
+        password: str,
+        timezone: str = "Europe/Bucharest",
+        *,
+        is_admin: bool = False,
     ) -> User:
         email = normalize_email(email)
         validate_password_policy(password, email)
@@ -126,8 +155,11 @@ class IdentityService:
             display_name=display_name.strip(),
             password_hash=passwords.hash_password(password),
             timezone=timezone,
+            is_admin=is_admin,
         )
         self._db.add(user)
+        await self._db.flush()
+        self._record("user.created", user.id, actor_type=ActorType.SYSTEM, is_admin=is_admin)
         await self._db.commit()
         logger.info("user_created", extra={"user_id": str(user.id)})
         return user
@@ -156,10 +188,29 @@ class IdentityService:
         password_ok = passwords.verify_password(user.password_hash if user else None, password)
 
         if user is None or not user.is_active:
+            self._record(
+                "auth.login.failed",
+                user.id if user else None,
+                outcome=Outcome.FAILURE,
+                ip_address=ip_address,
+                reason="unknown_or_inactive_user",
+            )
+            await self._db.commit()
             raise InvalidCredentials()
         if user.locked_until is not None and user.locked_until > now:
+            self._record(
+                "auth.login.locked", user.id, outcome=Outcome.DENIED, ip_address=ip_address
+            )
+            await self._db.commit()
             raise AccountLocked()
         if not password_ok:
+            self._record(
+                "auth.login.failed",
+                user.id,
+                outcome=Outcome.FAILURE,
+                ip_address=ip_address,
+                reason="invalid_password",
+            )
             await self._register_failure(user, now)
             raise InvalidCredentials()
 
@@ -173,6 +224,7 @@ class IdentityService:
         if level is AuthLevel.FULL:
             user.last_login_at = now
         issued = self._new_session(user, level, user_agent=user_agent, ip_address=ip_address)
+        self._record("auth.login.password_ok", user.id, ip_address=ip_address, level=level.value)
         await self._db.commit()
         logger.info("login_password_ok", extra={"user_id": str(user.id), "level": level.value})
         return issued
@@ -212,7 +264,20 @@ class IdentityService:
         if user.locked_until is not None and user.locked_until > now:
             raise AccountLocked()
         await self._check_totp(ctx, user.totp_secret_encrypted, code, now)
+        self._record("auth.mfa.verified", user.id, ip_address=ctx.session.ip_address)
         return await self._upgrade_session(ctx, now)
+
+    async def confirm_step_up(self, ctx: AuthContext, code: str) -> None:
+        """Fresh second-factor confirmation for high-risk actions (e.g. approvals)."""
+        user = ctx.user
+        if not user.mfa_enabled or user.totp_secret_encrypted is None:
+            raise Forbidden("Two-factor authentication must be enabled.", code="mfa_not_enabled")
+        now = self._now()
+        if user.locked_until is not None and user.locked_until > now:
+            raise AccountLocked()
+        await self._check_totp(ctx, user.totp_secret_encrypted, code, now)
+        self._record("auth.mfa.step_up", user.id, ip_address=ctx.session.ip_address)
+        await self._db.commit()
 
     async def begin_totp_enrollment(self, ctx: AuthContext) -> TotpEnrollment:
         user = ctx.user
@@ -236,11 +301,13 @@ class IdentityService:
         now = self._now()
         await self._check_totp(ctx, user.totp_secret_encrypted, code, now)
         user.totp_enabled_at = now
+        self._record("auth.mfa.enrolled", user.id, ip_address=ctx.session.ip_address)
         logger.info("mfa_enabled", extra={"user_id": str(user.id)})
         return await self._upgrade_session(ctx, now, force_rotation=True)
 
     async def logout(self, ctx: AuthContext) -> None:
         ctx.session.revoked_at = self._now()
+        self._record("auth.logout", ctx.user.id, ip_address=ctx.session.ip_address)
         await self._db.commit()
 
     # ---------------------------------------------------------------- sessions
@@ -268,6 +335,12 @@ class IdentityService:
         if target is None or target.revoked_at is not None:
             raise NotFound("Session not found.")
         target.revoked_at = self._now()
+        self._record(
+            "auth.session.revoked",
+            ctx.user.id,
+            ip_address=ctx.session.ip_address,
+            session_id=str(session_id),
+        )
         await self._db.commit()
 
     async def change_password(
@@ -275,10 +348,18 @@ class IdentityService:
     ) -> None:
         user = ctx.user
         if not passwords.verify_password(user.password_hash, current_password):
+            self._record(
+                "auth.password.change_failed",
+                user.id,
+                outcome=Outcome.FAILURE,
+                ip_address=ctx.session.ip_address,
+            )
+            await self._db.commit()
             raise Forbidden("Current password is incorrect.", code="invalid_current_password")
         validate_password_policy(new_password, user.email)
         user.password_hash = passwords.hash_password(new_password)
         await self._revoke_other_sessions(user.id, keep=ctx.session.id)
+        self._record("auth.password.changed", user.id, ip_address=ctx.session.ip_address)
         await self._db.commit()
         logger.info("password_changed", extra={"user_id": str(user.id)})
 
@@ -291,6 +372,7 @@ class IdentityService:
         user.totp_enabled_at = None
         user.totp_last_used_step = None
         await self._revoke_other_sessions(user.id, keep=None)
+        self._record("auth.mfa.reset", user.id, actor_type=ActorType.SYSTEM)
         await self._db.commit()
         logger.warning("mfa_reset", extra={"user_id": str(user.id)})
 
@@ -352,6 +434,12 @@ class IdentityService:
         secret = self._secret_box.decrypt(encrypted_secret)
         step = totp.matching_step(secret, code, user.totp_last_used_step, at=now.timestamp())
         if step is None:
+            self._record(
+                "auth.mfa.failed",
+                user.id,
+                outcome=Outcome.FAILURE,
+                ip_address=ctx.session.ip_address,
+            )
             locked = await self._register_failure(user, now)
             if locked:
                 ctx.session.revoked_at = now
@@ -368,6 +456,7 @@ class IdentityService:
         if locked:
             user.locked_until = now + timedelta(minutes=self._settings.auth_lockout_minutes)
             user.failed_login_count = 0
+            self._record("auth.account.locked", user.id, outcome=Outcome.DENIED)
             logger.warning("account_locked", extra={"user_id": str(user.id)})
         await self._db.commit()
         return locked

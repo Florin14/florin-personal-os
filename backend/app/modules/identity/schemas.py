@@ -49,6 +49,7 @@ class UserOut(BaseModel):
     display_name: str
     timezone: str
     mfa_enabled: bool
+    is_admin: bool
     last_login_at: datetime | None
 
 

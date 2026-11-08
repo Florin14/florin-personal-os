@@ -68,6 +68,7 @@ export const user = {
   display_name: 'Florin',
   timezone: 'Europe/Bucharest',
   mfa_enabled: true,
+  is_admin: true,
   last_login_at: '2026-11-08T10:00:00Z',
 } satisfies AuthState['user'];
 

@@ -35,7 +35,7 @@ async def test_system_info_requires_full_auth(
     body = resp.json()
     assert body["environment"] == "test"
     assert body["mfa_required"] is True
-    assert {m["name"] for m in body["modules"]} == {"system", "identity", "workspaces"}
+    assert {"system", "identity", "workspaces", "audit"} <= {m["name"] for m in body["modules"]}
 
 
 async def test_security_headers(client: httpx.AsyncClient) -> None:

@@ -52,3 +52,12 @@ async def require_full_auth(ctx: AnyAuthContext) -> AuthContext:
 
 
 CurrentUser = Annotated[AuthContext, Depends(require_full_auth)]
+
+
+async def require_admin(ctx: CurrentUser) -> AuthContext:
+    if not ctx.user.is_admin:
+        raise Forbidden("Administrator access required.", code="admin_required")
+    return ctx
+
+
+AdminUser = Annotated[AuthContext, Depends(require_admin)]

@@ -28,7 +28,7 @@ def main() -> None:
     schema = create_app(settings).openapi()
     output = json.dumps(schema, indent=2, sort_keys=True) + "\n"
     if len(sys.argv) > 1:
-        Path(sys.argv[1]).write_text(output, encoding="utf-8")
+        Path(sys.argv[1]).write_bytes(output.encode("utf-8"))
     else:
         sys.stdout.write(output)
 

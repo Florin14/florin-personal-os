@@ -130,3 +130,16 @@ class WorkspaceService:
         if not access.role.allows(minimum_role):
             raise Forbidden("Your role does not allow this action.", code="insufficient_role")
         return access
+
+
+async def accessible_workspace_ids(
+    session: AsyncSession, user_id: uuid.UUID, minimum_role: Role = Role.VIEWER
+) -> list[uuid.UUID]:
+    """Ids of workspaces where the user holds at least ``minimum_role``."""
+    roles = [r.value for r in Role if r.allows(minimum_role)]
+    result = await session.scalars(
+        select(WorkspaceMembership.workspace_id).where(
+            WorkspaceMembership.user_id == user_id, WorkspaceMembership.role.in_(roles)
+        )
+    )
+    return list(result)

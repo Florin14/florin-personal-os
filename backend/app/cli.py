@@ -63,7 +63,7 @@ async def create_user(args: argparse.Namespace) -> None:
 
     async def work(session: AsyncSession) -> None:
         user = await _identity(session).create_user(
-            args.email, args.display_name, password, timezone=args.timezone
+            args.email, args.display_name, password, timezone=args.timezone, is_admin=args.admin
         )
         workspaces = WorkspaceService(session)
         personal = await workspaces.create_workspace(
@@ -121,6 +121,7 @@ def build_parser() -> argparse.ArgumentParser:
     p_user.add_argument("--timezone", default="Europe/Bucharest")
     p_user.add_argument("--business-workspace", help="Also create a business workspace")
     p_user.add_argument("--password-stdin", action="store_true", help="Read password from stdin")
+    p_user.add_argument("--admin", action="store_true", help="Grant system administrator rights")
 
     p_ws = sub.add_parser("create-workspace", help="Create a workspace owned by a user")
     p_ws.add_argument("--owner-email", required=True)

@@ -11,7 +11,7 @@ A task is `COMPLETED` only after it is implemented **and** verified (tests/check
 |---|---|---|
 | 0 | Architecture, ADRs, module boundaries, schema proposal, threat model, backlog | COMPLETED |
 | 1 | Backend/frontend foundation, database, authentication, Docker, CI, basic dashboard | IN PROGRESS (all verified locally; first GitHub Actions run pending) |
-| 2 | Automation engine, persistent jobs, scheduler, events/outbox, approvals, notifications, audit | TODO |
+| 2 | Automation engine, persistent jobs, scheduler, events/outbox, approvals, notifications, audit | IN PROGRESS |
 | 3 | Discord bot, Oblio monthly invoicing workflow | TODO |
 | 4 | Google Calendar, Gmail, Drive, documents, basic expense processing | TODO |
 | 5 | Bank statement import, reconciliation, shopping & price tracking | TODO |
@@ -82,6 +82,40 @@ CI, and tests.
 | P1-18 | Dockerfiles, `compose.yaml`, `compose.prod.yaml`, health checks | COMPLETED |
 | P1-19 | Playwright E2E: login + MFA enrollment + dashboard | COMPLETED |
 | P1-20 | GitHub Actions: CI + security scanning | IN PROGRESS — workflows written and YAML-validated; not yet executed (changes not yet committed/pushed to github.com/Florin14/florin-personal-os) |
+
+## Phase 2 — Automation core
+
+### Scope
+
+Durable, auditable automation engine: audit trail, Postgres-backed jobs and
+worker, domain events via transactional outbox, scheduling, typed workflows
+with approvals and notifications, and the UI to observe and operate them.
+
+### Acceptance criteria
+
+1. Security-relevant actions produce append-only audit records.
+2. Jobs survive worker restarts; expired leases are re-claimed; retries use exponential backoff with jitter; permanently failed jobs are inspectable and retryable.
+3. Domain events are written in the same transaction as the state change (outbox) and delivered at least once to subscribers, with idempotent handlers.
+4. Cron/interval triggers fire in the configured IANA timezone without duplicate executions.
+5. Executions are persisted step by step, support dry-run, cancellation and an emergency stop.
+6. An expired approval never executes; a changed payload or version invalidates an approval; a non-member cannot approve; high-risk approvals require fresh MFA in-app.
+7. UI shows the automation network, executions/logs, approval inbox and notifications.
+
+### Tasks
+
+| ID | Task | Status |
+|---|---|---|
+| P2-1 | `audit` module, auth events wired in, admin flag | COMPLETED |
+| P2-2 | `jobs` module + `worker` process/container, admin jobs API | TODO |
+| P2-3 | `events` module: transactional outbox, relay to subscriber jobs | TODO |
+| P2-4 | `notifications` module: in-app channel, dedupe, API | TODO |
+| P2-5 | `approvals` module: risk policy, payload hash/version binding, expiry, step-up MFA | TODO |
+| P2-6 | `automation` module: definitions, versions, step registry, engine, dry-run, cancel, emergency stop | TODO |
+| P2-7 | Scheduling: cron/interval triggers with timezones, missed-run policy | TODO |
+| P2-8 | UI: Approval Inbox, Executions & Logs, notifications, audit log | TODO |
+| P2-9 | UI: Automation Network (React Flow) + Workflow Builder | TODO |
+| P2-10 | Phase 2 E2E and critical-scenario tests | TODO |
+
 
 ---
 

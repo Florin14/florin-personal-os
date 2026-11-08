@@ -29,6 +29,8 @@ class User(UUIDPrimaryKeyMixin, TimestampMixin, Base):
     display_name: Mapped[str] = mapped_column(String(100))
     password_hash: Mapped[str] = mapped_column(Text)
     is_active: Mapped[bool] = mapped_column(default=True)
+    # System administrators can see system-wide data (jobs, full audit log).
+    is_admin: Mapped[bool] = mapped_column(default=False, server_default="false")
     timezone: Mapped[str] = mapped_column(String(64), default="Europe/Bucharest")
 
     totp_secret_encrypted: Mapped[str | None] = mapped_column(Text, default=None)

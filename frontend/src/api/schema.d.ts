@@ -4,6 +4,28 @@
  */
 
 export interface paths {
+    "/api/v1/audit": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List Audit Records
+         * @description Own actions, plus records of workspaces where the user is admin/owner.
+         *
+         *     System administrators see every record.
+         */
+        get: operations["list_audit_records_api_v1_audit_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/auth/login": {
         parameters: {
             query?: never;
@@ -232,6 +254,41 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
+        /** AuditRecordOut */
+        AuditRecordOut: {
+            /** Action */
+            action: string;
+            /** Actor Type */
+            actor_type: string;
+            /** Actor User Id */
+            actor_user_id: string | null;
+            /** Details */
+            details: {
+                [key: string]: unknown;
+            };
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Ip Address */
+            ip_address: string | null;
+            /**
+             * Occurred At
+             * Format: date-time
+             */
+            occurred_at: string;
+            /** Outcome */
+            outcome: string;
+            /** Request Id */
+            request_id: string | null;
+            /** Target Id */
+            target_id: string | null;
+            /** Target Type */
+            target_type: string | null;
+            /** Workspace Id */
+            workspace_id: string | null;
+        };
         /**
          * AuthLevel
          * @description How strongly a session has been authenticated.
@@ -376,6 +433,8 @@ export interface components {
              * Format: uuid
              */
             id: string;
+            /** Is Admin */
+            is_admin: boolean;
             /** Last Login At */
             last_login_at: string | null;
             /** Mfa Enabled */
@@ -415,6 +474,40 @@ export interface components {
 }
 export type $defs = Record<string, never>;
 export interface operations {
+    list_audit_records_api_v1_audit_get: {
+        parameters: {
+            query?: {
+                limit?: number;
+                before?: string | null;
+                action_prefix?: string | null;
+                workspace_id?: string | null;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuditRecordOut"][];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
     login_api_v1_auth_login_post: {
         parameters: {
             query?: never;
