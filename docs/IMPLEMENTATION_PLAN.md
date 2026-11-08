@@ -109,7 +109,7 @@ with approvals and notifications, and the UI to observe and operate them.
 | P2-2 | `jobs` module + `worker` process/container, admin jobs API | COMPLETED |
 | P2-3 | `events` module: transactional outbox, relay to subscriber jobs | COMPLETED |
 | P2-4 | `notifications` module: in-app channel, dedupe, API | COMPLETED |
-| P2-5 | `approvals` module: risk policy, payload hash/version binding, expiry, step-up MFA | TODO |
+| P2-5 | `approvals` module: risk policy, payload hash/version binding, expiry, step-up MFA | COMPLETED |
 | P2-6 | `automation` module: definitions, versions, step registry, engine, dry-run, cancel, emergency stop | TODO |
 | P2-7 | Scheduling: cron/interval triggers with timezones, missed-run policy | TODO |
 | P2-8 | UI: Approval Inbox, Executions & Logs, notifications, audit log | TODO |

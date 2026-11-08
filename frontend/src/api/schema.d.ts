@@ -4,6 +4,57 @@
  */
 
 export interface paths {
+    "/api/v1/approvals": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Approvals */
+        get: operations["list_approvals_api_v1_approvals_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/approvals/{approval_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Approval */
+        get: operations["get_approval_api_v1_approvals__approval_id__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/approvals/{approval_id}/decision": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Decide */
+        post: operations["decide_api_v1_approvals__approval_id__decision_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/audit": {
         parameters: {
             query?: never;
@@ -424,6 +475,66 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
+        /** ApprovalOut */
+        ApprovalOut: {
+            /** Action Type */
+            action_type: string;
+            /** Consumed At */
+            consumed_at: string | null;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /** Decided At */
+            decided_at: string | null;
+            /** Decided By User Id */
+            decided_by_user_id: string | null;
+            /** Decided Via */
+            decided_via: string | null;
+            /** Decision Note */
+            decision_note: string | null;
+            /**
+             * Expires At
+             * Format: date-time
+             */
+            expires_at: string;
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Payload */
+            payload: {
+                [key: string]: unknown;
+            };
+            /** Payload Hash */
+            payload_hash: string;
+            /** Requires Step Up */
+            requires_step_up: boolean;
+            risk_level: components["schemas"]["RiskLevel"];
+            status: components["schemas"]["ApprovalStatus"];
+            /** Subject Id */
+            subject_id: string;
+            /** Subject Type */
+            subject_type: string;
+            /** Summary */
+            summary: string;
+            /** Title */
+            title: string;
+            /** Version Ref */
+            version_ref: string | null;
+            /**
+             * Workspace Id
+             * Format: uuid
+             */
+            workspace_id: string;
+        };
+        /**
+         * ApprovalStatus
+         * @enum {string}
+         */
+        ApprovalStatus: "pending" | "approved" | "rejected" | "expired" | "cancelled";
         /** AuditRecordOut */
         AuditRecordOut: {
             /** Action */
@@ -477,6 +588,19 @@ export interface components {
             current_password: string;
             /** New Password */
             new_password: string;
+        };
+        /**
+         * Decision
+         * @enum {string}
+         */
+        Decision: "approve" | "reject";
+        /** DecisionIn */
+        DecisionIn: {
+            decision: components["schemas"]["Decision"];
+            /** Mfa Code */
+            mfa_code?: string | null;
+            /** Note */
+            note?: string | null;
         };
         /** ErrorBody */
         ErrorBody: {
@@ -650,6 +774,11 @@ export interface components {
             workspace_id: string | null;
         };
         /**
+         * RiskLevel
+         * @enum {string}
+         */
+        RiskLevel: "low" | "medium" | "high";
+        /**
          * Role
          * @enum {string}
          */
@@ -771,6 +900,104 @@ export interface components {
 }
 export type $defs = Record<string, never>;
 export interface operations {
+    list_approvals_api_v1_approvals_get: {
+        parameters: {
+            query?: {
+                status?: components["schemas"]["ApprovalStatus"] | null;
+                limit?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApprovalOut"][];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    get_approval_api_v1_approvals__approval_id__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                approval_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApprovalOut"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    decide_api_v1_approvals__approval_id__decision_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                approval_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["DecisionIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApprovalOut"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
     list_audit_records_api_v1_audit_get: {
         parameters: {
             query?: {

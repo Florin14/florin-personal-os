@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from app.core.module import Module
+from app.modules.approvals.module import module as approvals
 from app.modules.audit.module import module as audit
 from app.modules.events.module import module as events
 from app.modules.identity.module import module as identity
@@ -19,6 +20,7 @@ MODULES: tuple[Module, ...] = (
     jobs,
     events,
     notifications,
+    approvals,
 )
 
 
@@ -27,6 +29,7 @@ def import_all_models() -> None:
 
     Used by Alembic and tests.
     """
+    import app.modules.approvals.models
     import app.modules.audit.models
     import app.modules.events.models
     import app.modules.identity.models
