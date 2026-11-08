@@ -7,7 +7,9 @@ Resume point for autonomous implementation sessions. Read this first, then
 
 - Mode: Autonomous Implementation Mode (requested 2026-11-08).
 - Branch: `develop` (local commits only; nothing is pushed without approval).
-- After each task: tests + lint + types → update plan/this file → commit.
+- **User preference (2026-11-08): implementation only — do NOT write new tests.** Keep running
+  ruff/mypy/tsc/eslint; existing test suites may be run as a regression guard.
+- After each task: lint + types → update plan/this file → commit.
 - Never: paid services, production deploys, real financial actions, invented credentials.
 
 ## Environment notes
@@ -29,12 +31,17 @@ Resume point for autonomous implementation sessions. Read this first, then
 system · identity (sessions, TOTP, step-up, admin flag) · workspaces · audit (append-only) ·
 jobs (+ worker, periodic tasks with advisory locks) · events (outbox → subscriber jobs, `*` wildcard) ·
 notifications (in-app + channel adapters) · approvals (payload hash/version binding, risk policy) ·
-automation (definitions, versions, engine, triggers, emergency stop, built-in actions).
+automation (definitions, versions, engine, triggers, emergency stop, built-in actions) ·
+integrations (encrypted connections, provider registry) · oblio (live + mock adapter) ·
+invoicing (profiles, duplicate-safe monthly invoices, SPV) · discord (signed interactions, channel adapter).
 
 ## Current status
 
 - Phase 0, Phase 1: COMPLETED (CI not yet run on GitHub).
-- Phase 2: backend COMPLETED (P2-1…P2-7). UI tasks P2-8, P2-9 and E2E P2-10 in progress.
+- Phase 2: COMPLETED. Phase 3: COMPLETED (Oblio verified in mock mode end-to-end; live Oblio/Discord
+  need credentials).
+- Smoke script for the invoice workflow: scratchpad `smoke_invoice.py` (run with
+  `docker compose exec -T backend python - < smoke_invoice.py`).
 
 ## Completed milestones
 
@@ -42,15 +49,20 @@ automation (definitions, versions, engine, triggers, emergency stop, built-in ac
 |---|---|
 | 2026-11-08 | Phase 0 docs + Phase 1 foundation |
 | 2026-11-08 | Phase 2 backend: audit, jobs/worker, events/outbox, notifications, approvals, automation engine, scheduling |
+| 2026-11-08 | Phase 2 UI (approvals, executions, network, builder) |
+| 2026-11-08 | Phase 3: integrations, Oblio, invoicing, Discord, UI |
 
 ## Blockers
 
 | Item | Blocker | Workaround |
 |---|---|---|
 | GitHub Actions run | Changes not pushed (push needs approval) | Workflows validated locally |
+| Live Oblio | No credentials | Mock mode (ADR-018 lists what to verify) |
+| Live Discord | No bot credentials | Signature/flow implemented per docs; untested live |
+| Google APIs (Phase 4) | No OAuth client credentials | Implement OAuth + adapters per docs, mock mode |
 
 ## Next actions
 
-1. P2-8 UI: Approval Inbox, Executions & Logs (+ failed jobs for admins), notifications bell, audit log, emergency stop.
-2. P2-9 UI: Automation Network (React Flow) + Workflow Builder.
-3. P2-10: Playwright E2E for approval flow; Phase 2 docs; then Phase 3 (integrations framework, Discord, Oblio).
+1. Phase 4: Google OAuth framework (integrations), Calendar adapter + events/reminders, Gmail
+   receipt discovery, Drive archival, documents module (metadata + storage volume), basic expenses.
+2. Phase 5: bank CSV import, reconciliation, shopping/price tracking.
