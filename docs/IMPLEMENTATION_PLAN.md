@@ -47,7 +47,7 @@ CI, and tests.
 
 ### Acceptance criteria
 
-1. `docker compose up --build` starts Postgres, runs migrations, starts the API and the frontend; the dashboard is reachable at `http://localhost:5173`.
+1. `docker compose up --build` starts Postgres, runs migrations, starts the API and the frontend; the dashboard is reachable at `http://localhost:3000`.
 2. An owner created via CLI can log in, is forced to enroll TOTP (when `AUTH_REQUIRE_MFA=true`), and reaches the dashboard.
 3. Unauthenticated requests to protected endpoints return `401`; non-members of a workspace get `404`.
 4. Unsafe requests without a valid CSRF token or from a non-allowed origin are rejected.

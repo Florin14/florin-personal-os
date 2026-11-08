@@ -11,8 +11,8 @@ RUN npm ci --no-audit
 # ---------- dev: Vite dev server (source mounted by compose) ----------
 FROM deps AS dev
 COPY --chown=node:node . .
-EXPOSE 5173
-CMD ["npx", "vite", "--host", "0.0.0.0", "--port", "5173"]
+EXPOSE 3000
+CMD ["npx", "vite", "--host", "0.0.0.0", "--port", "3000"]
 
 # ---------- build ----------
 FROM deps AS build

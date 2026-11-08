@@ -448,7 +448,7 @@ See `.env.example` for a complete, commented list.
 | `APP_ENV` | no | `development` | `development` / `test` / `production` |
 | `DATABASE_URL` | yes | — | `postgresql+asyncpg://...` |
 | `ENCRYPTION_KEYS` | yes | — | Comma-separated Fernet keys; first encrypts, all decrypt (rotation) |
-| `ALLOWED_ORIGINS` | yes | `http://localhost:5173` | Allowed browser origins (CORS + Origin check) |
+| `ALLOWED_ORIGINS` | yes | `http://localhost:3000` | Allowed browser origins (CORS + Origin check) |
 | `SESSION_COOKIE_SECURE` | no | `true` | Must be `true` behind HTTPS |
 | `SESSION_IDLE_TIMEOUT_MINUTES` | no | `720` | Idle session timeout |
 | `SESSION_ABSOLUTE_TIMEOUT_HOURS` | no | `168` | Absolute session lifetime |

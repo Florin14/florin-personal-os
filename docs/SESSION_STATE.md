@@ -14,9 +14,11 @@ Resume point for autonomous implementation sessions. Read this first, then
 
 ## Environment notes
 
-- Dev stack: `docker compose up -d` (Postgres 127.0.0.1:5433, API :8000, UI :5173, worker).
+- Dev stack: `docker compose up -d` (Postgres 127.0.0.1:5433, API :8000, UI :3000, worker).
   After adding Python deps: `docker compose build migrate && docker compose up -d`.
   After new migrations: `docker compose exec backend alembic upgrade head`.
+- Local testing: `AUTH_REQUIRE_MFA=false` makes TOTP enrollment optional. Production
+  always requires MFA. After changing the flag, recreate backend/worker and sign in again.
 - Backend venv: `backend/.venv` (uv). Tests need
   `TEST_DATABASE_URL=postgresql+asyncpg://personal_os:<POSTGRES_PASSWORD from .env>@127.0.0.1:5433/personal_os_test`.
 - Regenerate client after API changes:

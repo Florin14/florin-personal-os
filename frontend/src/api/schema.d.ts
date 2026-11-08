@@ -1246,6 +1246,23 @@ export interface components {
             /** File */
             file: string;
         };
+        /** CalendarEventOut */
+        CalendarEventOut: {
+            /** All Day */
+            all_day: boolean;
+            /** End */
+            end: string;
+            /** Html Link */
+            html_link: string | null;
+            /** Id */
+            id: string;
+            /** Location */
+            location: string | null;
+            /** Start */
+            start: string;
+            /** Summary */
+            summary: string;
+        };
         /** CalendarOut */
         CalendarOut: {
             /** Connected */
@@ -1253,7 +1270,7 @@ export interface components {
             /** Error */
             error: string | null;
             /** Events */
-            events: components["schemas"]["app__modules__calendar__router__EventOut"][];
+            events: components["schemas"]["CalendarEventOut"][];
         };
         /** ChangePasswordRequest */
         ChangePasswordRequest: {
@@ -1479,6 +1496,31 @@ export interface components {
              * @default Europe/Bucharest
              */
             timezone: string;
+        };
+        /** EventOut */
+        EventOut: {
+            /** Actor User Id */
+            actor_user_id: string | null;
+            /** Event Type */
+            event_type: string;
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /**
+             * Occurred At
+             * Format: date-time
+             */
+            occurred_at: string;
+            /** Payload */
+            payload: {
+                [key: string]: unknown;
+            };
+            /** Published At */
+            published_at: string | null;
+            /** Workspace Id */
+            workspace_id: string | null;
         };
         /** ExecutionDetailOut */
         ExecutionDetailOut: {
@@ -2325,48 +2367,6 @@ export interface components {
             /** Timezone */
             timezone: string;
         };
-        /** EventOut */
-        app__modules__calendar__router__EventOut: {
-            /** All Day */
-            all_day: boolean;
-            /** End */
-            end: string;
-            /** Html Link */
-            html_link: string | null;
-            /** Id */
-            id: string;
-            /** Location */
-            location: string | null;
-            /** Start */
-            start: string;
-            /** Summary */
-            summary: string;
-        };
-        /** EventOut */
-        app__modules__events__router__EventOut: {
-            /** Actor User Id */
-            actor_user_id: string | null;
-            /** Event Type */
-            event_type: string;
-            /**
-             * Id
-             * Format: uuid
-             */
-            id: string;
-            /**
-             * Occurred At
-             * Format: date-time
-             */
-            occurred_at: string;
-            /** Payload */
-            payload: {
-                [key: string]: unknown;
-            };
-            /** Published At */
-            published_at: string | null;
-            /** Workspace Id */
-            workspace_id: string | null;
-        };
     };
     responses: never;
     parameters: never;
@@ -2890,7 +2890,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["app__modules__events__router__EventOut"][];
+                    "application/json": components["schemas"]["EventOut"][];
                 };
             };
             /** @description Client error */
@@ -3838,7 +3838,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["app__modules__calendar__router__EventOut"];
+                    "application/json": components["schemas"]["CalendarEventOut"];
                 };
             };
             /** @description Client error */

@@ -86,7 +86,7 @@ jobs:
           {
             echo "POSTGRES_PASSWORD=$(openssl rand -hex 24)"
             echo "ENCRYPTION_KEYS=$(python3 -c 'import base64,os;print(base64.urlsafe_b64encode(os.urandom(32)).decode())')"
-            echo "ALLOWED_ORIGINS=http://localhost:5173"
+            echo "ALLOWED_ORIGINS=http://localhost:3000"
             echo "AUTH_REQUIRE_MFA=true"
           } > .env
       - name: Start stack

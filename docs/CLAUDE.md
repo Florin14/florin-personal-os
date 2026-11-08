@@ -111,7 +111,7 @@ Do not place business logic inside FastAPI routers.
 
 - Use TypeScript strict mode.
 - Prefer functional React components.
-- Use reusable MUI components.
+- Use reusable Tailwind CSS + shadcn/ui + React Flow + Motion components.
 - Use TanStack Query for server state.
 - Use Zustand only when shared client state is needed.
 - Avoid unnecessary Redux.
@@ -315,3 +315,36 @@ that is easy to extend with new modules.
 Prioritize reliability, developer experience,
 low operating costs, and practical usefulness
 over unnecessary complexity.
+
+
+
+## Autonomous Development & Session Recovery
+
+This project follows a continuous autonomous development workflow.
+
+At the beginning of every session:
+1. Read PROJECT_SPEC.md, IMPLEMENTATION_PLAN.md,
+   and SESSION_STATE.md.
+2. Inspect Git history and working tree.
+3. Determine the next unfinished task.
+4. Resume implementation automatically.
+
+After every completed task:
+1. Run tests and verify functionality.
+2. Commit completed changes.
+3. Update IMPLEMENTATION_PLAN.md.
+4. Update SESSION_STATE.md.
+5. Continue with the next eligible task.
+
+Do not wait for manual instructions between tasks.
+
+Before stopping, when possible:
+- Save current progress.
+- Document blockers.
+- Record the next actionable task.
+- Leave the repository in a recoverable state.
+```
+
+**Important:** `CLAUDE.md` nu poate elimina limita de 5 ore și nici nu poate reporni automat Claude Code după resetare. Dar, când reiei sesiunea, Claude va avea instrucțiunile necesare ca să continue din punctul în care a rămas.
+
+Dacă folosești Claude Code în terminal, poți încerca și `claude --continue` după resetarea limitei, pentru a relua ultima conversație.

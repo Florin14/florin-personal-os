@@ -32,7 +32,7 @@ Viewer = Annotated[WorkspaceAccess, Depends(require_workspace_access(Role.VIEWER
 Member = Annotated[WorkspaceAccess, Depends(require_workspace_access(Role.MEMBER))]
 
 
-class EventOut(BaseModel):
+class CalendarEventOut(BaseModel):
     id: str
     summary: str
     start: str
@@ -45,7 +45,7 @@ class EventOut(BaseModel):
 class CalendarOut(BaseModel):
     connected: bool
     error: str | None
-    events: list[EventOut]
+    events: list[CalendarEventOut]
 
 
 class EventIn(BaseModel):
@@ -103,18 +103,24 @@ async def upcoming(
         events = await CalendarService(db, box).upcoming(access.workspace_id, days)
     except ProviderError as exc:
         return CalendarOut(connected=True, error=exc.message, events=[])
-    return CalendarOut(connected=True, error=None, events=[EventOut(**e.__dict__) for e in events])
+    return CalendarOut(
+        connected=True, error=None, events=[CalendarEventOut(**e.__dict__) for e in events]
+    )
 
 
-@router.post("/calendar/events", response_model=EventOut, status_code=status.HTTP_201_CREATED)
-async def create_event(body: EventIn, access: Member, db: DbSession, box: SecretBoxDep) -> EventOut:
+@router.post(
+    "/calendar/events", response_model=CalendarEventOut, status_code=status.HTTP_201_CREATED
+)
+async def create_event(
+    body: EventIn, access: Member, db: DbSession, box: SecretBoxDep
+) -> CalendarEventOut:
     try:
         event = await CalendarService(db, box).create_event(
             access.workspace_id, **body.model_dump()
         )
     except ProviderError as exc:
         raise _provider_error(exc) from exc
-    return EventOut(**event.__dict__)
+    return CalendarEventOut(**event.__dict__)
 
 
 @router.get("/tasks", response_model=list[TaskOut])

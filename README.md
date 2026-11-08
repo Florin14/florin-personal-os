@@ -44,14 +44,29 @@ Requirements: Docker with Compose v2. (Node 24 and Python 3.13 + uv only for run
        --email you@example.com --display-name "Your Name" --business-workspace "Your SRL"
    ```
 
-4. Open **http://localhost:5173** (use `localhost`, not `127.0.0.1` — the origin must match
-   `ALLOWED_ORIGINS`). Sign in and enroll an authenticator app (TOTP) when prompted.
+4. Open **http://localhost:3000** (use `localhost`, not `127.0.0.1` — the origin must match
+   `ALLOWED_ORIGINS`). Sign in with your email and password. Authenticator app (TOTP)
+   enrollment is optional locally (`AUTH_REQUIRE_MFA=false`). Set it to `true` to test
+   mandatory enrollment, then recreate the backend with `docker compose up -d backend worker`.
 
 | Service | URL (bound to 127.0.0.1 only) |
 |---|---|
-| Web UI (Vite, hot reload) | http://localhost:5173 |
+| Web UI (Vite, hot reload) | http://localhost:3000 |
 | API + Swagger UI (dev only) | http://localhost:8000/api/docs |
 | PostgreSQL | `localhost:5433` (`POSTGRES_HOST_PORT`) |
+
+To run the frontend directly on your host, keep the backend running on
+`http://localhost:8000` and run:
+
+```bash
+# Stop the frontend container first if it is already using port 3000.
+docker compose stop frontend
+cd frontend
+npm ci
+npm run dev
+```
+
+Vite serves **http://localhost:3000** and proxies `/api` to the backend.
 
 ## Common commands
 
@@ -97,6 +112,7 @@ docs/       Specification, architecture, decisions, plan, deployment
 ## Security notes
 
 * No public sign-up. Users are created with the CLI.
-* MFA (TOTP) is mandatory (`AUTH_REQUIRE_MFA=true`, enforced in production).
+* MFA (TOTP) is optional for local testing (`AUTH_REQUIRE_MFA=false`) and mandatory in
+  production. Accounts that already enabled MFA still require their authenticator code.
 * Never commit `.env`. Rotate `ENCRYPTION_KEYS` by prepending a new key (see ADR-006).
 * Lost authenticator: `docker compose exec backend python -m app.cli reset-mfa --email <email>`.

@@ -559,6 +559,63 @@
         "title": "Body_upload_document_api_v1_workspaces__workspace_id__documents_post",
         "type": "object"
       },
+      "CalendarEventOut": {
+        "properties": {
+          "all_day": {
+            "title": "All Day",
+            "type": "boolean"
+          },
+          "end": {
+            "title": "End",
+            "type": "string"
+          },
+          "html_link": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Html Link"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "location": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Location"
+          },
+          "start": {
+            "title": "Start",
+            "type": "string"
+          },
+          "summary": {
+            "title": "Summary",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "summary",
+          "start",
+          "end",
+          "all_day",
+          "html_link",
+          "location"
+        ],
+        "title": "CalendarEventOut",
+        "type": "object"
+      },
       "CalendarOut": {
         "properties": {
           "connected": {
@@ -578,7 +635,7 @@
           },
           "events": {
             "items": {
-              "$ref": "#/components/schemas/app__modules__calendar__router__EventOut"
+              "$ref": "#/components/schemas/CalendarEventOut"
             },
             "title": "Events",
             "type": "array"
@@ -1285,6 +1342,76 @@
           "start"
         ],
         "title": "EventIn",
+        "type": "object"
+      },
+      "EventOut": {
+        "properties": {
+          "actor_user_id": {
+            "anyOf": [
+              {
+                "format": "uuid",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Actor User Id"
+          },
+          "event_type": {
+            "title": "Event Type",
+            "type": "string"
+          },
+          "id": {
+            "format": "uuid",
+            "title": "Id",
+            "type": "string"
+          },
+          "occurred_at": {
+            "format": "date-time",
+            "title": "Occurred At",
+            "type": "string"
+          },
+          "payload": {
+            "additionalProperties": true,
+            "title": "Payload",
+            "type": "object"
+          },
+          "published_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Published At"
+          },
+          "workspace_id": {
+            "anyOf": [
+              {
+                "format": "uuid",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Workspace Id"
+          }
+        },
+        "required": [
+          "id",
+          "event_type",
+          "occurred_at",
+          "published_at",
+          "workspace_id",
+          "actor_user_id",
+          "payload"
+        ],
+        "title": "EventOut",
         "type": "object"
       },
       "ExecutionDetailOut": {
@@ -3503,133 +3630,6 @@
         ],
         "title": "WorkspaceOut",
         "type": "object"
-      },
-      "app__modules__calendar__router__EventOut": {
-        "properties": {
-          "all_day": {
-            "title": "All Day",
-            "type": "boolean"
-          },
-          "end": {
-            "title": "End",
-            "type": "string"
-          },
-          "html_link": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Html Link"
-          },
-          "id": {
-            "title": "Id",
-            "type": "string"
-          },
-          "location": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Location"
-          },
-          "start": {
-            "title": "Start",
-            "type": "string"
-          },
-          "summary": {
-            "title": "Summary",
-            "type": "string"
-          }
-        },
-        "required": [
-          "id",
-          "summary",
-          "start",
-          "end",
-          "all_day",
-          "html_link",
-          "location"
-        ],
-        "title": "EventOut",
-        "type": "object"
-      },
-      "app__modules__events__router__EventOut": {
-        "properties": {
-          "actor_user_id": {
-            "anyOf": [
-              {
-                "format": "uuid",
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Actor User Id"
-          },
-          "event_type": {
-            "title": "Event Type",
-            "type": "string"
-          },
-          "id": {
-            "format": "uuid",
-            "title": "Id",
-            "type": "string"
-          },
-          "occurred_at": {
-            "format": "date-time",
-            "title": "Occurred At",
-            "type": "string"
-          },
-          "payload": {
-            "additionalProperties": true,
-            "title": "Payload",
-            "type": "object"
-          },
-          "published_at": {
-            "anyOf": [
-              {
-                "format": "date-time",
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Published At"
-          },
-          "workspace_id": {
-            "anyOf": [
-              {
-                "format": "uuid",
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Workspace Id"
-          }
-        },
-        "required": [
-          "id",
-          "event_type",
-          "occurred_at",
-          "published_at",
-          "workspace_id",
-          "actor_user_id",
-          "payload"
-        ],
-        "title": "EventOut",
-        "type": "object"
       }
     }
   },
@@ -4362,7 +4362,7 @@
               "application/json": {
                 "schema": {
                   "items": {
-                    "$ref": "#/components/schemas/app__modules__events__router__EventOut"
+                    "$ref": "#/components/schemas/EventOut"
                   },
                   "title": "Response List Events Api V1 Events Get",
                   "type": "array"
@@ -5720,7 +5720,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/app__modules__calendar__router__EventOut"
+                  "$ref": "#/components/schemas/CalendarEventOut"
                 }
               }
             },

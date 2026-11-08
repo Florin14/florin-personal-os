@@ -35,7 +35,7 @@ class Settings(BaseSettings):
     # Comma separated Fernet keys. The first key encrypts; all keys decrypt.
     encryption_keys: Annotated[list[SecretStr], NoDecode]
 
-    allowed_origins: Annotated[list[str], NoDecode] = ["http://localhost:5173"]
+    allowed_origins: Annotated[list[str], NoDecode] = ["http://localhost:3000"]
 
     session_cookie_name: str = "pos_session"
     csrf_cookie_name: str = "pos_csrf"
