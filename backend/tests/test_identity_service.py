@@ -2,8 +2,6 @@
 
 from __future__ import annotations
 
-from datetime import UTC, datetime, timedelta
-
 import pytest
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -18,23 +16,7 @@ from app.modules.identity.service import (
     InvalidCredentials,
     NextStep,
 )
-from tests.conftest import DEFAULT_PASSWORD, UserFactory, make_settings
-
-
-class Clock:
-    def __init__(self) -> None:
-        self.now = datetime.now(UTC)
-
-    def __call__(self) -> datetime:
-        return self.now
-
-    def advance(self, **delta: float) -> None:
-        self.now += timedelta(**delta)
-
-
-@pytest.fixture
-def clock() -> Clock:
-    return Clock()
+from tests.conftest import DEFAULT_PASSWORD, Clock, UserFactory, make_settings
 
 
 @pytest.fixture

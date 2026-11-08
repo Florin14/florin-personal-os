@@ -10,7 +10,13 @@ import pytest
 
 APP_DIR = Path(__file__).resolve().parent.parent / "app"
 # Composition roots may know every module.
-COMPOSITION_ROOTS = {"main.py", "cli.py", "modules/registry.py", "migrations/env.py"}
+COMPOSITION_ROOTS = {
+    "main.py",
+    "cli.py",
+    "worker.py",
+    "modules/registry.py",
+    "migrations/env.py",
+}
 FRAMEWORK_PACKAGES = ("fastapi", "starlette")
 
 

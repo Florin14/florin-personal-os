@@ -12,6 +12,7 @@ import os
 import time
 from collections.abc import AsyncIterator, Awaitable, Callable
 from dataclasses import dataclass
+from datetime import UTC, datetime, timedelta
 
 import httpx
 import pytest
@@ -20,12 +21,19 @@ from alembic.config import Config
 from fastapi import FastAPI
 from pydantic import SecretStr
 from sqlalchemy import Connection, text
-from sqlalchemy.ext.asyncio import AsyncEngine, AsyncSession, create_async_engine
+from sqlalchemy.ext.asyncio import (
+    AsyncConnection,
+    AsyncEngine,
+    AsyncSession,
+    async_sessionmaker,
+    create_async_engine,
+)
 
 from app.core.config import Environment, Settings
 from app.core.dependencies import get_db_session
 from app.core.security import totp
 from app.core.security.encryption import SecretBox, generate_key
+from app.core.tasks import WorkerContext
 from app.main import create_app
 from app.modules.identity.models import User
 from app.modules.identity.service import IdentityService
@@ -97,17 +105,60 @@ async def engine() -> AsyncIterator[AsyncEngine]:
 
 
 @pytest.fixture
-async def db_session(engine: AsyncEngine) -> AsyncIterator[AsyncSession]:
+async def db_connection(engine: AsyncEngine) -> AsyncIterator[AsyncConnection]:
+    """A connection inside an outer transaction that is rolled back after the test."""
     async with engine.connect() as conn:
         outer = await conn.begin()
-        session = AsyncSession(
-            bind=conn, join_transaction_mode="create_savepoint", expire_on_commit=False
-        )
         try:
-            yield session
+            yield conn
         finally:
-            await session.close()
             await outer.rollback()
+
+
+@pytest.fixture
+def session_factory(db_connection: AsyncConnection) -> async_sessionmaker[AsyncSession]:
+    """Sessions whose commits become savepoints of the test transaction."""
+    return async_sessionmaker(
+        bind=db_connection, join_transaction_mode="create_savepoint", expire_on_commit=False
+    )
+
+
+@pytest.fixture
+async def db_session(
+    session_factory: async_sessionmaker[AsyncSession],
+) -> AsyncIterator[AsyncSession]:
+    async with session_factory() as session:
+        yield session
+
+
+class Clock:
+    """Controllable UTC clock for time-dependent tests."""
+
+    def __init__(self) -> None:
+        self.now = datetime.now(UTC)
+
+    def __call__(self) -> datetime:
+        return self.now
+
+    def advance(self, **delta: float) -> None:
+        self.now += timedelta(**delta)
+
+
+@pytest.fixture
+def clock() -> Clock:
+    return Clock()
+
+
+@pytest.fixture
+def worker_ctx(
+    session_factory: async_sessionmaker[AsyncSession],
+    settings: Settings,
+    secret_box: SecretBox,
+    clock: Clock,
+) -> WorkerContext:
+    return WorkerContext(
+        session_factory=session_factory, settings=settings, secret_box=secret_box, clock=clock
+    )
 
 
 def build_app(settings: Settings, db_session: AsyncSession) -> FastAPI:
@@ -151,10 +202,14 @@ class UserFactory:
     identity: IdentityService
     counter: int = 0
 
-    async def __call__(self, *, email: str | None = None, password: str = DEFAULT_PASSWORD) -> User:
+    async def __call__(
+        self, *, email: str | None = None, password: str = DEFAULT_PASSWORD, is_admin: bool = False
+    ) -> User:
         self.counter += 1
         email = email or f"user{self.counter}-{time.monotonic_ns()}@example.test"
-        return await self.identity.create_user(email, f"User {self.counter}", password)
+        return await self.identity.create_user(
+            email, f"User {self.counter}", password, is_admin=is_admin
+        )
 
     async def workspace(
         self, owner: User, name: str, kind: WorkspaceKind = WorkspaceKind.PERSONAL

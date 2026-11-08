@@ -50,6 +50,14 @@ class Settings(BaseSettings):
     auth_lockout_minutes: int = Field(default=15, ge=1)
     totp_issuer: str = "Personal OS"
 
+    # Background worker
+    worker_poll_interval_seconds: float = Field(default=2.0, gt=0)
+    worker_batch_size: int = Field(default=5, ge=1, le=100)
+
+    # Retention
+    job_retention_days: int = Field(default=30, ge=1)
+    audit_retention_days: int = Field(default=365, ge=30)
+
     @field_validator("encryption_keys", mode="before")
     @classmethod
     def _split_keys(cls, value: object) -> object:

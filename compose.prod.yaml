@@ -66,6 +66,24 @@ services:
     <<: *hardening
     logging: *logging
 
+  worker:
+    image: personal-os-backend:prod
+    command: ["python", "-m", "app.worker"]
+    environment: *backend-env
+    # data: database; edge: outbound access for integrations.
+    networks: [data, edge]
+    depends_on:
+      migrate: { condition: service_completed_successfully }
+    restart: unless-stopped
+    read_only: true
+    tmpfs: ["/tmp"]
+    mem_limit: 256m
+    stop_grace_period: 60s
+    healthcheck:
+      disable: true
+    <<: *hardening
+    logging: *logging
+
   web:
     build: { context: ./frontend, target: prod }
     image: personal-os-web:prod

@@ -61,6 +61,17 @@ services:
       retries: 10
       start_period: 10s
 
+  worker:
+    image: personal-os-backend:dev
+    # Restarts automatically when backend code changes.
+    command: ["watchfiles", "--filter", "python", "python -m app.worker", "app"]
+    environment: *backend-env
+    volumes:
+      - ./backend/app:/app/app
+    depends_on:
+      migrate: { condition: service_completed_successfully }
+    restart: unless-stopped
+
   frontend:
     build: { context: ./frontend, target: dev }
     image: personal-os-frontend:dev

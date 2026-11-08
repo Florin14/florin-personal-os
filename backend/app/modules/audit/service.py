@@ -5,14 +5,15 @@ from __future__ import annotations
 import uuid
 from collections.abc import Sequence
 from dataclasses import dataclass
-from datetime import datetime
+from datetime import datetime, timedelta
 from enum import StrEnum
 from typing import Any
 
-from sqlalchemy import or_, select
+from sqlalchemy import delete, or_, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.logging import redact, request_id_var
+from app.core.tasks import WorkerContext
 from app.modules.audit.models import AuditRecord
 
 
@@ -108,3 +109,11 @@ class AuditQueryService:
             stmt = stmt.where(AuditRecord.action.like(f"{escaped}%", escape="\\"))
         stmt = stmt.order_by(AuditRecord.occurred_at.desc(), AuditRecord.id.desc()).limit(limit)
         return list(await self._db.scalars(stmt))
+
+
+async def purge_expired_audit_records(worker: WorkerContext) -> None:
+    """Retention policy: delete audit records older than ``audit_retention_days``."""
+    cutoff = worker.clock() - timedelta(days=worker.settings.audit_retention_days)
+    async with worker.session_factory() as db:
+        await db.execute(delete(AuditRecord).where(AuditRecord.occurred_at < cutoff))
+        await db.commit()
