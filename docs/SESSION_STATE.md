@@ -116,15 +116,23 @@ Done — banking (P5-1…P5-3):
 - Verified: ruff/mypy strict clean; 214 backend tests pass; migration upgrade/downgrade/check;
   API walkthrough + Chromium walkthrough against the dev stack (all criteria hold, data cleaned up).
 
+Done — shopping (P5-4…P5-6, ADR-022):
+- Backend `app/modules/shopping/` (models, identity, providers = manual only, service, router,
+  actions). Migration `20261109_e50bebad6df2_shopping`. Product identity is unique by
+  `identity_key` AND by `model_key` (brand+model), so GTIN and non-GTIN entries cannot duplicate.
+  Event-triggered workflows receive `{event_type, event: <payload>}` → templates use
+  `{{ trigger.event.<field> }}`. Builder template "Approve before buying" added.
+- Frontend `/shopping` (lazy route): alerts strip, product cards, product panel (comparison table,
+  listings, record price, decision/purchase, price history chart). Chart palette validated with the
+  dataviz validator on #0b1120: #4f7dff,#d95926,#1aa3bf,#d55181,#9085e9 (fixed order by merchant).
+
+**Phase 5 is complete.**
+
 Remaining (resume here):
-1. P5-4 `shopping` module (merchants, canonical products, listings, manual price observations,
-   history, thresholds). Manual source only — no scraping; SSRF rules in ARCHITECTURE §threat model
-   apply if URLs are ever fetched.
-2. P5-5 alerts via notifications + approval-gated confirmation (no checkout).
-3. P5-6 Shopping Intelligence UI (price history chart with Recharts).
-4. Follow-ups: store the provider's gross invoice total so gross payments can auto-match
+1. Phase 6 scoping: freelance opportunity discovery + optional AI (PROJECT_SPEC §10, §14).
+2. Follow-ups: store the provider's gross invoice total so gross payments can auto-match
    (ADR-021 consequence); lazy-load heavy pages (main chunk ~250 KB gzip).
-5. Note for the owner: `docs/CLAUDE.md` §4 still lists "Material UI" under Frontend (§6 already
+3. Note for the owner: `docs/CLAUDE.md` §4 still lists "Material UI" under Frontend (§6 already
    says Tailwind/shadcn). Owner-maintained file; not edited by the agent.
 
 Dev-server notes:

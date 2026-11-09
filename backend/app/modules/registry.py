@@ -19,6 +19,7 @@ from app.modules.invoicing.module import module as invoicing
 from app.modules.jobs.module import module as jobs
 from app.modules.notifications.module import module as notifications
 from app.modules.oblio.module import module as oblio
+from app.modules.shopping.module import module as shopping
 from app.modules.system.module import module as system
 from app.modules.workspaces.module import module as workspaces
 
@@ -41,6 +42,7 @@ MODULES: tuple[Module, ...] = (
     documents,
     expenses,
     banking,
+    shopping,
 )
 
 
@@ -63,4 +65,5 @@ def import_all_models() -> None:
     import app.modules.invoicing.models
     import app.modules.jobs.models
     import app.modules.notifications.models
+    import app.modules.shopping.models
     import app.modules.workspaces.models  # noqa: F401

@@ -1247,6 +1247,205 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/workspaces/{workspace_id}/shopping/alerts": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Alerts */
+        get: operations["list_alerts_api_v1_workspaces__workspace_id__shopping_alerts_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/workspaces/{workspace_id}/shopping/alerts/{alert_id}/dismiss": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Dismiss Alert */
+        post: operations["dismiss_alert_api_v1_workspaces__workspace_id__shopping_alerts__alert_id__dismiss_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/workspaces/{workspace_id}/shopping/listings/{listing_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** Update Listing */
+        put: operations["update_listing_api_v1_workspaces__workspace_id__shopping_listings__listing_id__put"];
+        post?: never;
+        /** Delete Listing */
+        delete: operations["delete_listing_api_v1_workspaces__workspace_id__shopping_listings__listing_id__delete"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/workspaces/{workspace_id}/shopping/listings/{listing_id}/observations": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Record Price
+         * @description Records a price seen by the user; returns any alerts it triggered.
+         */
+        post: operations["record_price_api_v1_workspaces__workspace_id__shopping_listings__listing_id__observations_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/workspaces/{workspace_id}/shopping/merchants": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Merchants */
+        get: operations["list_merchants_api_v1_workspaces__workspace_id__shopping_merchants_get"];
+        put?: never;
+        /** Create Merchant */
+        post: operations["create_merchant_api_v1_workspaces__workspace_id__shopping_merchants_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/workspaces/{workspace_id}/shopping/merchants/{merchant_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** Update Merchant */
+        put: operations["update_merchant_api_v1_workspaces__workspace_id__shopping_merchants__merchant_id__put"];
+        post?: never;
+        /** Delete Merchant */
+        delete: operations["delete_merchant_api_v1_workspaces__workspace_id__shopping_merchants__merchant_id__delete"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/workspaces/{workspace_id}/shopping/observations/{observation_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** Delete Observation */
+        delete: operations["delete_observation_api_v1_workspaces__workspace_id__shopping_observations__observation_id__delete"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/workspaces/{workspace_id}/shopping/products": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Products */
+        get: operations["list_products_api_v1_workspaces__workspace_id__shopping_products_get"];
+        put?: never;
+        /** Create Product */
+        post: operations["create_product_api_v1_workspaces__workspace_id__shopping_products_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/workspaces/{workspace_id}/shopping/products/{product_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Product Detail */
+        get: operations["product_detail_api_v1_workspaces__workspace_id__shopping_products__product_id__get"];
+        /** Update Product */
+        put: operations["update_product_api_v1_workspaces__workspace_id__shopping_products__product_id__put"];
+        post?: never;
+        /** Delete Product */
+        delete: operations["delete_product_api_v1_workspaces__workspace_id__shopping_products__product_id__delete"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/workspaces/{workspace_id}/shopping/products/{product_id}/listings": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Add Listing */
+        post: operations["add_listing_api_v1_workspaces__workspace_id__shopping_products__product_id__listings_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/workspaces/{workspace_id}/shopping/products/{product_id}/status": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /**
+         * Set Product Status
+         * @description Record a purchase decision or a purchase made elsewhere (no checkout happens here).
+         */
+        put: operations["set_product_status_api_v1_workspaces__workspace_id__shopping_products__product_id__status_put"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/workspaces/{workspace_id}/tasks": {
         parameters: {
             query?: never;
@@ -1366,6 +1565,42 @@ export interface components {
             side_effecting: boolean;
             /** Title */
             title: string;
+        };
+        /** AlertOut */
+        AlertOut: {
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /** Currency */
+            currency: string;
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /**
+             * Kind
+             * @enum {string}
+             */
+            kind: "below_target" | "price_drop" | "back_in_stock";
+            /** Previous Price */
+            previous_price: string | null;
+            /** Price */
+            price: string;
+            /**
+             * Product Id
+             * Format: uuid
+             */
+            product_id: string;
+            /** Product Name */
+            product_name: string;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "open" | "dismissed";
         };
         /** ApprovalOut */
         ApprovalOut: {
@@ -1550,6 +1785,27 @@ export interface components {
             description?: string | null;
             /** Name */
             name?: string | null;
+        };
+        /** BestOfferOut */
+        BestOfferOut: {
+            /** Currency */
+            currency: string;
+            /** In Stock */
+            in_stock: boolean | null;
+            /**
+             * Listing Id
+             * Format: uuid
+             */
+            listing_id: string;
+            /** Merchant */
+            merchant: string;
+            /**
+             * Observed At
+             * Format: date-time
+             */
+            observed_at: string;
+            /** Price */
+            price: string;
         };
         /** Body_import_statement_api_v1_workspaces__workspace_id__banking_accounts__account_id__imports_post */
         Body_import_statement_api_v1_workspaces__workspace_id__banking_accounts__account_id__imports_post: {
@@ -2232,6 +2488,37 @@ export interface components {
          * @enum {string}
          */
         JobStatus: "queued" | "running" | "succeeded" | "failed" | "cancelled";
+        /** ListingIn */
+        ListingIn: {
+            /**
+             * Merchant Id
+             * Format: uuid
+             */
+            merchant_id: string;
+            /** Url */
+            url?: string | null;
+        };
+        /** ListingOut */
+        ListingOut: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            latest: components["schemas"]["ObservationOut"] | null;
+            /** Lowest Price */
+            lowest_price: string | null;
+            merchant: components["schemas"]["MerchantOut"];
+            /** Source */
+            source: string;
+            /** Url */
+            url: string | null;
+        };
+        /** ListingUpdateIn */
+        ListingUpdateIn: {
+            /** Url */
+            url?: string | null;
+        };
         /** LoginRequest */
         LoginRequest: {
             /** Email */
@@ -2274,6 +2561,25 @@ export interface components {
              * Format: uuid
              */
             transaction_id: string;
+        };
+        /** MerchantIn */
+        MerchantIn: {
+            /** Name */
+            name: string;
+            /** Website */
+            website?: string | null;
+        };
+        /** MerchantOut */
+        MerchantOut: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Name */
+            name: string;
+            /** Website */
+            website: string | null;
         };
         /** MfaCodeRequest */
         MfaCodeRequest: {
@@ -2320,6 +2626,50 @@ export interface components {
             /** Workspace Id */
             workspace_id: string | null;
         };
+        /** ObservationIn */
+        ObservationIn: {
+            /** Currency */
+            currency?: string | null;
+            /** In Stock */
+            in_stock?: boolean | null;
+            /**
+             * Note
+             * @default
+             */
+            note: string;
+            /** Observed At */
+            observed_at?: string | null;
+            /** Price */
+            price: number | string;
+        };
+        /** ObservationOut */
+        ObservationOut: {
+            /** Currency */
+            currency: string;
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** In Stock */
+            in_stock: boolean | null;
+            /**
+             * Listing Id
+             * Format: uuid
+             */
+            listing_id: string;
+            /** Note */
+            note: string;
+            /**
+             * Observed At
+             * Format: date-time
+             */
+            observed_at: string;
+            /** Price */
+            price: string;
+            /** Source */
+            source: string;
+        };
         /** PreviewOut */
         PreviewOut: {
             /** Columns */
@@ -2360,6 +2710,108 @@ export interface components {
             reference: string;
             /** Value Date */
             value_date: string | null;
+        };
+        /** ProductDetailOut */
+        ProductDetailOut: {
+            /** Alerts */
+            alerts: components["schemas"]["AlertOut"][];
+            /** History */
+            history: components["schemas"]["ObservationOut"][];
+            /** Listings */
+            listings: components["schemas"]["ListingOut"][];
+            product: components["schemas"]["ProductOut"];
+        };
+        /** ProductIn */
+        ProductIn: {
+            /**
+             * Brand
+             * @default
+             */
+            brand: string;
+            /**
+             * Category
+             * @default
+             */
+            category: string;
+            /**
+             * Currency
+             * @default RON
+             */
+            currency: string;
+            /**
+             * Drop Alert Percent
+             * @default 5
+             */
+            drop_alert_percent: number | string;
+            /** Gtin */
+            gtin?: string | null;
+            /**
+             * Model
+             * @default
+             */
+            model: string;
+            /** Name */
+            name: string;
+            /**
+             * Notes
+             * @default
+             */
+            notes: string;
+            /** Target Price */
+            target_price?: number | string | null;
+        };
+        /** ProductOut */
+        ProductOut: {
+            best?: components["schemas"]["BestOfferOut"] | null;
+            /** Brand */
+            brand: string;
+            /** Category */
+            category: string;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /** Currency */
+            currency: string;
+            /** Decided At */
+            decided_at: string | null;
+            /** Decided Price */
+            decided_price: string | null;
+            /** Drop Alert Percent */
+            drop_alert_percent: string;
+            /** Gtin */
+            gtin: string | null;
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /**
+             * Listing Count
+             * @default 0
+             */
+            listing_count: number;
+            /** Model */
+            model: string;
+            /** Name */
+            name: string;
+            /** Notes */
+            notes: string;
+            /**
+             * Open Alerts
+             * @default 0
+             */
+            open_alerts: number;
+            /** Purchased At */
+            purchased_at: string | null;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "watching" | "approved" | "purchased" | "archived";
+            /** Target Price */
+            target_price: string | null;
         };
         /** ProfileIn */
         ProfileIn: {
@@ -2591,6 +3043,12 @@ export interface components {
             /** Suggested */
             suggested: number;
         };
+        /** RecordedOut */
+        RecordedOut: {
+            /** Alerts */
+            alerts: components["schemas"]["AlertOut"][];
+            observation: components["schemas"]["ObservationOut"];
+        };
         /** ReviewItemOut */
         ReviewItemOut: {
             /** Suggestions */
@@ -2669,6 +3127,16 @@ export interface components {
          * @enum {string}
          */
         Severity: "info" | "success" | "warning" | "error";
+        /** StatusIn */
+        StatusIn: {
+            /** Price */
+            price?: number | string | null;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "watching" | "approved" | "purchased" | "archived";
+        };
         /** StepOut */
         StepOut: {
             /** Approval Id */
@@ -5638,6 +6106,571 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["InvoiceOut"][];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    list_alerts_api_v1_workspaces__workspace_id__shopping_alerts_get: {
+        parameters: {
+            query?: {
+                status?: ("open" | "dismissed") | null;
+            };
+            header?: never;
+            path: {
+                workspace_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AlertOut"][];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    dismiss_alert_api_v1_workspaces__workspace_id__shopping_alerts__alert_id__dismiss_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                alert_id: string;
+                workspace_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AlertOut"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    update_listing_api_v1_workspaces__workspace_id__shopping_listings__listing_id__put: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                listing_id: string;
+                workspace_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ListingUpdateIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    delete_listing_api_v1_workspaces__workspace_id__shopping_listings__listing_id__delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                listing_id: string;
+                workspace_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    record_price_api_v1_workspaces__workspace_id__shopping_listings__listing_id__observations_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                listing_id: string;
+                workspace_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ObservationIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RecordedOut"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    list_merchants_api_v1_workspaces__workspace_id__shopping_merchants_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                workspace_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MerchantOut"][];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    create_merchant_api_v1_workspaces__workspace_id__shopping_merchants_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                workspace_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["MerchantIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MerchantOut"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    update_merchant_api_v1_workspaces__workspace_id__shopping_merchants__merchant_id__put: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                merchant_id: string;
+                workspace_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["MerchantIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MerchantOut"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    delete_merchant_api_v1_workspaces__workspace_id__shopping_merchants__merchant_id__delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                merchant_id: string;
+                workspace_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    delete_observation_api_v1_workspaces__workspace_id__shopping_observations__observation_id__delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                observation_id: string;
+                workspace_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    list_products_api_v1_workspaces__workspace_id__shopping_products_get: {
+        parameters: {
+            query?: {
+                status?: ("watching" | "approved" | "purchased" | "archived") | null;
+            };
+            header?: never;
+            path: {
+                workspace_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProductOut"][];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    create_product_api_v1_workspaces__workspace_id__shopping_products_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                workspace_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ProductIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProductOut"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    product_detail_api_v1_workspaces__workspace_id__shopping_products__product_id__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                product_id: string;
+                workspace_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProductDetailOut"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    update_product_api_v1_workspaces__workspace_id__shopping_products__product_id__put: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                product_id: string;
+                workspace_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ProductIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProductOut"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    delete_product_api_v1_workspaces__workspace_id__shopping_products__product_id__delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                product_id: string;
+                workspace_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    add_listing_api_v1_workspaces__workspace_id__shopping_products__product_id__listings_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                product_id: string;
+                workspace_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ListingIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ListingOut"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    set_product_status_api_v1_workspaces__workspace_id__shopping_products__product_id__status_put: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                product_id: string;
+                workspace_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["StatusIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProductOut"];
                 };
             };
             /** @description Client error */

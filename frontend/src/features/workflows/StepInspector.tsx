@@ -32,6 +32,8 @@ const KNOWN_EVENTS = [
   'approvals.requested',
   'approvals.decided',
   'approvals.expired',
+  'banking.statement_imported',
+  'shopping.price_alert',
 ];
 const TIMEZONES = ['Europe/Bucharest', 'UTC', 'Europe/London', 'Europe/Berlin', 'America/New_York'];
 const CRON_PRESETS = [

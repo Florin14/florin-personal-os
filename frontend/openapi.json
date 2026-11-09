@@ -153,6 +153,78 @@
         "title": "ActionOut",
         "type": "object"
       },
+      "AlertOut": {
+        "properties": {
+          "created_at": {
+            "format": "date-time",
+            "title": "Created At",
+            "type": "string"
+          },
+          "currency": {
+            "title": "Currency",
+            "type": "string"
+          },
+          "id": {
+            "format": "uuid",
+            "title": "Id",
+            "type": "string"
+          },
+          "kind": {
+            "enum": [
+              "below_target",
+              "price_drop",
+              "back_in_stock"
+            ],
+            "title": "Kind",
+            "type": "string"
+          },
+          "previous_price": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Previous Price"
+          },
+          "price": {
+            "title": "Price",
+            "type": "string"
+          },
+          "product_id": {
+            "format": "uuid",
+            "title": "Product Id",
+            "type": "string"
+          },
+          "product_name": {
+            "title": "Product Name",
+            "type": "string"
+          },
+          "status": {
+            "enum": [
+              "open",
+              "dismissed"
+            ],
+            "title": "Status",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "product_id",
+          "product_name",
+          "kind",
+          "price",
+          "previous_price",
+          "currency",
+          "status",
+          "created_at"
+        ],
+        "title": "AlertOut",
+        "type": "object"
+      },
       "ApprovalOut": {
         "properties": {
           "action_type": {
@@ -639,6 +711,53 @@
           "definition"
         ],
         "title": "AutomationUpdateIn",
+        "type": "object"
+      },
+      "BestOfferOut": {
+        "properties": {
+          "currency": {
+            "title": "Currency",
+            "type": "string"
+          },
+          "in_stock": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "In Stock"
+          },
+          "listing_id": {
+            "format": "uuid",
+            "title": "Listing Id",
+            "type": "string"
+          },
+          "merchant": {
+            "title": "Merchant",
+            "type": "string"
+          },
+          "observed_at": {
+            "format": "date-time",
+            "title": "Observed At",
+            "type": "string"
+          },
+          "price": {
+            "title": "Price",
+            "type": "string"
+          }
+        },
+        "required": [
+          "listing_id",
+          "merchant",
+          "price",
+          "currency",
+          "in_stock",
+          "observed_at"
+        ],
+        "title": "BestOfferOut",
         "type": "object"
       },
       "Body_import_statement_api_v1_workspaces__workspace_id__banking_accounts__account_id__imports_post": {
@@ -2558,6 +2677,110 @@
         "title": "JobStatus",
         "type": "string"
       },
+      "ListingIn": {
+        "additionalProperties": false,
+        "properties": {
+          "merchant_id": {
+            "format": "uuid",
+            "title": "Merchant Id",
+            "type": "string"
+          },
+          "url": {
+            "anyOf": [
+              {
+                "maxLength": 500,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Url"
+          }
+        },
+        "required": [
+          "merchant_id"
+        ],
+        "title": "ListingIn",
+        "type": "object"
+      },
+      "ListingOut": {
+        "properties": {
+          "id": {
+            "format": "uuid",
+            "title": "Id",
+            "type": "string"
+          },
+          "latest": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ObservationOut"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "lowest_price": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Lowest Price"
+          },
+          "merchant": {
+            "$ref": "#/components/schemas/MerchantOut"
+          },
+          "source": {
+            "title": "Source",
+            "type": "string"
+          },
+          "url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Url"
+          }
+        },
+        "required": [
+          "id",
+          "merchant",
+          "url",
+          "source",
+          "latest",
+          "lowest_price"
+        ],
+        "title": "ListingOut",
+        "type": "object"
+      },
+      "ListingUpdateIn": {
+        "additionalProperties": false,
+        "properties": {
+          "url": {
+            "anyOf": [
+              {
+                "maxLength": 500,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Url"
+          }
+        },
+        "title": "ListingUpdateIn",
+        "type": "object"
+      },
       "LoginRequest": {
         "additionalProperties": false,
         "properties": {
@@ -2671,6 +2894,65 @@
           "decided_at"
         ],
         "title": "MatchOut",
+        "type": "object"
+      },
+      "MerchantIn": {
+        "additionalProperties": false,
+        "properties": {
+          "name": {
+            "maxLength": 100,
+            "minLength": 1,
+            "title": "Name",
+            "type": "string"
+          },
+          "website": {
+            "anyOf": [
+              {
+                "maxLength": 500,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Website"
+          }
+        },
+        "required": [
+          "name"
+        ],
+        "title": "MerchantIn",
+        "type": "object"
+      },
+      "MerchantOut": {
+        "properties": {
+          "id": {
+            "format": "uuid",
+            "title": "Id",
+            "type": "string"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "website": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Website"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "website"
+        ],
+        "title": "MerchantOut",
         "type": "object"
       },
       "MfaCodeRequest": {
@@ -2797,6 +3079,127 @@
         "title": "NotificationOut",
         "type": "object"
       },
+      "ObservationIn": {
+        "additionalProperties": false,
+        "properties": {
+          "currency": {
+            "anyOf": [
+              {
+                "pattern": "^[A-Z]{3}$",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Currency"
+          },
+          "in_stock": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "In Stock"
+          },
+          "note": {
+            "default": "",
+            "maxLength": 300,
+            "title": "Note",
+            "type": "string"
+          },
+          "observed_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Observed At"
+          },
+          "price": {
+            "anyOf": [
+              {
+                "exclusiveMinimum": 0.0,
+                "type": "number"
+              },
+              {
+                "type": "string"
+              }
+            ],
+            "title": "Price"
+          }
+        },
+        "required": [
+          "price"
+        ],
+        "title": "ObservationIn",
+        "type": "object"
+      },
+      "ObservationOut": {
+        "properties": {
+          "currency": {
+            "title": "Currency",
+            "type": "string"
+          },
+          "id": {
+            "format": "uuid",
+            "title": "Id",
+            "type": "string"
+          },
+          "in_stock": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "In Stock"
+          },
+          "listing_id": {
+            "format": "uuid",
+            "title": "Listing Id",
+            "type": "string"
+          },
+          "note": {
+            "title": "Note",
+            "type": "string"
+          },
+          "observed_at": {
+            "format": "date-time",
+            "title": "Observed At",
+            "type": "string"
+          },
+          "price": {
+            "title": "Price",
+            "type": "string"
+          },
+          "source": {
+            "title": "Source",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "listing_id",
+          "price",
+          "currency",
+          "in_stock",
+          "observed_at",
+          "source",
+          "note"
+        ],
+        "title": "ObservationOut",
+        "type": "object"
+      },
       "PreviewOut": {
         "properties": {
           "columns": {
@@ -2904,6 +3307,277 @@
           "reference"
         ],
         "title": "PreviewRowOut",
+        "type": "object"
+      },
+      "ProductDetailOut": {
+        "properties": {
+          "alerts": {
+            "items": {
+              "$ref": "#/components/schemas/AlertOut"
+            },
+            "title": "Alerts",
+            "type": "array"
+          },
+          "history": {
+            "items": {
+              "$ref": "#/components/schemas/ObservationOut"
+            },
+            "title": "History",
+            "type": "array"
+          },
+          "listings": {
+            "items": {
+              "$ref": "#/components/schemas/ListingOut"
+            },
+            "title": "Listings",
+            "type": "array"
+          },
+          "product": {
+            "$ref": "#/components/schemas/ProductOut"
+          }
+        },
+        "required": [
+          "product",
+          "listings",
+          "history",
+          "alerts"
+        ],
+        "title": "ProductDetailOut",
+        "type": "object"
+      },
+      "ProductIn": {
+        "additionalProperties": false,
+        "properties": {
+          "brand": {
+            "default": "",
+            "maxLength": 100,
+            "title": "Brand",
+            "type": "string"
+          },
+          "category": {
+            "default": "",
+            "maxLength": 50,
+            "title": "Category",
+            "type": "string"
+          },
+          "currency": {
+            "default": "RON",
+            "pattern": "^[A-Z]{3}$",
+            "title": "Currency",
+            "type": "string"
+          },
+          "drop_alert_percent": {
+            "anyOf": [
+              {
+                "exclusiveMinimum": 0.0,
+                "maximum": 90.0,
+                "type": "number"
+              },
+              {
+                "type": "string"
+              }
+            ],
+            "default": "5",
+            "title": "Drop Alert Percent"
+          },
+          "gtin": {
+            "anyOf": [
+              {
+                "maxLength": 14,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Gtin"
+          },
+          "model": {
+            "default": "",
+            "maxLength": 100,
+            "title": "Model",
+            "type": "string"
+          },
+          "name": {
+            "maxLength": 200,
+            "minLength": 1,
+            "title": "Name",
+            "type": "string"
+          },
+          "notes": {
+            "default": "",
+            "maxLength": 4000,
+            "title": "Notes",
+            "type": "string"
+          },
+          "target_price": {
+            "anyOf": [
+              {
+                "exclusiveMinimum": 0.0,
+                "type": "number"
+              },
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Target Price"
+          }
+        },
+        "required": [
+          "name"
+        ],
+        "title": "ProductIn",
+        "type": "object"
+      },
+      "ProductOut": {
+        "properties": {
+          "best": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/BestOfferOut"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "brand": {
+            "title": "Brand",
+            "type": "string"
+          },
+          "category": {
+            "title": "Category",
+            "type": "string"
+          },
+          "created_at": {
+            "format": "date-time",
+            "title": "Created At",
+            "type": "string"
+          },
+          "currency": {
+            "title": "Currency",
+            "type": "string"
+          },
+          "decided_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Decided At"
+          },
+          "decided_price": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Decided Price"
+          },
+          "drop_alert_percent": {
+            "title": "Drop Alert Percent",
+            "type": "string"
+          },
+          "gtin": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Gtin"
+          },
+          "id": {
+            "format": "uuid",
+            "title": "Id",
+            "type": "string"
+          },
+          "listing_count": {
+            "default": 0,
+            "title": "Listing Count",
+            "type": "integer"
+          },
+          "model": {
+            "title": "Model",
+            "type": "string"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "notes": {
+            "title": "Notes",
+            "type": "string"
+          },
+          "open_alerts": {
+            "default": 0,
+            "title": "Open Alerts",
+            "type": "integer"
+          },
+          "purchased_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Purchased At"
+          },
+          "status": {
+            "enum": [
+              "watching",
+              "approved",
+              "purchased",
+              "archived"
+            ],
+            "title": "Status",
+            "type": "string"
+          },
+          "target_price": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Target Price"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "brand",
+          "model",
+          "gtin",
+          "category",
+          "target_price",
+          "currency",
+          "drop_alert_percent",
+          "status",
+          "decided_price",
+          "decided_at",
+          "purchased_at",
+          "notes",
+          "created_at"
+        ],
+        "title": "ProductOut",
         "type": "object"
       },
       "ProfileIn": {
@@ -3505,6 +4179,26 @@
         "title": "ReconcileOut",
         "type": "object"
       },
+      "RecordedOut": {
+        "properties": {
+          "alerts": {
+            "items": {
+              "$ref": "#/components/schemas/AlertOut"
+            },
+            "title": "Alerts",
+            "type": "array"
+          },
+          "observation": {
+            "$ref": "#/components/schemas/ObservationOut"
+          }
+        },
+        "required": [
+          "observation",
+          "alerts"
+        ],
+        "title": "RecordedOut",
+        "type": "object"
+      },
       "ReviewItemOut": {
         "properties": {
           "suggestions": {
@@ -3664,6 +4358,41 @@
         ],
         "title": "Severity",
         "type": "string"
+      },
+      "StatusIn": {
+        "additionalProperties": false,
+        "properties": {
+          "price": {
+            "anyOf": [
+              {
+                "exclusiveMinimum": 0.0,
+                "type": "number"
+              },
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Price"
+          },
+          "status": {
+            "enum": [
+              "watching",
+              "approved",
+              "purchased",
+              "archived"
+            ],
+            "title": "Status",
+            "type": "string"
+          }
+        },
+        "required": [
+          "status"
+        ],
+        "title": "StatusIn",
+        "type": "object"
       },
       "StepOut": {
         "properties": {
@@ -8667,6 +9396,947 @@
         "summary": "List Invoices",
         "tags": [
           "invoicing"
+        ]
+      }
+    },
+    "/api/v1/workspaces/{workspace_id}/shopping/alerts": {
+      "get": {
+        "operationId": "list_alerts_api_v1_workspaces__workspace_id__shopping_alerts_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "workspace_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Workspace Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "status",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "enum": [
+                    "open",
+                    "dismissed"
+                  ],
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": "open",
+              "title": "Status"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/AlertOut"
+                  },
+                  "title": "Response List Alerts Api V1 Workspaces  Workspace Id  Shopping Alerts Get",
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "4XX": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Client error"
+          }
+        },
+        "summary": "List Alerts",
+        "tags": [
+          "shopping"
+        ]
+      }
+    },
+    "/api/v1/workspaces/{workspace_id}/shopping/alerts/{alert_id}/dismiss": {
+      "post": {
+        "operationId": "dismiss_alert_api_v1_workspaces__workspace_id__shopping_alerts__alert_id__dismiss_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "alert_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Alert Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "workspace_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Workspace Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AlertOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "4XX": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Client error"
+          }
+        },
+        "summary": "Dismiss Alert",
+        "tags": [
+          "shopping"
+        ]
+      }
+    },
+    "/api/v1/workspaces/{workspace_id}/shopping/listings/{listing_id}": {
+      "delete": {
+        "operationId": "delete_listing_api_v1_workspaces__workspace_id__shopping_listings__listing_id__delete",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "listing_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Listing Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "workspace_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Workspace Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "4XX": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Client error"
+          }
+        },
+        "summary": "Delete Listing",
+        "tags": [
+          "shopping"
+        ]
+      },
+      "put": {
+        "operationId": "update_listing_api_v1_workspaces__workspace_id__shopping_listings__listing_id__put",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "listing_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Listing Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "workspace_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Workspace Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ListingUpdateIn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "4XX": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Client error"
+          }
+        },
+        "summary": "Update Listing",
+        "tags": [
+          "shopping"
+        ]
+      }
+    },
+    "/api/v1/workspaces/{workspace_id}/shopping/listings/{listing_id}/observations": {
+      "post": {
+        "description": "Records a price seen by the user; returns any alerts it triggered.",
+        "operationId": "record_price_api_v1_workspaces__workspace_id__shopping_listings__listing_id__observations_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "listing_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Listing Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "workspace_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Workspace Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ObservationIn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RecordedOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "4XX": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Client error"
+          }
+        },
+        "summary": "Record Price",
+        "tags": [
+          "shopping"
+        ]
+      }
+    },
+    "/api/v1/workspaces/{workspace_id}/shopping/merchants": {
+      "get": {
+        "operationId": "list_merchants_api_v1_workspaces__workspace_id__shopping_merchants_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "workspace_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Workspace Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/MerchantOut"
+                  },
+                  "title": "Response List Merchants Api V1 Workspaces  Workspace Id  Shopping Merchants Get",
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "4XX": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Client error"
+          }
+        },
+        "summary": "List Merchants",
+        "tags": [
+          "shopping"
+        ]
+      },
+      "post": {
+        "operationId": "create_merchant_api_v1_workspaces__workspace_id__shopping_merchants_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "workspace_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Workspace Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MerchantIn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MerchantOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "4XX": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Client error"
+          }
+        },
+        "summary": "Create Merchant",
+        "tags": [
+          "shopping"
+        ]
+      }
+    },
+    "/api/v1/workspaces/{workspace_id}/shopping/merchants/{merchant_id}": {
+      "delete": {
+        "operationId": "delete_merchant_api_v1_workspaces__workspace_id__shopping_merchants__merchant_id__delete",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "merchant_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Merchant Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "workspace_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Workspace Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "4XX": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Client error"
+          }
+        },
+        "summary": "Delete Merchant",
+        "tags": [
+          "shopping"
+        ]
+      },
+      "put": {
+        "operationId": "update_merchant_api_v1_workspaces__workspace_id__shopping_merchants__merchant_id__put",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "merchant_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Merchant Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "workspace_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Workspace Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MerchantIn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MerchantOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "4XX": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Client error"
+          }
+        },
+        "summary": "Update Merchant",
+        "tags": [
+          "shopping"
+        ]
+      }
+    },
+    "/api/v1/workspaces/{workspace_id}/shopping/observations/{observation_id}": {
+      "delete": {
+        "operationId": "delete_observation_api_v1_workspaces__workspace_id__shopping_observations__observation_id__delete",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "observation_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Observation Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "workspace_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Workspace Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "4XX": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Client error"
+          }
+        },
+        "summary": "Delete Observation",
+        "tags": [
+          "shopping"
+        ]
+      }
+    },
+    "/api/v1/workspaces/{workspace_id}/shopping/products": {
+      "get": {
+        "operationId": "list_products_api_v1_workspaces__workspace_id__shopping_products_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "workspace_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Workspace Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "status",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "enum": [
+                    "watching",
+                    "approved",
+                    "purchased",
+                    "archived"
+                  ],
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Status"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/ProductOut"
+                  },
+                  "title": "Response List Products Api V1 Workspaces  Workspace Id  Shopping Products Get",
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "4XX": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Client error"
+          }
+        },
+        "summary": "List Products",
+        "tags": [
+          "shopping"
+        ]
+      },
+      "post": {
+        "operationId": "create_product_api_v1_workspaces__workspace_id__shopping_products_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "workspace_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Workspace Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProductIn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "4XX": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Client error"
+          }
+        },
+        "summary": "Create Product",
+        "tags": [
+          "shopping"
+        ]
+      }
+    },
+    "/api/v1/workspaces/{workspace_id}/shopping/products/{product_id}": {
+      "delete": {
+        "operationId": "delete_product_api_v1_workspaces__workspace_id__shopping_products__product_id__delete",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "product_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Product Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "workspace_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Workspace Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "4XX": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Client error"
+          }
+        },
+        "summary": "Delete Product",
+        "tags": [
+          "shopping"
+        ]
+      },
+      "get": {
+        "operationId": "product_detail_api_v1_workspaces__workspace_id__shopping_products__product_id__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "product_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Product Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "workspace_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Workspace Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductDetailOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "4XX": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Client error"
+          }
+        },
+        "summary": "Product Detail",
+        "tags": [
+          "shopping"
+        ]
+      },
+      "put": {
+        "operationId": "update_product_api_v1_workspaces__workspace_id__shopping_products__product_id__put",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "product_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Product Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "workspace_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Workspace Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProductIn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "4XX": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Client error"
+          }
+        },
+        "summary": "Update Product",
+        "tags": [
+          "shopping"
+        ]
+      }
+    },
+    "/api/v1/workspaces/{workspace_id}/shopping/products/{product_id}/listings": {
+      "post": {
+        "operationId": "add_listing_api_v1_workspaces__workspace_id__shopping_products__product_id__listings_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "product_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Product Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "workspace_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Workspace Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ListingIn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListingOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "4XX": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Client error"
+          }
+        },
+        "summary": "Add Listing",
+        "tags": [
+          "shopping"
+        ]
+      }
+    },
+    "/api/v1/workspaces/{workspace_id}/shopping/products/{product_id}/status": {
+      "put": {
+        "description": "Record a purchase decision or a purchase made elsewhere (no checkout happens here).",
+        "operationId": "set_product_status_api_v1_workspaces__workspace_id__shopping_products__product_id__status_put",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "product_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Product Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "workspace_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Workspace Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/StatusIn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "4XX": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Client error"
+          }
+        },
+        "summary": "Set Product Status",
+        "tags": [
+          "shopping"
         ]
       }
     },

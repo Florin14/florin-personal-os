@@ -6,6 +6,8 @@ import { LoadingState } from '@/components/feedback/StateViews';
 const CommandCenterPage = lazy(() => import('@/features/command/CommandCenterPage'));
 const NetworkPage = lazy(() => import('@/features/workflows/NetworkPage'));
 const WorkflowBuilderPage = lazy(() => import('@/features/workflows/WorkflowBuilderPage'));
+// Recharts (price history) is only downloaded with the shopping page.
+const ShoppingPage = lazy(() => import('@/features/shopping/ShoppingPage'));
 
 export function NetworkRoute() {
   return (
@@ -19,6 +21,14 @@ export function WorkflowBuilderRoute() {
   return (
     <Suspense fallback={<LoadingState />}>
       <WorkflowBuilderPage />
+    </Suspense>
+  );
+}
+
+export function ShoppingRoute() {
+  return (
+    <Suspense fallback={<LoadingState />}>
+      <ShoppingPage />
     </Suspense>
   );
 }

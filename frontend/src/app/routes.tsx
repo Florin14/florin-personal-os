@@ -17,7 +17,7 @@ import { IntegrationsPage } from '@/features/integrations/IntegrationsPage';
 import { ComingSoonPage } from '@/features/placeholder/ComingSoonPage';
 import { SettingsPage } from '@/features/settings/SettingsPage';
 
-import { CommandCenterRoute, NetworkRoute, WorkflowBuilderRoute } from './lazyPages';
+import { CommandCenterRoute, NetworkRoute, ShoppingRoute, WorkflowBuilderRoute } from './lazyPages';
 
 const plannedAreas: RouteObject[] = NAV_ITEMS.filter((item) => !isAvailable(item)).map((item) => ({
   path: item.path,
@@ -40,6 +40,7 @@ export const routes: RouteObject[] = [
           { path: '/business', element: <BusinessPage /> },
           { path: '/finance', element: <FinancePage /> },
           { path: '/banking', element: <BankingPage /> },
+          { path: '/shopping', element: <ShoppingRoute /> },
           { path: '/calendar', element: <CalendarPage /> },
           { path: '/network', element: <NetworkRoute /> },
           { path: '/workflows', element: <WorkflowBuilderRoute /> },

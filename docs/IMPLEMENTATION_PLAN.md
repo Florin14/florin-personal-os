@@ -14,7 +14,7 @@ A task is `COMPLETED` only after it is implemented **and** verified (tests/check
 | 2 | Automation engine, persistent jobs, scheduler, events/outbox, approvals, notifications, audit | COMPLETED |
 | 3 | Discord bot, Oblio monthly invoicing workflow | COMPLETED (live Oblio/Discord not verified: no credentials; mock verified) |
 | 4 | Google Calendar, Gmail, Drive, documents, basic expense processing | IN PROGRESS |
-| 5 | Bank statement import, reconciliation, shopping & price tracking | TODO |
+| 5 | Bank statement import, reconciliation, shopping & price tracking | COMPLETED (manual price source only; live bank/price sources need licensed providers) |
 | 6 | Freelance opportunity discovery, optional AI assistance | TODO |
 | 7 | Home Assistant, location, health, lifestyle, shared planning | TODO |
 | 8 | Performance, monitoring, security hardening (passkeys, rate limiting), disaster recovery | TODO |
@@ -163,9 +163,9 @@ MUI → Tailwind v4 + shadcn-style Radix primitives + Motion + Lucide + Recharts
 | P5-1 | `banking` module: accounts, CSV statement import (pluggable parsers, preview, duplicate-safe), transactions, undo import, Open Banking provider interface | COMPLETED |
 | P5-2 | Reconciliation: deterministic rules + confidence scoring against documents, expenses and issued invoices; suggestions, manual confirm/reject/unmatch, `banking.reconcile` action | COMPLETED |
 | P5-3 | UI: Banking & Reconciliation page (accounts, import with preview, transactions, review queue) | COMPLETED |
-| P5-4 | `shopping` module: merchants, products (canonical identity), listings, manual price observations, history, thresholds/alerts, provider abstraction (manual source only) | TODO |
-| P5-5 | Shopping alerts through notifications + confirmation workflow (approval before any purchase step; no checkout) | TODO |
-| P5-6 | UI: Shopping Intelligence page (products, merchant comparison, price history chart, alerts) | TODO |
+| P5-4 | `shopping` module: merchants, products (canonical identity), listings, manual price observations, history, thresholds/alerts, provider abstraction (manual source only) | COMPLETED |
+| P5-5 | Shopping alerts through notifications + confirmation workflow (approval before any purchase step; no checkout) | COMPLETED |
+| P5-6 | UI: Shopping Intelligence page (products, merchant comparison, price history chart, alerts) | COMPLETED |
 
 **Acceptance criteria (banking, P5-1…P5-3)**
 - A CSV statement (comma/semicolon/tab, decimal comma or point, common date formats, UTF-8 or
@@ -178,6 +178,15 @@ MUI → Tailwind v4 + shadcn-style Radix primitives + Motion + Lucide + Recharts
   a confidence; only a single unambiguous exact candidate (≥ 0.95) is auto-confirmed, everything
   else waits in a review queue; confirmed matches can be undone.
 - No bank credentials are ever requested; Open Banking exists only as an interface (ADR-021).
+
+**Acceptance criteria (shopping, P5-4…P5-6)**
+- A product cannot be tracked twice in a workspace (same GTIN, or same brand+model, or same name).
+- Prices are NUMERIC; observations are append-only (a wrong entry can be deleted, never edited).
+- Alerts fire only for newer observations of a product being watched; at most one open
+  "below target" alert per product; every alert notifies in-app and emits `shopping.price_alert`.
+- Merchant comparison shows each listing's latest price and stock; history is charted per merchant.
+- No URL is ever fetched by the server; no scraping; no checkout. Purchase decisions taken by a
+  workflow require an approval (ADR-022).
 
 
 
@@ -217,6 +226,37 @@ WireGuard deployment guide, Home Assistant node guide.
 ## Session log
 
 _(Completion reports are appended here at the end of each implementation session.)_
+
+### 2026-11-09 — Frontend redesign completed + Phase 5
+
+**Implemented**
+- Visual Workflow Builder (typed nodes, inspector, drag-to-connect, JSON sync, client validation,
+  run overlay), Automation Network; MUI/Emotion removed; lint/format clean (ADR-020).
+- `banking`: CSV statement import with preview, duplicate-safe fingerprints, undo, deterministic
+  reconciliation with review queue, Open Banking interface only (ADR-021).
+- `shopping`: merchants, canonical products (GTIN / brand+model / name), listings, append-only
+  manual price observations, alerts (below target, drop %, back in stock) with notifications and
+  `shopping.price_alert`, approval-gated `shopping.approve_purchase`, no scraping/checkout (ADR-022).
+- UI: Banking & Reconciliation, Shopping Intelligence (price history chart, validated palette).
+
+**Verification (executed)**
+- Backend: ruff + mypy --strict clean; 215 pytest tests pass; both migrations upgrade/downgrade and
+  `alembic check` clean.
+- Frontend: tsc, ESLint, Prettier clean; 43 Vitest tests pass; production build OK.
+- End-to-end against the dev stack (scripts in the session scratchpad, data cleaned up): banking API
+  + UI walkthroughs; shopping API (identity, URL rules, every alert rule, comparison, the full
+  event → workflow → approval → decision chain through the real worker) + UI walkthrough.
+- No new automated tests were added (owner preference, 2026-11-08).
+
+**Known limitations**
+- Invoices store net amounts; gross payments only reach the review queue (ADR-021 follow-up).
+- Only a generic CSV parser; bank-specific parsers need real export samples.
+- Prices are manual until a compliant source exists; no automation delete endpoint, so smoke
+  automations ("Smoke approve purchase", "Smoke builder …") remain disabled in the dev DB.
+- Main JS chunk ~253 KB gzip (Banking/Finance are not lazy-loaded yet).
+
+**Next recommended task**
+Phase 6 scoping (freelance discovery + optional AI) — or the follow-ups above if preferred.
 
 ### 2026-11-08 — Phase 0 + Phase 1
 

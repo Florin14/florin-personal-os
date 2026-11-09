@@ -77,4 +77,44 @@ export const TEMPLATES: { id: string; label: string; definition: Record<string, 
       ],
     },
   },
+  {
+    id: 'approve-before-buying',
+    label: 'Approve before buying (price alert)',
+    definition: {
+      // Event triggers receive { event_type, event: <payload> }.
+      triggers: [{ type: 'event', key: 'price_alert', event_type: 'shopping.price_alert' }],
+      steps: [
+        {
+          key: 'at_target',
+          type: 'condition',
+          conditions: [{ left: 'trigger.event.kind', op: 'eq', right: 'below_target' }],
+          on_false: 'end',
+        },
+        {
+          key: 'decide',
+          type: 'action',
+          action: 'shopping.approve_purchase',
+          params: {
+            product_id: '{{ trigger.event.product_id }}',
+            price: '{{ trigger.event.price }}',
+          },
+          approval: {
+            risk_level: 'medium',
+            title: 'Buy {{ trigger.event.product_name }}?',
+            summary:
+              '{{ trigger.event.price }} {{ trigger.event.currency }} at {{ trigger.event.merchant }}',
+            expires_in_minutes: 2880,
+          },
+        },
+        {
+          key: 'reminder',
+          type: 'notify',
+          message_title: 'Decision recorded: buy {{ trigger.event.product_name }}',
+          message_body:
+            'Nothing was ordered. Buy it at {{ trigger.event.merchant }}, then mark it purchased.',
+          severity: 'success',
+        },
+      ],
+    },
+  },
 ];
