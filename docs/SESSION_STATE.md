@@ -9,6 +9,8 @@ Resume point for autonomous implementation sessions. Read this first, then
 - Branch: `develop` (local commits only; nothing is pushed without approval).
 - **User preference (2026-11-08): implementation only — do NOT write new tests.** Keep running
   ruff/mypy/tsc/eslint; existing test suites may be run as a regression guard.
+- **Owner decision (2026-11-09): defer P7-3/P7-4/P7-5** (location, health/lifestyle and shared
+  planning). Resume only on explicit request; do not collect these data or keep asking for sources.
 - After each task: lint + types → update plan/this file → commit.
 - Never: paid services, production deploys, real financial actions, invented credentials.
 
@@ -172,10 +174,11 @@ were continued in place; the existing modular architecture and Tailwind/Radix de
   encrypted. The walkthrough's temporary users/workspace are removed after verification.
 
 Remaining (resume here):
-1. P7-3/P7-4/P7-5: location, health/lifestyle and shared planning need the owner's data-source/privacy
-   and participant decisions (see IMPLEMENTATION_PLAN). Do not invent integrations or collect data.
-2. Follow-ups: store the provider's gross invoice total so gross payments can auto-match
-   (ADR-021 consequence); lazy-load heavy pages (main chunk ~250 KB gzip).
+1. Eligible follow-ups: lazy-load remaining heavy pages (main chunk ~259 KB gzip); store the
+   provider's gross invoice total so gross payments can auto-match (ADR-021 consequence).
+2. P7-3/P7-4/P7-5 are explicitly deferred by the owner (2026-11-09), not awaiting an immediate
+   answer. Leave them pending until the owner asks to resume, then establish data sources/privacy
+   and participant scope. Do not invent integrations or collect these data.
 3. Note for the owner: `docs/CLAUDE.md` §4 still lists "Material UI" under Frontend (§6 already
    says Tailwind/shadcn). Owner-maintained file; not edited by the agent.
 
