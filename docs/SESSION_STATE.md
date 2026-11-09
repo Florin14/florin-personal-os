@@ -96,9 +96,14 @@ Done (new design):
   Vitest suites pass (43 tests; the obsolete theme-switch test was removed — the redesign is
   dark-only); production build OK; all 13 routes smoke-tested in Chromium with 0 runtime errors.
 
+- FR-5 (2026-11-09): ADR-020 (supersedes ADR-010's UI layer) and ARCHITECTURE §4.4 updated.
+  **The frontend redesign is complete.**
+
 Remaining (resume here):
-1. FR-5 docs: ARCHITECTURE §4.4 + ADR superseding ADR-010 for the Tailwind/shadcn stack.
-2. Then continue Phase 5 (bank CSV import, reconciliation, shopping/price tracking).
+1. Phase 5 (bank CSV import, reconciliation, shopping/price tracking) — needs acceptance
+   criteria from PROJECT_SPEC §14 first.
+2. Note for the owner: `docs/CLAUDE.md` §4 still lists "Material UI" under Frontend (§6 already
+   says Tailwind/shadcn). Owner-maintained file; not edited by the agent.
 
 Dev-server note: an old Vite instance owns 127.0.0.1:3000 (PID shows as 0, not killable from the
 agent shell) and its dep cache predates the MUI removal, so it answers 504 "outdated optimize

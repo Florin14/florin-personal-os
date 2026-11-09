@@ -172,15 +172,28 @@ attempt counter while returning an error.
 
 ```
 frontend/src/
-  app/          # App, router, providers, MUI theme (dark-first)
+  app/          # App, router (lazy routes), providers
   api/          # openapi-fetch client, generated schema types, query hooks per domain
-  components/   # design-system building blocks: layout shell, state views, cards
-  features/     # auth, dashboard, settings, coming-soon areas
-  stores/       # Zustand: UI preferences (theme, nav), current workspace
+  components/
+    ui/         # design system: button, form controls, overlays (Radix), surfaces, alert
+    layout/     # command-center shell: sidebar, Ctrl+K palette, notifications, header
+    feedback/   # loading / error / empty / unauthorized / offline states
+    data/       # formatting helpers, status chips, key-value views
+  features/     # one folder per area: command (neural Command Center), workflows (builder +
+                # network), executions, approvals, business, finance, calendar, integrations,
+                # settings, auth, placeholders
+  stores/       # Zustand: UI state (sidebar, palette), current workspace
+  styles/       # globals.css — Tailwind v4 @theme tokens, glass surfaces, React Flow theming
   test/         # Vitest setup and helpers
 ```
 
-* Server state → TanStack Query only. Client state → Zustand only when shared (theme, current workspace).
+* Stack (ADR-020): Tailwind v4 + Radix primitives in local shadcn-style components, Lucide,
+  Motion (reduced-motion aware), Recharts, React Flow. Dark-only.
+* Workflow Builder: the saved definition JSON is the single source of truth; `builderModel.ts`
+  (typed model, edits, client validation mirroring `automation/definition.py`) and
+  `builderGraph.ts` (layout + execution overlay) derive the canvas from it. The server remains
+  authoritative for validation.
+* Server state → TanStack Query only. Client state → Zustand only when shared (UI shell, current workspace).
 * API types are generated from FastAPI's OpenAPI schema (`openapi-typescript`) into `src/api/schema.d.ts`.
 * Presentation components never call `fetch` directly; they use hooks from `src/api`.
 * Every data view renders explicit loading, error, empty, unauthorized, and offline states.

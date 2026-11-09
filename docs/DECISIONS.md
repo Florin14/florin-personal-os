@@ -67,7 +67,7 @@ Do not edit an accepted ADR's decision silently. Add a new ADR that supersedes i
 
 ## ADR-010 — Frontend stack
 
-* **Status:** Accepted (2026-11-08)
+* **Status:** Superseded by ADR-020 (UI layer only; the rest still applies)
 * **Decision:** React + Vite + TypeScript (strict), MUI with a custom dark-first theme, TanStack Query (server state), Zustand (theme, current workspace), React Router, self-hosted Inter font (no external font CDN for privacy). React Flow (Automation Network/Workflow Builder) and Recharts (analytics) are added when those areas are built, not before.
 * **Consequences:** Bundle size kept lean in Phase 1; placeholder pages exist for all 13 areas so navigation is stable.
 
@@ -134,3 +134,10 @@ Do not edit an accepted ADR's decision silently. Add a new ADR that supersedes i
 
 * **Status:** Accepted (2026-11-08)
 * **Decision:** Only `POST /api/v1/integrations/discord/interactions` may be exposed outside the VPN (Discord must reach it). It accepts only Ed25519-signed requests (5-minute timestamp window), never uses sessions, maps Discord users to accounts through an explicit allowlist, restricts channels, and inherits the approval risk policy (high-risk actions cannot be approved from Discord). Messages contain no confidential titles/amounts unless `include_titles` is enabled.
+
+## ADR-020 — Tailwind + Radix design system replaces MUI
+
+* **Status:** Accepted (2026-11-09); supersedes the UI-library part of ADR-010.
+* **Context:** The owner asked for a "neural command center" look (dense, dark, luminous graph-first UI) that MUI's Material defaults fought against, and MUI + Emotion carried runtime CSS-in-JS cost.
+* **Decision:** Tailwind CSS v4 with design tokens in `src/styles/globals.css` (`@theme`), shadcn-style components owned in `src/components/ui/` built on Radix primitives (dialog, dropdown, popover, tabs, tooltip, switch, checkbox) for accessibility, `class-variance-authority` + `tailwind-merge` for variants, Lucide icons, Motion for animation (respecting `prefers-reduced-motion`), Recharts for charts, React Flow for the Command Center map, Workflow Builder and Automation Network. Fonts (Inter, Space Grotesk, JetBrains Mono) are self-hosted via Fontsource. The UI is dark-only; the theme switch was removed. TanStack Query, Zustand, React Router and the generated OpenAPI client are unchanged.
+* **Consequences:** + No runtime styling engine, smaller bundle (`@mui/*`, `@emotion/*` removed), components are local code we can adapt. − We maintain our own primitives (no upstream component library updates); a light theme would need a second token set.

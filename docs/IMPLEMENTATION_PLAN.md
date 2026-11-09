@@ -154,7 +154,7 @@ MUI → Tailwind v4 + shadcn-style Radix primitives + Motion + Lucide + Recharts
 | FR-2 | Migrate auth, settings, approvals, executions, business, integrations, calendar, finance | COMPLETED |
 | FR-3 | Visual Workflow Builder (typed nodes, inspector, drag-to-connect, JSON sync, validation, run overlay) + Automation Network | COMPLETED |
 | FR-4 | Remove `@mui/*` / `@emotion/*`; ESLint + Prettier clean on the whole frontend; existing Vitest suites updated to new markup | COMPLETED |
-| FR-5 | Docs: ARCHITECTURE §4.4 + new ADR superseding ADR-010 | TODO |
+| FR-5 | Docs: ARCHITECTURE §4.4 + ADR-020 superseding ADR-010 | COMPLETED |
 
 
 
