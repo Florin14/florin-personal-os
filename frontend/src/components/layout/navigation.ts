@@ -44,6 +44,7 @@ export const IMPLEMENTED_PATHS = new Set([
   '/banking',
   '/shopping',
   '/opportunities',
+  '/home',
   '/calendar',
   '/integrations',
   '/settings',

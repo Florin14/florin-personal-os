@@ -301,6 +301,18 @@ async def is_connected(
     return await session.scalar(stmt) is not None
 
 
+async def connected_workspaces(session: AsyncSession, provider: str) -> list[uuid.UUID]:
+    """Workspaces with an active connection for a workspace-scoped provider (for pollers)."""
+    rows = await session.scalars(
+        select(IntegrationConnection.workspace_id).where(
+            IntegrationConnection.provider == provider,
+            IntegrationConnection.status == ConnectionStatus.ACTIVE.value,
+            IntegrationConnection.workspace_id.is_not(None),
+        )
+    )
+    return [w for w in rows if w is not None]
+
+
 async def upsert_connection(
     session: AsyncSession,
     box: SecretBox,

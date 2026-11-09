@@ -1632,6 +1632,108 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/workspaces/{workspace_id}/smarthome/commands": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Commands */
+        get: operations["list_commands_api_v1_workspaces__workspace_id__smarthome_commands_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/workspaces/{workspace_id}/smarthome/devices": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Devices */
+        get: operations["list_devices_api_v1_workspaces__workspace_id__smarthome_devices_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/workspaces/{workspace_id}/smarthome/devices/{device_id}/commands": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Send Command */
+        post: operations["send_command_api_v1_workspaces__workspace_id__smarthome_devices__device_id__commands_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/workspaces/{workspace_id}/smarthome/devices/{device_id}/policy": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** Configure Device */
+        put: operations["configure_device_api_v1_workspaces__workspace_id__smarthome_devices__device_id__policy_put"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/workspaces/{workspace_id}/smarthome/status": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Home Status */
+        get: operations["home_status_api_v1_workspaces__workspace_id__smarthome_status_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/workspaces/{workspace_id}/smarthome/sync": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Sync Devices */
+        post: operations["sync_devices_api_v1_workspaces__workspace_id__smarthome_sync_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/workspaces/{workspace_id}/tasks": {
         parameters: {
             query?: never;
@@ -2598,6 +2700,128 @@ export interface components {
              * @enum {string}
              */
             status: "ok" | "degraded";
+        };
+        /** HomeCommandIn */
+        HomeCommandIn: {
+            /**
+             * Confirm Sensitive
+             * @default false
+             */
+            confirm_sensitive: boolean;
+            /** Data */
+            data?: {
+                [key: string]: unknown;
+            };
+            /**
+             * Idempotency Key
+             * Format: uuid
+             */
+            idempotency_key: string;
+            /** Service */
+            service: string;
+        };
+        /** HomeCommandOut */
+        HomeCommandOut: {
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /** Data */
+            data: {
+                [key: string]: unknown;
+            };
+            /**
+             * Device Id
+             * Format: uuid
+             */
+            device_id: string;
+            /** Entity Id */
+            entity_id: string;
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Message */
+            message: string;
+            /** Service */
+            service: string;
+            /**
+             * Source
+             * @enum {string}
+             */
+            source: "manual" | "automation";
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "pending" | "succeeded" | "refused" | "failed" | "unknown";
+        };
+        /** HomeDeviceOut */
+        HomeDeviceOut: {
+            /** Attributes */
+            attributes: {
+                [key: string]: unknown;
+            };
+            /** Available */
+            available: boolean;
+            /** Controllable */
+            controllable: boolean;
+            /** Domain */
+            domain: string;
+            /** Entity Id */
+            entity_id: string;
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Last Command At */
+            last_command_at: string | null;
+            /**
+             * Last Seen At
+             * Format: date-time
+             */
+            last_seen_at: string;
+            /** Min Interval Seconds */
+            min_interval_seconds: number;
+            /** Name */
+            name: string;
+            /** Override Until */
+            override_until: string | null;
+            /** Sensitive Services */
+            sensitive_services: string[];
+            /** Services */
+            services: string[];
+            /** State */
+            state: string;
+        };
+        /** HomeDevicePolicyIn */
+        HomeDevicePolicyIn: {
+            /** Controllable */
+            controllable: boolean;
+            /**
+             * Min Interval Seconds
+             * @default 60
+             */
+            min_interval_seconds: number;
+            /** Override Until */
+            override_until?: string | null;
+        };
+        /** HomeStatusOut */
+        HomeStatusOut: {
+            /** Configured */
+            configured: boolean;
+            /** Connected */
+            connected: boolean;
+            /** Mode */
+            mode: ("mock" | "live") | null;
+        };
+        /** HomeSyncOut */
+        HomeSyncOut: {
+            /** Devices */
+            devices: number;
         };
         /** IgnoreIn */
         IgnoreIn: {
@@ -7583,6 +7807,205 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ProductOut"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    list_commands_api_v1_workspaces__workspace_id__smarthome_commands_get: {
+        parameters: {
+            query?: {
+                device_id?: string | null;
+                limit?: number;
+            };
+            header?: never;
+            path: {
+                workspace_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HomeCommandOut"][];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    list_devices_api_v1_workspaces__workspace_id__smarthome_devices_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                workspace_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HomeDeviceOut"][];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    send_command_api_v1_workspaces__workspace_id__smarthome_devices__device_id__commands_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                device_id: string;
+                workspace_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["HomeCommandIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HomeCommandOut"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    configure_device_api_v1_workspaces__workspace_id__smarthome_devices__device_id__policy_put: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                device_id: string;
+                workspace_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["HomeDevicePolicyIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HomeDeviceOut"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    home_status_api_v1_workspaces__workspace_id__smarthome_status_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                workspace_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HomeStatusOut"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    sync_devices_api_v1_workspaces__workspace_id__smarthome_sync_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                workspace_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HomeSyncOut"];
                 };
             };
             /** @description Client error */

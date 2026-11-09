@@ -1,10 +1,10 @@
 # Personal OS
 
 A secure, modular, self-hosted personal automation platform: a modular monolith
-(FastAPI + PostgreSQL) with a React/MUI command-center UI, deployed with Docker Compose.
+(FastAPI + PostgreSQL) with a React/Tailwind/Radix command-center UI, deployed with Docker Compose.
 
-**Status:** Phase 1 (foundation) completed — authentication with mandatory TOTP MFA,
-personal/business workspaces, app shell and overview dashboard. See
+**Status:** Phase 7 in progress — Smart Home discovery and guarded controls are implemented
+(mock walkthrough verified; real Home Assistant hardware not yet tested). See
 [docs/IMPLEMENTATION_PLAN.md](docs/IMPLEMENTATION_PLAN.md).
 
 | Document | Purpose |
@@ -103,7 +103,7 @@ and run `uv run pytest`. The test database is created automatically by the dev P
 
 ```
 backend/    FastAPI modular monolith (app/core, app/modules/<module>, migrations, tests)
-frontend/   React + Vite + TypeScript + MUI (src/, e2e/, nginx/)
+frontend/   React + Vite + TypeScript + Tailwind/Radix (src/, e2e/, nginx/)
 infra/      Postgres init scripts for development
 docs/       Specification, architecture, decisions, plan, deployment
 .github/    CI and security scanning workflows

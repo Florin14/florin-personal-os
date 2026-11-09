@@ -16,7 +16,7 @@ A task is `COMPLETED` only after it is implemented **and** verified (tests/check
 | 4 | Google Calendar, Gmail, Drive, documents, basic expense processing | IN PROGRESS |
 | 5 | Bank statement import, reconciliation, shopping & price tracking | COMPLETED (manual price source only; live bank/price sources need licensed providers) |
 | 6 | Freelance opportunity discovery, optional AI assistance | COMPLETED (AI verified against a fake Ollama; no real model run) |
-| 7 | Home Assistant, location, health, lifestyle, shared planning | TODO |
+| 7 | Home Assistant, location, health, lifestyle, shared planning | IN PROGRESS (Smart Home completed; context/health/sharing await owner scope) |
 | 8 | Performance, monitoring, security hardening (passkeys, rate limiting), disaster recovery | TODO |
 
 ---
@@ -143,6 +143,38 @@ bot (signed interactions, allowlists, approvals, notifications).
 | P4-2 | `calendar` module: upcoming events, create events/reminders, free/busy, tasks, actions, UI | TODO |
 | P4-3 | `documents` module: safe upload storage, metadata, Gmail receipt import, Drive archival, UI | TODO |
 | P4-4 | `expenses` module: expenses from documents, categories, monthly summary, UI | TODO |
+
+## Phase 7 — Home Assistant, location, health, lifestyle, shared planning
+
+| ID | Task | Status |
+|---|---|---|
+| P7-1 | `smarthome` module: Home Assistant provider (live + mock), discovery, state events, opt-in controllable devices, service allowlist, anti-toggle guard, manual override, command log, `smarthome.call_service` action (ADR-025) | COMPLETED (mock walkthrough + simulated live wire format; no real Home Assistant available) |
+| P7-2 | UI: Smart Home page (devices, states, controls, overrides, command log) | COMPLETED (desktop/mobile Chromium walkthrough, lint/types/build verified) |
+| P7-3 | Location & context rules | BLOCKED — owner decision: whether location data is collected at all, and from which device/app |
+| P7-4 | Health & lifestyle | BLOCKED — owner decision: which data (manual only vs. a specific app/export) |
+| P7-5 | Shared planning | BLOCKED — owner decision: who shares what (needs multi-user invites, currently CLI-only) |
+
+**Acceptance criteria (P7-1/P7-2)**
+- Works fully in mock mode without credentials; live mode uses only documented REST endpoints.
+- No command reaches Home Assistant unless the device is marked controllable and the service is on
+  the domain allowlist; sensitive services are refused for automations.
+- Repeated commands faster than the device interval or above 20/hour are refused; overridden devices
+  refuse automation commands; every attempt is logged with its outcome.
+- State transitions emit `smarthome.state_changed`; continuous sensor readings do not.
+
+**Verified checkpoint (2026-11-09, Codex continuation)**
+- Completed Claude's in-progress adapter and ADR-025; added the module, migration
+  `20261109_0238cc500048_smarthome`, registry wiring, generated client, lazy `/home` page and
+  Command Center integration using the existing Tailwind/Radix components.
+- Durable command intents prevent replay after crashes/unknown outcomes; concurrent delivery with
+  the same key sends once. Manual-only sensitive commands need explicit UI confirmation; all
+  automation controls require approval and respect the engine's emergency stop.
+- Backend: Ruff/format/mypy clean, 218 existing pytest tests pass (including migration round trip).
+  Frontend: ESLint/Prettier/TypeScript/build clean, 43 existing Vitest tests pass.
+- One-off API/service/browser walkthroughs verified mock discovery, policy, state events, overrides,
+  cooldowns, 20/hour limit, idempotency/concurrency/timeouts, viewer/member/admin authorization,
+  mobile layout and no runtime errors. No new automated tests were added (owner preference).
+- P7-3/P7-4/P7-5 retain Claude's owner-decision blockers. Real devices remain unverified.
 
 ## Phase 6 — Freelance opportunities & optional AI
 

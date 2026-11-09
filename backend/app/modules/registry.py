@@ -22,6 +22,7 @@ from app.modules.notifications.module import module as notifications
 from app.modules.oblio.module import module as oblio
 from app.modules.opportunities.module import module as opportunities
 from app.modules.shopping.module import module as shopping
+from app.modules.smarthome.module import module as smarthome
 from app.modules.system.module import module as system
 from app.modules.workspaces.module import module as workspaces
 
@@ -47,6 +48,7 @@ MODULES: tuple[Module, ...] = (
     shopping,
     ai,
     opportunities,
+    smarthome,
 )
 
 
@@ -72,4 +74,5 @@ def import_all_models() -> None:
     import app.modules.notifications.models
     import app.modules.opportunities.models
     import app.modules.shopping.models
+    import app.modules.smarthome.models
     import app.modules.workspaces.models  # noqa: F401

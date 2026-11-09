@@ -74,11 +74,25 @@ db 512 MB, backend 384 MB, web 64 MB. Containers drop all Linux capabilities (ex
 Postgres, which needs them to switch users), run as non-root, use read-only root
 filesystems where possible and `no-new-privileges`.
 
-## Future: Home Assistant node
+## Home Assistant node (optional)
 
 A Raspberry Pi or mini PC running Home Assistant joins the same WireGuard network as a
-peer. Personal OS will reach its local API over the tunnel (Phase 7); no Home Assistant
+peer. Personal OS reaches its local REST API over the tunnel; no Home Assistant
 port is exposed to the internet.
+
+Connect it in **Integrations → Home Assistant** (workspace admin/owner): choose `live`, set the
+Home Assistant origin (for example `http://10.8.0.2:8123`) and a long-lived access token. The
+token is encrypted, never returned to the browser, and sent only to the configured host; redirects
+are refused. Use a Home Assistant user with access only to the required devices. See the
+[official REST API documentation](https://contributors.home-assistant.io/core/internals/rest-api/).
+
+Open **Smart Home → Sync devices**. Devices start read-only; enable controls per device through
+**Device policy**. Automations require approval and respect cooldowns and manual overrides.
+Sensitive commands (including opening unknown cover types) are manual-only. An unknown/pending
+command outcome must be checked against device state before a deliberate new command is submitted.
+
+Without hardware, use **Smart Home → Try mock home** (no token/network needed). Live hardware has
+not yet been verified; the adapter's request/response format was checked with simulated HTTP.
 
 ## Discord bot (optional)
 

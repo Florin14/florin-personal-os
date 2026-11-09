@@ -6,6 +6,7 @@ credentials with ``mark_connection_error`` (affected workflows then fail safely)
 
 from app.modules.integrations.service import (
     LoadedConnection,
+    connected_workspaces,
     current_config,
     is_connected,
     load_connection,
@@ -16,6 +17,7 @@ from app.modules.integrations.service import (
 
 __all__ = [
     "LoadedConnection",
+    "connected_workspaces",
     "current_config",
     "is_connected",
     "load_connection",

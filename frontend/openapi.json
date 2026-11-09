@@ -2438,6 +2438,291 @@
         "title": "HealthResponse",
         "type": "object"
       },
+      "HomeCommandIn": {
+        "additionalProperties": false,
+        "properties": {
+          "confirm_sensitive": {
+            "default": false,
+            "title": "Confirm Sensitive",
+            "type": "boolean"
+          },
+          "data": {
+            "additionalProperties": true,
+            "maxProperties": 4,
+            "title": "Data",
+            "type": "object"
+          },
+          "idempotency_key": {
+            "format": "uuid",
+            "title": "Idempotency Key",
+            "type": "string"
+          },
+          "service": {
+            "maxLength": 60,
+            "minLength": 1,
+            "pattern": "^[a-z_]+$",
+            "title": "Service",
+            "type": "string"
+          }
+        },
+        "required": [
+          "service",
+          "idempotency_key"
+        ],
+        "title": "HomeCommandIn",
+        "type": "object"
+      },
+      "HomeCommandOut": {
+        "properties": {
+          "created_at": {
+            "format": "date-time",
+            "title": "Created At",
+            "type": "string"
+          },
+          "data": {
+            "additionalProperties": true,
+            "title": "Data",
+            "type": "object"
+          },
+          "device_id": {
+            "format": "uuid",
+            "title": "Device Id",
+            "type": "string"
+          },
+          "entity_id": {
+            "title": "Entity Id",
+            "type": "string"
+          },
+          "id": {
+            "format": "uuid",
+            "title": "Id",
+            "type": "string"
+          },
+          "message": {
+            "title": "Message",
+            "type": "string"
+          },
+          "service": {
+            "title": "Service",
+            "type": "string"
+          },
+          "source": {
+            "enum": [
+              "manual",
+              "automation"
+            ],
+            "title": "Source",
+            "type": "string"
+          },
+          "status": {
+            "enum": [
+              "pending",
+              "succeeded",
+              "refused",
+              "failed",
+              "unknown"
+            ],
+            "title": "Status",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "device_id",
+          "entity_id",
+          "service",
+          "data",
+          "source",
+          "status",
+          "message",
+          "created_at"
+        ],
+        "title": "HomeCommandOut",
+        "type": "object"
+      },
+      "HomeDeviceOut": {
+        "properties": {
+          "attributes": {
+            "additionalProperties": true,
+            "title": "Attributes",
+            "type": "object"
+          },
+          "available": {
+            "title": "Available",
+            "type": "boolean"
+          },
+          "controllable": {
+            "title": "Controllable",
+            "type": "boolean"
+          },
+          "domain": {
+            "title": "Domain",
+            "type": "string"
+          },
+          "entity_id": {
+            "title": "Entity Id",
+            "type": "string"
+          },
+          "id": {
+            "format": "uuid",
+            "title": "Id",
+            "type": "string"
+          },
+          "last_command_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Last Command At"
+          },
+          "last_seen_at": {
+            "format": "date-time",
+            "title": "Last Seen At",
+            "type": "string"
+          },
+          "min_interval_seconds": {
+            "title": "Min Interval Seconds",
+            "type": "integer"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "override_until": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Override Until"
+          },
+          "sensitive_services": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Sensitive Services",
+            "type": "array"
+          },
+          "services": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Services",
+            "type": "array"
+          },
+          "state": {
+            "title": "State",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "entity_id",
+          "name",
+          "domain",
+          "state",
+          "attributes",
+          "available",
+          "controllable",
+          "min_interval_seconds",
+          "override_until",
+          "last_seen_at",
+          "last_command_at",
+          "services",
+          "sensitive_services"
+        ],
+        "title": "HomeDeviceOut",
+        "type": "object"
+      },
+      "HomeDevicePolicyIn": {
+        "additionalProperties": false,
+        "properties": {
+          "controllable": {
+            "title": "Controllable",
+            "type": "boolean"
+          },
+          "min_interval_seconds": {
+            "default": 60,
+            "maximum": 3600.0,
+            "minimum": 10.0,
+            "title": "Min Interval Seconds",
+            "type": "integer"
+          },
+          "override_until": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Override Until"
+          }
+        },
+        "required": [
+          "controllable"
+        ],
+        "title": "HomeDevicePolicyIn",
+        "type": "object"
+      },
+      "HomeStatusOut": {
+        "properties": {
+          "configured": {
+            "title": "Configured",
+            "type": "boolean"
+          },
+          "connected": {
+            "title": "Connected",
+            "type": "boolean"
+          },
+          "mode": {
+            "anyOf": [
+              {
+                "enum": [
+                  "mock",
+                  "live"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Mode"
+          }
+        },
+        "required": [
+          "configured",
+          "connected",
+          "mode"
+        ],
+        "title": "HomeStatusOut",
+        "type": "object"
+      },
+      "HomeSyncOut": {
+        "properties": {
+          "devices": {
+            "title": "Devices",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "devices"
+        ],
+        "title": "HomeSyncOut",
+        "type": "object"
+      },
       "IgnoreIn": {
         "additionalProperties": false,
         "properties": {
@@ -11801,6 +12086,341 @@
         "summary": "Set Product Status",
         "tags": [
           "shopping"
+        ]
+      }
+    },
+    "/api/v1/workspaces/{workspace_id}/smarthome/commands": {
+      "get": {
+        "operationId": "list_commands_api_v1_workspaces__workspace_id__smarthome_commands_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "workspace_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Workspace Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "device_id",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "format": "uuid",
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Device Id"
+            }
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 50,
+              "maximum": 200,
+              "minimum": 1,
+              "title": "Limit",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/HomeCommandOut"
+                  },
+                  "title": "Response List Commands Api V1 Workspaces  Workspace Id  Smarthome Commands Get",
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "4XX": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Client error"
+          }
+        },
+        "summary": "List Commands",
+        "tags": [
+          "smarthome"
+        ]
+      }
+    },
+    "/api/v1/workspaces/{workspace_id}/smarthome/devices": {
+      "get": {
+        "operationId": "list_devices_api_v1_workspaces__workspace_id__smarthome_devices_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "workspace_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Workspace Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/HomeDeviceOut"
+                  },
+                  "title": "Response List Devices Api V1 Workspaces  Workspace Id  Smarthome Devices Get",
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "4XX": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Client error"
+          }
+        },
+        "summary": "List Devices",
+        "tags": [
+          "smarthome"
+        ]
+      }
+    },
+    "/api/v1/workspaces/{workspace_id}/smarthome/devices/{device_id}/commands": {
+      "post": {
+        "operationId": "send_command_api_v1_workspaces__workspace_id__smarthome_devices__device_id__commands_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "device_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Device Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "workspace_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Workspace Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/HomeCommandIn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HomeCommandOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "4XX": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Client error"
+          }
+        },
+        "summary": "Send Command",
+        "tags": [
+          "smarthome"
+        ]
+      }
+    },
+    "/api/v1/workspaces/{workspace_id}/smarthome/devices/{device_id}/policy": {
+      "put": {
+        "operationId": "configure_device_api_v1_workspaces__workspace_id__smarthome_devices__device_id__policy_put",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "device_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Device Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "workspace_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Workspace Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/HomeDevicePolicyIn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HomeDeviceOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "4XX": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Client error"
+          }
+        },
+        "summary": "Configure Device",
+        "tags": [
+          "smarthome"
+        ]
+      }
+    },
+    "/api/v1/workspaces/{workspace_id}/smarthome/status": {
+      "get": {
+        "operationId": "home_status_api_v1_workspaces__workspace_id__smarthome_status_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "workspace_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Workspace Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HomeStatusOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "4XX": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Client error"
+          }
+        },
+        "summary": "Home Status",
+        "tags": [
+          "smarthome"
+        ]
+      }
+    },
+    "/api/v1/workspaces/{workspace_id}/smarthome/sync": {
+      "post": {
+        "operationId": "sync_devices_api_v1_workspaces__workspace_id__smarthome_sync_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "workspace_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Workspace Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HomeSyncOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "4XX": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Client error"
+          }
+        },
+        "summary": "Sync Devices",
+        "tags": [
+          "smarthome"
         ]
       }
     },

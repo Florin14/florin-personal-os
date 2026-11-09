@@ -8,6 +8,15 @@ const NetworkPage = lazy(() => import('@/features/workflows/NetworkPage'));
 const WorkflowBuilderPage = lazy(() => import('@/features/workflows/WorkflowBuilderPage'));
 // Recharts (price history) is only downloaded with the shopping page.
 const ShoppingPage = lazy(() => import('@/features/shopping/ShoppingPage'));
+const SmartHomePage = lazy(() => import('@/features/smarthome/SmartHomePage'));
+
+export function SmartHomeRoute() {
+  return (
+    <Suspense fallback={<LoadingState />}>
+      <SmartHomePage />
+    </Suspense>
+  );
+}
 
 export function NetworkRoute() {
   return (

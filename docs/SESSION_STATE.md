@@ -25,7 +25,7 @@ Resume point for autonomous implementation sessions. Read this first, then
   `cd backend && .venv/Scripts/python scripts/export_openapi.py ../frontend/openapi.json && cd ../frontend && npm run generate:api`.
 - Windows host: Bash heredocs containing quotes sometimes break; write helper scripts to the
   session scratchpad and run them with `py`.
-- Library majors: MUI 9 (no system props — use `sx`), React Router 8, Vite 8, Vitest 5,
+- Library majors: Tailwind 4 + local Radix primitives (ADR-020), React Router 8, Vite 8, Vitest 5,
   TS 5.9, ESLint 9, SQLAlchemy 2.1 (no `Result.tuples()`), FastAPI 0.16x, Starlette 1.x.
 
 ## Architecture snapshot (backend modules)
@@ -54,6 +54,7 @@ invoicing (profiles, duplicate-safe monthly invoices, SPV) · discord (signed in
 | 2026-11-08 | Phase 2 UI (approvals, executions, network, builder) |
 | 2026-11-08 | Phase 3: integrations, Oblio, invoicing, Discord, UI |
 | 2026-11-09 | Redesign FR-3: visual Workflow Builder + Automation Network; MUI removed |
+| 2026-11-09 | Codex continuation: Phase 7 Smart Home backend + UI (P7-1/P7-2), mock and guarded commands verified |
 
 ## Blockers
 
@@ -139,18 +140,49 @@ Done — shopping (P5-4…P5-6, ADR-022):
 - To try AI locally: run Ollama, `ollama pull llama3.2`, set `AI_PROVIDER=ollama` (and
   `OLLAMA_BASE_URL`), recreate backend/worker, then enable the feature in Settings → AI.
 
+## Current handoff — Phase 7 Smart Home (2026-11-09, Codex)
+
+Claude's last commit was `20c6cbf` (Phase 6 UI). The uncommitted starting point contained
+ADR-025, P7 scoping, `smarthome/client.py` and `integrations.connected_workspaces`. Those changes
+were continued in place; the existing modular architecture and Tailwind/Radix design were kept.
+
+**P7-1 and P7-2 are complete.**
+- Backend `app/modules/smarthome/`: client/provider, models, policy, service, router, action and module.
+  Migration head: `0238cc500048` (previous: `239e52c36ade`); registered in `modules/registry.py`.
+- Workspace API: `/api/v1/workspaces/{workspace_id}/smarthome/` (`status`, `devices`, `sync`,
+  `devices/{id}/policy`, `devices/{id}/commands`, `commands`). Schemas use `Home*` names to avoid
+  the OpenAPI name collisions noted above. Schema/client regenerated.
+- `smarthome.call_service` is registered, approval-gated and side-effecting (emergency stop applies).
+  Event: `smarthome.state_changed`; worker polls active connections every 60 seconds.
+- Controls are opt-in, targets/parameters are allowlisted, unknown/sensitive cover opening is
+  manual-only, override blocks automations, cooldown defaults to 60 s (10–3600 configurable),
+  hard cap 20 commands/hour. Durable intent commits before outbound calls; duplicate delivery sends
+  once, and pending/unknown commands are never retried blindly. Connection host/mode changes reset
+  permissions; only selected home attributes/sensor classes are ingested (ADR-025 details).
+- Frontend: `src/api/smarthome.ts`, lazy `/home` route, device inventory, policy/override dialog,
+  controls with sensitive-command confirmation, command log and Command Center wiring. Shared
+  `useNow` drives countdowns; status is available to viewers/members without exposing integrations.
+- Verification: backend Ruff/format/mypy clean; 218 existing pytest tests pass, including migration
+  downgrade/upgrade and metadata comparison. Frontend ESLint/Prettier/TypeScript/build clean;
+  43 existing Vitest tests pass. One-off API/service/Chromium walkthroughs passed for mock flow,
+  guards, rate cap, idempotency/concurrency/timeouts, role isolation, desktop/mobile and runtime errors.
+  No new automated tests were added (owner preference). No real Home Assistant instance was contacted.
+- Try it: Smart Home → **Try mock home** → a device → **Device policy** → enable controls.
+  For live mode, connect Home Assistant in Integrations with its local origin/token; tokens stay
+  encrypted. The walkthrough's temporary users/workspace are removed after verification.
+
 Remaining (resume here):
-1. Phase 7 scoping (Home Assistant, location, health, lifestyle, shared planning) — needs owner
-   input on which integrations exist (Home Assistant URL/token, devices) before building.
+1. P7-3/P7-4/P7-5: location, health/lifestyle and shared planning need the owner's data-source/privacy
+   and participant decisions (see IMPLEMENTATION_PLAN). Do not invent integrations or collect data.
 2. Follow-ups: store the provider's gross invoice total so gross payments can auto-match
    (ADR-021 consequence); lazy-load heavy pages (main chunk ~250 KB gzip).
 3. Note for the owner: `docs/CLAUDE.md` §4 still lists "Material UI" under Frontend (§6 already
    says Tailwind/shadcn). Owner-maintained file; not edited by the agent.
 
 Dev-server notes:
-- An old Vite instance owns 127.0.0.1:3000 and its dep cache predates the MUI removal, so it
-  answers 504 "outdated optimize dep". Restart whatever owns :3000 (or
-  `docker compose build frontend && docker compose up -d frontend`).
+- The existing user-managed Vite server on :3000 served the Smart Home walkthrough successfully.
+  Codex did not start/stop another frontend server. If the earlier 504 "outdated optimize dep"
+  issue returns after dependency changes, restart Vite (or rebuild the frontend container).
 - Orphaned agent Vite processes may still run (`vite --port 3100`, `vite --config
   vite.smoke.config.ts`); the agent was not permitted to stop them. They are safe to kill.
 - Agent smoke tests on another port: the backend only trusts `Origin: http://localhost:3000`, so

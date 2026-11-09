@@ -1,6 +1,7 @@
 import { useApprovals } from '@/api/approvals';
 import { isActive, useAutomations, useExecutions } from '@/api/automation';
 import { useConnections } from '@/api/integrations';
+import { useHomeStatus } from '@/api/smarthome';
 import { useInvoices } from '@/api/invoicing';
 import type { Automation, Execution } from '@/api/types';
 import { formatMoney, sumMoney } from '@/components/data/format';
@@ -54,6 +55,7 @@ export function useCommandData() {
   const expenses = useExpenseSummary(wsId, year);
   const tasks = useTasks(wsId, false);
   const calendar = useCalendar(wsId);
+  const home = useHomeStatus(wsId);
 
   const connection = (provider: string) =>
     connections.data?.find(
@@ -82,6 +84,7 @@ export function useCommandData() {
       if (def.id === 'business' || def.id === 'calendar') {
         if (missing.length) status = 'disconnected';
       }
+      if (def.id === 'home' && !home.data?.connected) status = 'disconnected';
       if (broken || failed > 0) status = 'attention';
       else if (running > 0) status = 'active';
 
@@ -126,6 +129,12 @@ export function useCommandData() {
             value: calendar.data?.connected ? String(calendar.data.events.length) : 'not connected',
           },
         );
+      }
+      if (def.id === 'home') {
+        metrics.push({
+          label: 'Home Assistant',
+          value: home.data?.connected ? `${home.data.mode ?? 'live'} connection` : 'not connected',
+        });
       }
     }
     metrics.unshift({

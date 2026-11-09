@@ -181,3 +181,32 @@ Do not edit an accepted ADR's decision silently. Add a new ADR that supersedes i
   * Feeds are fetched by the worker only: `https` only, no credentials in URLs, every resolved address must be public (private, loopback, link-local, reserved, multicast and CGNAT ranges are refused), redirects are followed manually (max 3) with the same checks, 15 s timeout, 2 MB cap, XML content types only, conditional GET (ETag / Last-Modified), minimum poll interval 30 min, generic User-Agent without personal data. XML is parsed with `defusedxml` (no entity expansion, no external entities). Residual risk: DNS rebinding between check and connect — mitigated by the private-network deployment (no secrets reachable without auth) and documented.
   * Matching is deterministic and explainable: weighted skill phrases (title counts double), include keywords, hard exclusions, optional remote-only and minimum-rate checks → score 0–100 with reasons. Listings are de-duplicated per source by GUID/link. Scores ≥ the profile threshold produce one in-app notification per poll and an `opportunities.matched` event.
   * Optional AI summary (ADR-023 feature `opportunities.summary`) explains fit; it never changes the score.
+
+## ADR-025 — Home Assistant: local control with opt-in, rate-limited commands
+
+* **Status:** Accepted (2026-11-09)
+* **Context:** The spec asks for device discovery, state, approved commands and automation events through documented APIs, local control, protection against repeated toggling and manual overrides. No Home Assistant instance or token is available yet.
+* **Decision:**
+  * Integration provider `home_assistant` (workspace scope): config `base_url` + `mode` (`live`/`mock`), secret `access_token` (long-lived token, stored encrypted). The live adapter uses only the documented REST API: `GET /api/`, `GET /api/states`, `POST /api/services/<domain>/<service>` with `Authorization: Bearer`. The mock adapter simulates a small home with realistic entities.
+  * `base_url` is intentionally a **local** address (local control); it is set only by workspace admins through the integrations UI, must be `http(s)` without credentials, and redirects are never followed. The token is sent only to that host.
+  * Discovery polls `/api/states` every minute, stores supported entities and publishes `smarthome.state_changed` for actual state transitions (sensors with continuous readings are stored but not emitted).
+  * **Every device is read-only until an admin marks it controllable**, and only a fixed per-domain service allowlist is callable. Sensitive services (`lock.unlock`, `cover.open_cover` on garage/gate devices, any alarm panel) are never available to automations; a person must trigger them in the UI.
+  * Anti-toggle guard per device: minimum interval between commands (default 60 s) and at most 20 commands per hour. **Manual override**: a device can be paused for automations until a time; user commands still work. Every attempt — executed, refused or failed — is logged and audited.
+* **Consequences:** + Safe by default, works offline in mock mode, no cloud dependency. − Polling (not the WebSocket API) means up to ~1 minute latency for state events; WebSocket subscription is a later improvement.
+* **Implementation details (2026-11-09):**
+  * Mock mode is the default and accepts empty secrets. Live mode requires a token; origins cannot
+    contain credentials, paths, queries or fragments. Provider response text is never persisted in
+    errors, so a remote host cannot echo a token into logs.
+  * Discovery persists selected display/control attributes only. Generic sensors are restricted to
+    temperature, humidity, illuminance, power, energy and battery classes; trackers and arbitrary
+    attributes (including coordinates) are not stored. Unknown cover classes are manual-only for
+    opening; only known blinds/shades/curtains/shutters/awnings can open from automations.
+  * All automation commands require approval. Manual sensitive commands require explicit UI
+    confirmation. Per-workspace locking serializes policy checks; pending commands count toward
+    rate limits. The server fixes the entity target and validates service-specific parameter bounds.
+  * Command intent is committed before the provider call. Stable keys deduplicate concurrent/retried
+    requests. Pending/unknown outcomes are never replayed automatically (Home Assistant has no
+    provider idempotency key); verify device state before a deliberate new command.
+  * Changing connection host/mode resets control permissions on discovery; a stale device cannot be
+    controlled before re-sync. Viewers can read devices/status/logs, members can send manual commands,
+    and workspace admins/owners manage connection and policy.

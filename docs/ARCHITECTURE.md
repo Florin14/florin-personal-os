@@ -223,7 +223,7 @@ frontend/src/
 | shopping | products, merchants, price observations, alerts | P5 |
 | opportunities | freelance listings, matching | P6 |
 | ai | provider interface (disabled/Ollama/cloud), budgets, usage | P6 |
-| smarthome | Home Assistant adapter, devices, safe commands | P7 |
+| smarthome | Home Assistant live/mock adapter, discovery/state events, opt-in controls, cooldowns/overrides, durable command log | P7-1/P7-2 implemented (ADR-025) |
 | context | location rules, health/lifestyle, shared planning | P7 |
 
 ---
