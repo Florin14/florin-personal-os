@@ -156,6 +156,29 @@ MUI → Tailwind v4 + shadcn-style Radix primitives + Motion + Lucide + Recharts
 | FR-4 | Remove `@mui/*` / `@emotion/*`; ESLint + Prettier clean on the whole frontend; existing Vitest suites updated to new markup | COMPLETED |
 | FR-5 | Docs: ARCHITECTURE §4.4 + ADR-020 superseding ADR-010 | COMPLETED |
 
+## Phase 5 — Finance imports, reconciliation, shopping & price tracking
+
+| ID | Task | Status |
+|---|---|---|
+| P5-1 | `banking` module: accounts, CSV statement import (pluggable parsers, preview, duplicate-safe), transactions, undo import, Open Banking provider interface | COMPLETED |
+| P5-2 | Reconciliation: deterministic rules + confidence scoring against documents, expenses and issued invoices; suggestions, manual confirm/reject/unmatch, `banking.reconcile` action | COMPLETED |
+| P5-3 | UI: Banking & Reconciliation page (accounts, import with preview, transactions, review queue) | COMPLETED |
+| P5-4 | `shopping` module: merchants, products (canonical identity), listings, manual price observations, history, thresholds/alerts, provider abstraction (manual source only) | TODO |
+| P5-5 | Shopping alerts through notifications + confirmation workflow (approval before any purchase step; no checkout) | TODO |
+| P5-6 | UI: Shopping Intelligence page (products, merchant comparison, price history chart, alerts) | TODO |
+
+**Acceptance criteria (banking, P5-1…P5-3)**
+- A CSV statement (comma/semicolon/tab, decimal comma or point, common date formats, UTF-8 or
+  Windows-1250) can be previewed without persisting anything; unparseable rows are reported per line.
+- Importing the same file twice is rejected; importing an overlapping statement adds only new rows;
+  two genuinely identical transactions in one statement are both kept.
+- Amounts are stored as NUMERIC (never float); debits are negative.
+- An import can be undone (removes its transactions and their matches), audited.
+- Reconciliation never matches across workspaces or currencies; every match records the rule and
+  a confidence; only a single unambiguous exact candidate (≥ 0.95) is auto-confirmed, everything
+  else waits in a review queue; confirmed matches can be undone.
+- No bank credentials are ever requested; Open Banking exists only as an interface (ADR-021).
+
 
 
 

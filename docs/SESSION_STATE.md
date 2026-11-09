@@ -99,14 +99,40 @@ Done (new design):
 - FR-5 (2026-11-09): ADR-020 (supersedes ADR-010's UI layer) and ARCHITECTURE §4.4 updated.
   **The frontend redesign is complete.**
 
+## Phase 5 (started 2026-11-09)
+
+Scope + acceptance criteria are in IMPLEMENTATION_PLAN.md (Phase 5); design in ADR-021.
+
+Done — banking (P5-1…P5-3):
+- Backend `app/modules/banking/`: `models.py` (accounts, imports, transactions, matches; partial
+  unique indexes = one confirmed match per transaction and per target), `parsers.py` (generic
+  header-driven CSV, UTF-8/cp1250, delimiter + decimal-separator detection, fingerprints with
+  occurrence numbers), `reconciliation.py` (pure scoring), `service.py`, `router.py`
+  (`/api/v1/workspaces/{id}/banking/...`), `actions.py` (`banking.reconcile`), `providers.py`
+  (Open Banking interface only). Migration `20261109_251ae87f05fa_banking`. Event
+  `banking.statement_imported`. `invoicing.public` now exports `Invoice`.
+- Frontend `/banking` page (`src/features/banking/*`, `src/api/banking.ts`): accounts, import with
+  preview, review queue, transactions + detail dialog (manual match, ignore), imports with undo.
+- Verified: ruff/mypy strict clean; 214 backend tests pass; migration upgrade/downgrade/check;
+  API walkthrough + Chromium walkthrough against the dev stack (all criteria hold, data cleaned up).
+
 Remaining (resume here):
-1. Phase 5 (bank CSV import, reconciliation, shopping/price tracking) — needs acceptance
-   criteria from PROJECT_SPEC §14 first.
-2. Note for the owner: `docs/CLAUDE.md` §4 still lists "Material UI" under Frontend (§6 already
+1. P5-4 `shopping` module (merchants, canonical products, listings, manual price observations,
+   history, thresholds). Manual source only — no scraping; SSRF rules in ARCHITECTURE §threat model
+   apply if URLs are ever fetched.
+2. P5-5 alerts via notifications + approval-gated confirmation (no checkout).
+3. P5-6 Shopping Intelligence UI (price history chart with Recharts).
+4. Follow-ups: store the provider's gross invoice total so gross payments can auto-match
+   (ADR-021 consequence); lazy-load heavy pages (main chunk ~250 KB gzip).
+5. Note for the owner: `docs/CLAUDE.md` §4 still lists "Material UI" under Frontend (§6 already
    says Tailwind/shadcn). Owner-maintained file; not edited by the agent.
 
-Dev-server note: an old Vite instance owns 127.0.0.1:3000 (PID shows as 0, not killable from the
-agent shell) and its dep cache predates the MUI removal, so it answers 504 "outdated optimize
-dep". Restart whatever owns :3000 (or `docker compose build frontend && docker compose up -d
-frontend`). For agent smoke tests on another port, the backend only trusts
-`Origin: http://localhost:3000`, so the Vite proxy must send that header (`headers: { origin }`).
+Dev-server notes:
+- An old Vite instance owns 127.0.0.1:3000 and its dep cache predates the MUI removal, so it
+  answers 504 "outdated optimize dep". Restart whatever owns :3000 (or
+  `docker compose build frontend && docker compose up -d frontend`).
+- Orphaned agent Vite processes may still run (`vite --port 3100`, `vite --config
+  vite.smoke.config.ts`); the agent was not permitted to stop them. They are safe to kill.
+- Agent smoke tests on another port: the backend only trusts `Origin: http://localhost:3000`, so
+  the Vite proxy must send that header (`headers: { origin }`), and use a separate `cacheDir`
+  so other dev servers' dependency caches are not invalidated. Avoid port 4317 (OTLP).

@@ -6,6 +6,7 @@ from app.core.module import Module
 from app.modules.approvals.module import module as approvals
 from app.modules.audit.module import module as audit
 from app.modules.automation.module import module as automation
+from app.modules.banking.module import module as banking
 from app.modules.calendar.module import module as calendar
 from app.modules.discord.module import module as discord
 from app.modules.documents.module import module as documents
@@ -39,6 +40,7 @@ MODULES: tuple[Module, ...] = (
     calendar,
     documents,
     expenses,
+    banking,
 )
 
 
@@ -50,6 +52,7 @@ def import_all_models() -> None:
     import app.modules.approvals.models
     import app.modules.audit.models
     import app.modules.automation.models
+    import app.modules.banking.models
     import app.modules.calendar.service
     import app.modules.documents.service
     import app.modules.events.models

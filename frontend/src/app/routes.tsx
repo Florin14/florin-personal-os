@@ -7,6 +7,7 @@ import { LoginPage } from '@/features/auth/LoginPage';
 import { MfaEnrollPage } from '@/features/auth/MfaEnrollPage';
 import { MfaVerifyPage } from '@/features/auth/MfaVerifyPage';
 import { RequireAuth } from '@/features/auth/RequireAuth';
+import { BankingPage } from '@/features/banking/BankingPage';
 import { NotFoundPage } from '@/features/errors/NotFoundPage';
 import { BusinessPage } from '@/features/business/BusinessPage';
 import { CalendarPage } from '@/features/calendar/CalendarPage';
@@ -38,6 +39,7 @@ export const routes: RouteObject[] = [
           { path: '/integrations', element: <IntegrationsPage /> },
           { path: '/business', element: <BusinessPage /> },
           { path: '/finance', element: <FinancePage /> },
+          { path: '/banking', element: <BankingPage /> },
           { path: '/calendar', element: <CalendarPage /> },
           { path: '/network', element: <NetworkRoute /> },
           { path: '/workflows', element: <WorkflowBuilderRoute /> },

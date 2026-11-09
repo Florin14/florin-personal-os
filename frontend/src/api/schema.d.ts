@@ -713,6 +713,278 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/workspaces/{workspace_id}/banking/accounts": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Accounts */
+        get: operations["list_accounts_api_v1_workspaces__workspace_id__banking_accounts_get"];
+        put?: never;
+        /** Create Account */
+        post: operations["create_account_api_v1_workspaces__workspace_id__banking_accounts_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/workspaces/{workspace_id}/banking/accounts/{account_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** Update Account */
+        put: operations["update_account_api_v1_workspaces__workspace_id__banking_accounts__account_id__put"];
+        post?: never;
+        /** Delete Account */
+        delete: operations["delete_account_api_v1_workspaces__workspace_id__banking_accounts__account_id__delete"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/workspaces/{workspace_id}/banking/accounts/{account_id}/imports": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Import Statement */
+        post: operations["import_statement_api_v1_workspaces__workspace_id__banking_accounts__account_id__imports_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/workspaces/{workspace_id}/banking/accounts/{account_id}/imports/preview": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Preview Import
+         * @description Parses a statement without storing anything.
+         */
+        post: operations["preview_import_api_v1_workspaces__workspace_id__banking_accounts__account_id__imports_preview_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/workspaces/{workspace_id}/banking/imports": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Imports */
+        get: operations["list_imports_api_v1_workspaces__workspace_id__banking_imports_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/workspaces/{workspace_id}/banking/imports/{import_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /**
+         * Undo Import
+         * @description Removes the transactions this import added, with their matches.
+         */
+        delete: operations["undo_import_api_v1_workspaces__workspace_id__banking_imports__import_id__delete"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/workspaces/{workspace_id}/banking/matches/{match_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** Remove Match */
+        delete: operations["remove_match_api_v1_workspaces__workspace_id__banking_matches__match_id__delete"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/workspaces/{workspace_id}/banking/matches/{match_id}/confirm": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Confirm Match */
+        post: operations["confirm_match_api_v1_workspaces__workspace_id__banking_matches__match_id__confirm_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/workspaces/{workspace_id}/banking/matches/{match_id}/reject": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Reject Match */
+        post: operations["reject_match_api_v1_workspaces__workspace_id__banking_matches__match_id__reject_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/workspaces/{workspace_id}/banking/reconcile": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Reconcile
+         * @description Re-scores every open transaction (e.g. after adding documents or invoices).
+         */
+        post: operations["reconcile_api_v1_workspaces__workspace_id__banking_reconcile_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/workspaces/{workspace_id}/banking/review": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Review Queue
+         * @description Transactions with match suggestions waiting for a decision.
+         */
+        get: operations["review_queue_api_v1_workspaces__workspace_id__banking_review_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/workspaces/{workspace_id}/banking/transactions": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Transactions */
+        get: operations["list_transactions_api_v1_workspaces__workspace_id__banking_transactions_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/workspaces/{workspace_id}/banking/transactions/{transaction_id}/candidates": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Transaction Candidates
+         * @description Current matches plus freshly scored candidates (including weak ones) for manual review.
+         */
+        get: operations["transaction_candidates_api_v1_workspaces__workspace_id__banking_transactions__transaction_id__candidates_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/workspaces/{workspace_id}/banking/transactions/{transaction_id}/ignored": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** Set Ignored */
+        put: operations["set_ignored_api_v1_workspaces__workspace_id__banking_transactions__transaction_id__ignored_put"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/workspaces/{workspace_id}/banking/transactions/{transaction_id}/matches": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Manual Match */
+        post: operations["manual_match_api_v1_workspaces__workspace_id__banking_transactions__transaction_id__matches_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/workspaces/{workspace_id}/calendar/events": {
         parameters: {
             query?: never;
@@ -1032,6 +1304,50 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
+        /** AccountIn */
+        AccountIn: {
+            /**
+             * Bank Name
+             * @default
+             */
+            bank_name: string;
+            /**
+             * Currency
+             * @default RON
+             */
+            currency: string;
+            /** Iban */
+            iban?: string | null;
+            /** Name */
+            name: string;
+        };
+        /** AccountOut */
+        AccountOut: {
+            /** Bank Name */
+            bank_name: string;
+            /** Counts */
+            counts: {
+                [key: string]: number;
+            };
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /** Currency */
+            currency: string;
+            /** Iban */
+            iban: string | null;
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Last Import At */
+            last_import_at: string | null;
+            /** Name */
+            name: string;
+        };
         /** ActionOut */
         ActionOut: {
             /** Description */
@@ -1235,6 +1551,22 @@ export interface components {
             /** Name */
             name?: string | null;
         };
+        /** Body_import_statement_api_v1_workspaces__workspace_id__banking_accounts__account_id__imports_post */
+        Body_import_statement_api_v1_workspaces__workspace_id__banking_accounts__account_id__imports_post: {
+            /**
+             * File
+             * @description CSV statement, max 5 MB
+             */
+            file: string;
+        };
+        /** Body_preview_import_api_v1_workspaces__workspace_id__banking_accounts__account_id__imports_preview_post */
+        Body_preview_import_api_v1_workspaces__workspace_id__banking_accounts__account_id__imports_preview_post: {
+            /**
+             * File
+             * @description CSV statement, max 5 MB
+             */
+            file: string;
+        };
         /** Body_upload_document_api_v1_workspaces__workspace_id__documents_post */
         Body_upload_document_api_v1_workspaces__workspace_id__documents_post: {
             /**
@@ -1271,6 +1603,24 @@ export interface components {
             error: string | null;
             /** Events */
             events: components["schemas"]["CalendarEventOut"][];
+        };
+        /** CandidateOut */
+        CandidateOut: {
+            /** Confidence */
+            confidence: string;
+            /** Reasons */
+            reasons: string[];
+            /** Rule */
+            rule: string;
+            target: components["schemas"]["TargetOut"];
+        };
+        /** CandidatesOut */
+        CandidatesOut: {
+            /** Candidates */
+            candidates: components["schemas"]["CandidateOut"][];
+            /** Matches */
+            matches: components["schemas"]["MatchOut"][];
+            transaction: components["schemas"]["TransactionOut"];
         };
         /** ChangePasswordRequest */
         ChangePasswordRequest: {
@@ -1716,6 +2066,50 @@ export interface components {
              */
             status: "ok" | "degraded";
         };
+        /** IgnoreIn */
+        IgnoreIn: {
+            /** Ignored */
+            ignored: boolean;
+        };
+        /** ImportOut */
+        ImportOut: {
+            /**
+             * Account Id
+             * Format: uuid
+             */
+            account_id: string;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /** Duplicate Count */
+            duplicate_count: number;
+            /** Error Count */
+            error_count: number;
+            /** Filename */
+            filename: string;
+            /** First Date */
+            first_date: string | null;
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Imported Count */
+            imported_count: number;
+            /** Last Date */
+            last_date: string | null;
+            /** Parser */
+            parser: string;
+            /** Row Count */
+            row_count: number;
+        };
+        /** ImportResultOut */
+        ImportResultOut: {
+            batch: components["schemas"]["ImportOut"];
+            reconciliation: components["schemas"]["ReconcileOut"];
+        };
         /** InvoiceOut */
         InvoiceOut: {
             /** Client Name */
@@ -1845,6 +2239,42 @@ export interface components {
             /** Password */
             password: string;
         };
+        /** ManualMatchIn */
+        ManualMatchIn: {
+            /**
+             * Target Id
+             * Format: uuid
+             */
+            target_id: string;
+            target_type: components["schemas"]["TargetType"];
+        };
+        /** MatchOut */
+        MatchOut: {
+            /** Confidence */
+            confidence: string;
+            /** Decided At */
+            decided_at: string | null;
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Reasons */
+            reasons: string[];
+            /** Rule */
+            rule: string;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "suggested" | "confirmed" | "rejected";
+            target: components["schemas"]["TargetOut"] | null;
+            /**
+             * Transaction Id
+             * Format: uuid
+             */
+            transaction_id: string;
+        };
         /** MfaCodeRequest */
         MfaCodeRequest: {
             /** Code */
@@ -1889,6 +2319,47 @@ export interface components {
             title: string;
             /** Workspace Id */
             workspace_id: string | null;
+        };
+        /** PreviewOut */
+        PreviewOut: {
+            /** Columns */
+            columns: {
+                [key: string]: string;
+            };
+            /** Duplicate Rows */
+            duplicate_rows: number;
+            /** Errors */
+            errors: components["schemas"]["RowErrorOut"][];
+            /** Parser */
+            parser: string;
+            /** Sample */
+            sample: components["schemas"]["PreviewRowOut"][];
+            /** Total Rows */
+            total_rows: number;
+            /** Valid Rows */
+            valid_rows: number;
+        };
+        /** PreviewRowOut */
+        PreviewRowOut: {
+            /** Amount */
+            amount: string;
+            /**
+             * Booking Date
+             * Format: date
+             */
+            booking_date: string;
+            /** Counterparty */
+            counterparty: string;
+            /** Currency */
+            currency: string;
+            /** Description */
+            description: string;
+            /** Line */
+            line: number;
+            /** Reference */
+            reference: string;
+            /** Value Date */
+            value_date: string | null;
         };
         /** ProfileIn */
         ProfileIn: {
@@ -2111,6 +2582,21 @@ export interface components {
             /** Title */
             title: string;
         };
+        /** ReconcileOut */
+        ReconcileOut: {
+            /** Auto Matched */
+            auto_matched: number;
+            /** Processed */
+            processed: number;
+            /** Suggested */
+            suggested: number;
+        };
+        /** ReviewItemOut */
+        ReviewItemOut: {
+            /** Suggestions */
+            suggestions: components["schemas"]["MatchOut"][];
+            transaction: components["schemas"]["TransactionOut"];
+        };
         /**
          * RiskLevel
          * @enum {string}
@@ -2121,6 +2607,13 @@ export interface components {
          * @enum {string}
          */
         Role: "viewer" | "member" | "admin" | "owner";
+        /** RowErrorOut */
+        RowErrorOut: {
+            /** Line */
+            line: number;
+            /** Message */
+            message: string;
+        };
         /** RunIn */
         RunIn: {
             /**
@@ -2234,6 +2727,35 @@ export interface components {
             /** Version */
             version: string;
         };
+        /** TargetOut */
+        TargetOut: {
+            /** Amount */
+            amount: string;
+            /** Currency */
+            currency: string;
+            /**
+             * Date
+             * Format: date
+             */
+            date: string;
+            /** Label */
+            label: string;
+            /**
+             * Target Id
+             * Format: uuid
+             */
+            target_id: string;
+            /**
+             * Target Type
+             * @enum {string}
+             */
+            target_type: "invoice" | "document" | "expense";
+        };
+        /**
+         * TargetType
+         * @enum {string}
+         */
+        TargetType: "invoice" | "document" | "expense";
         /** TaskIn */
         TaskIn: {
             /** Due Date */
@@ -2286,6 +2808,42 @@ export interface components {
             /** Secret */
             secret: string;
         };
+        /** TransactionOut */
+        TransactionOut: {
+            /**
+             * Account Id
+             * Format: uuid
+             */
+            account_id: string;
+            /** Amount */
+            amount: string;
+            /**
+             * Booking Date
+             * Format: date
+             */
+            booking_date: string;
+            /** Counterparty */
+            counterparty: string;
+            /** Currency */
+            currency: string;
+            /** Description */
+            description: string;
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            matched?: components["schemas"]["TargetOut"] | null;
+            /** Reference */
+            reference: string;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "unmatched" | "suggested" | "matched" | "ignored";
+            /** Value Date */
+            value_date: string | null;
+        };
         /** TriggerStateOut */
         TriggerStateOut: {
             /** Enabled */
@@ -2300,6 +2858,11 @@ export interface components {
             trigger_key: string;
             /** Trigger Type */
             trigger_type: string;
+        };
+        /** UndoOut */
+        UndoOut: {
+            /** Removed */
+            removed: number;
         };
         /** UnreadCountOut */
         UnreadCountOut: {
@@ -3771,6 +4334,573 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["VersionOut"][];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    list_accounts_api_v1_workspaces__workspace_id__banking_accounts_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                workspace_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AccountOut"][];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    create_account_api_v1_workspaces__workspace_id__banking_accounts_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                workspace_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AccountIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AccountOut"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    update_account_api_v1_workspaces__workspace_id__banking_accounts__account_id__put: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                workspace_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AccountIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AccountOut"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    delete_account_api_v1_workspaces__workspace_id__banking_accounts__account_id__delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                workspace_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    import_statement_api_v1_workspaces__workspace_id__banking_accounts__account_id__imports_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                workspace_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "multipart/form-data": components["schemas"]["Body_import_statement_api_v1_workspaces__workspace_id__banking_accounts__account_id__imports_post"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ImportResultOut"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    preview_import_api_v1_workspaces__workspace_id__banking_accounts__account_id__imports_preview_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                workspace_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "multipart/form-data": components["schemas"]["Body_preview_import_api_v1_workspaces__workspace_id__banking_accounts__account_id__imports_preview_post"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PreviewOut"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    list_imports_api_v1_workspaces__workspace_id__banking_imports_get: {
+        parameters: {
+            query?: {
+                account_id?: string | null;
+            };
+            header?: never;
+            path: {
+                workspace_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ImportOut"][];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    undo_import_api_v1_workspaces__workspace_id__banking_imports__import_id__delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                import_id: string;
+                workspace_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["UndoOut"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    remove_match_api_v1_workspaces__workspace_id__banking_matches__match_id__delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                match_id: string;
+                workspace_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    confirm_match_api_v1_workspaces__workspace_id__banking_matches__match_id__confirm_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                match_id: string;
+                workspace_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MatchOut"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    reject_match_api_v1_workspaces__workspace_id__banking_matches__match_id__reject_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                match_id: string;
+                workspace_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MatchOut"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    reconcile_api_v1_workspaces__workspace_id__banking_reconcile_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                workspace_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ReconcileOut"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    review_queue_api_v1_workspaces__workspace_id__banking_review_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                workspace_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ReviewItemOut"][];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    list_transactions_api_v1_workspaces__workspace_id__banking_transactions_get: {
+        parameters: {
+            query?: {
+                account_id?: string | null;
+                status?: ("unmatched" | "suggested" | "matched" | "ignored") | null;
+                date_from?: string | null;
+                date_to?: string | null;
+                q?: string | null;
+                limit?: number;
+            };
+            header?: never;
+            path: {
+                workspace_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TransactionOut"][];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    transaction_candidates_api_v1_workspaces__workspace_id__banking_transactions__transaction_id__candidates_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                transaction_id: string;
+                workspace_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CandidatesOut"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    set_ignored_api_v1_workspaces__workspace_id__banking_transactions__transaction_id__ignored_put: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                transaction_id: string;
+                workspace_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["IgnoreIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TransactionOut"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    manual_match_api_v1_workspaces__workspace_id__banking_transactions__transaction_id__matches_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                transaction_id: string;
+                workspace_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ManualMatchIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MatchOut"];
                 };
             };
             /** @description Client error */

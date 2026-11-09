@@ -14,6 +14,7 @@ import {
   ShieldCheck,
   ShoppingBag,
   Wallet,
+  Landmark,
   Workflow,
 } from 'lucide-react';
 
@@ -40,6 +41,7 @@ export const IMPLEMENTED_PATHS = new Set([
   '/executions',
   '/business',
   '/finance',
+  '/banking',
   '/calendar',
   '/integrations',
   '/settings',
@@ -104,7 +106,14 @@ export const NAV_SECTIONS: NavSection[] = [
         Briefcase,
         3,
       ),
-      item('/finance', 'Finance', 'Documents, expenses and (soon) bank reconciliation.', Wallet, 4),
+      item('/finance', 'Finance', 'Documents and expenses.', Wallet, 4),
+      item(
+        '/banking',
+        'Banking & Reconciliation',
+        'Bank statement import and matching with documents, expenses and invoices.',
+        Landmark,
+        5,
+      ),
       item(
         '/calendar',
         'Calendar & Tasks',
