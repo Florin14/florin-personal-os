@@ -51,17 +51,17 @@ def _terms(values: list[str]) -> list[str]:
 Terms = Annotated[list[Term], AfterValidator(_terms)]
 
 
-class SkillIn(BaseModel):
+class SkillWeightIn(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
     term: Term
     weight: int = Field(default=3, ge=1, le=5)
 
 
-class ProfileIn(BaseModel):
+class OpportunityProfileIn(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
-    skills: list[SkillIn] = Field(default_factory=list, max_length=60)
+    skills: list[SkillWeightIn] = Field(default_factory=list, max_length=60)
     include_keywords: Terms = Field(default_factory=list, max_length=60)
     exclude_keywords: Terms = Field(default_factory=list, max_length=60)
     min_hourly_rate: Annotated[Decimal, Field(gt=0, max_digits=10, decimal_places=2)] | None = None
@@ -70,8 +70,8 @@ class ProfileIn(BaseModel):
     notify_threshold: int = Field(default=60, ge=0, le=100)
 
 
-class ProfileOut(BaseModel):
-    skills: list[SkillIn]
+class OpportunityProfileOut(BaseModel):
+    skills: list[SkillWeightIn]
     include_keywords: list[str]
     exclude_keywords: list[str]
     min_hourly_rate: Decimal | None
@@ -81,7 +81,7 @@ class ProfileOut(BaseModel):
     configured: bool
 
 
-class FeedIn(BaseModel):
+class FeedSourceIn(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
     name: str = Field(min_length=1, max_length=100)
@@ -90,7 +90,7 @@ class FeedIn(BaseModel):
     poll_interval_minutes: int = Field(default=60, ge=30, le=24 * 60)
 
 
-class SourceOut(BaseModel):
+class OpportunitySourceOut(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
     id: uuid.UUID
@@ -104,13 +104,13 @@ class SourceOut(BaseModel):
     last_error: str
 
 
-class PollOut(BaseModel):
+class FeedPollOut(BaseModel):
     status: str | None
     new: int
     error: str
 
 
-class ManualListingIn(BaseModel):
+class ManualOpportunityIn(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
     title: str = Field(min_length=1, max_length=300)
@@ -120,7 +120,7 @@ class ManualListingIn(BaseModel):
     budget_text: str = Field(default="", max_length=200)
 
 
-class ListingOut(BaseModel):
+class OpportunityOut(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
     id: uuid.UUID
@@ -140,15 +140,15 @@ class ListingOut(BaseModel):
     created_at: datetime
 
 
-class StatusIn(BaseModel):
+class OpportunityStatusIn(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
     status: StatusName
 
 
-def _profile(p: OpportunityProfile | None) -> ProfileOut:
+def _profile(p: OpportunityProfile | None) -> OpportunityProfileOut:
     if p is None:
-        return ProfileOut(
+        return OpportunityProfileOut(
             skills=[],
             include_keywords=[],
             exclude_keywords=[],
@@ -158,8 +158,8 @@ def _profile(p: OpportunityProfile | None) -> ProfileOut:
             notify_threshold=60,
             configured=False,
         )
-    return ProfileOut(
-        skills=[SkillIn.model_validate(s) for s in p.skills],
+    return OpportunityProfileOut(
+        skills=[SkillWeightIn.model_validate(s) for s in p.skills],
         include_keywords=p.include_keywords,
         exclude_keywords=p.exclude_keywords,
         min_hourly_rate=p.min_hourly_rate,
@@ -170,26 +170,26 @@ def _profile(p: OpportunityProfile | None) -> ProfileOut:
     )
 
 
-def _listing(o: Opportunity) -> ListingOut:
-    return ListingOut.model_validate(o)
+def _listing(o: Opportunity) -> OpportunityOut:
+    return OpportunityOut.model_validate(o)
 
 
-def _source(s: OpportunitySource) -> SourceOut:
-    return SourceOut.model_validate(s)
+def _source(s: OpportunitySource) -> OpportunitySourceOut:
+    return OpportunitySourceOut.model_validate(s)
 
 
 # ------------------------------------------------------------------- profile
 
 
-@router.get("/profile", response_model=ProfileOut)
-async def get_profile(access: Viewer, db: DbSession) -> ProfileOut:
+@router.get("/profile", response_model=OpportunityProfileOut)
+async def get_profile(access: Viewer, db: DbSession) -> OpportunityProfileOut:
     return _profile(await OpportunityService(db).profile(access.workspace_id))
 
 
-@router.put("/profile", response_model=ProfileOut)
+@router.put("/profile", response_model=OpportunityProfileOut)
 async def save_profile(
-    body: ProfileIn, access: Member, ctx: CurrentUser, db: DbSession
-) -> ProfileOut:
+    body: OpportunityProfileIn, access: Member, ctx: CurrentUser, db: DbSession
+) -> OpportunityProfileOut:
     """Saving re-scores every stored listing with the new profile."""
     data: dict[str, Any] = body.model_dump()
     data["skills"] = [s.model_dump() for s in body.skills]
@@ -201,22 +201,24 @@ async def save_profile(
 # ------------------------------------------------------------------- sources
 
 
-@router.get("/sources", response_model=list[SourceOut])
-async def list_sources(access: Viewer, db: DbSession) -> list[SourceOut]:
+@router.get("/sources", response_model=list[OpportunitySourceOut])
+async def list_sources(access: Viewer, db: DbSession) -> list[OpportunitySourceOut]:
     return [_source(s) for s in await OpportunityService(db).list_sources(access.workspace_id)]
 
 
-@router.post("/sources", response_model=SourceOut, status_code=status.HTTP_201_CREATED)
-async def add_feed(body: FeedIn, access: Admin, ctx: CurrentUser, db: DbSession) -> SourceOut:
+@router.post("/sources", response_model=OpportunitySourceOut, status_code=status.HTTP_201_CREATED)
+async def add_feed(
+    body: FeedSourceIn, access: Admin, ctx: CurrentUser, db: DbSession
+) -> OpportunitySourceOut:
     return _source(
         await OpportunityService(db).save_feed(access.workspace_id, body.model_dump(), ctx.user.id)
     )
 
 
-@router.put("/sources/{source_id}", response_model=SourceOut)
+@router.put("/sources/{source_id}", response_model=OpportunitySourceOut)
 async def update_feed(
-    source_id: uuid.UUID, body: FeedIn, access: Admin, ctx: CurrentUser, db: DbSession
-) -> SourceOut:
+    source_id: uuid.UUID, body: FeedSourceIn, access: Admin, ctx: CurrentUser, db: DbSession
+) -> OpportunitySourceOut:
     service = OpportunityService(db)
     source = await service.get_source(access.workspace_id, source_id)
     return _source(
@@ -235,17 +237,17 @@ async def delete_source(
     )
 
 
-@router.post("/sources/{source_id}/poll", response_model=PollOut)
-async def poll_now(source_id: uuid.UUID, access: Member, db: DbSession) -> PollOut:
+@router.post("/sources/{source_id}/poll", response_model=FeedPollOut)
+async def poll_now(source_id: uuid.UUID, access: Member, db: DbSession) -> FeedPollOut:
     service = OpportunityService(db)
     source = await service.get_source(access.workspace_id, source_id)
-    return PollOut(**await service.poll(source))
+    return FeedPollOut(**await service.poll(source))
 
 
 # ------------------------------------------------------------------ listings
 
 
-@router.get("/listings", response_model=list[ListingOut])
+@router.get("/listings", response_model=list[OpportunityOut])
 async def list_listings(
     access: Viewer,
     db: DbSession,
@@ -254,7 +256,7 @@ async def list_listings(
     q: Annotated[str | None, Query(max_length=100)] = None,
     include_excluded: bool = False,
     limit: Annotated[int, Query(ge=1, le=500)] = 200,
-) -> list[ListingOut]:
+) -> list[OpportunityOut]:
     listings = await OpportunityService(db).list_listings(
         access.workspace_id,
         status=status_filter,
@@ -266,28 +268,32 @@ async def list_listings(
     return [_listing(o) for o in listings]
 
 
-@router.post("/listings", response_model=ListingOut, status_code=status.HTTP_201_CREATED)
+@router.post("/listings", response_model=OpportunityOut, status_code=status.HTTP_201_CREATED)
 async def add_listing(
-    body: ManualListingIn, access: Member, ctx: CurrentUser, db: DbSession
-) -> ListingOut:
+    body: ManualOpportunityIn, access: Member, ctx: CurrentUser, db: DbSession
+) -> OpportunityOut:
     return _listing(
         await OpportunityService(db).add_manual(access.workspace_id, body.model_dump(), ctx.user.id)
     )
 
 
-@router.put("/listings/{listing_id}/status", response_model=ListingOut)
+@router.put("/listings/{listing_id}/status", response_model=OpportunityOut)
 async def set_listing_status(
-    listing_id: uuid.UUID, body: StatusIn, access: Member, ctx: CurrentUser, db: DbSession
-) -> ListingOut:
+    listing_id: uuid.UUID,
+    body: OpportunityStatusIn,
+    access: Member,
+    ctx: CurrentUser,
+    db: DbSession,
+) -> OpportunityOut:
     service = OpportunityService(db)
     listing = await service.get_listing(access.workspace_id, listing_id)
     return _listing(await service.set_status(listing, ListingStatus(body.status), ctx.user.id))
 
 
-@router.post("/listings/{listing_id}/summary", response_model=ListingOut)
+@router.post("/listings/{listing_id}/summary", response_model=OpportunityOut)
 async def summarize_listing(
     listing_id: uuid.UUID, access: Member, ctx: CurrentUser, db: DbSession, settings: SettingsDep
-) -> ListingOut:
+) -> OpportunityOut:
     """Optional AI summary (ADR-023). 409 when AI is unavailable, 502-style message on failure."""
     service = OpportunityService(db)
     listing = await service.get_listing(access.workspace_id, listing_id)

@@ -15,7 +15,7 @@ A task is `COMPLETED` only after it is implemented **and** verified (tests/check
 | 3 | Discord bot, Oblio monthly invoicing workflow | COMPLETED (live Oblio/Discord not verified: no credentials; mock verified) |
 | 4 | Google Calendar, Gmail, Drive, documents, basic expense processing | IN PROGRESS |
 | 5 | Bank statement import, reconciliation, shopping & price tracking | COMPLETED (manual price source only; live bank/price sources need licensed providers) |
-| 6 | Freelance opportunity discovery, optional AI assistance | TODO |
+| 6 | Freelance opportunity discovery, optional AI assistance | COMPLETED (AI verified against a fake Ollama; no real model run) |
 | 7 | Home Assistant, location, health, lifestyle, shared planning | TODO |
 | 8 | Performance, monitoring, security hardening (passkeys, rate limiting), disaster recovery | TODO |
 
@@ -150,7 +150,7 @@ bot (signed interactions, allowlists, approvals, notifications).
 |---|---|---|
 | P6-1 | `ai` module: disabled/Ollama providers, per-workspace feature consent, monthly budget, usage log, redaction, structured outputs (ADR-023) | COMPLETED |
 | P6-2 | `opportunities` module: profile, manual + RSS/Atom sources with SSRF-safe fetching, deterministic matching, notifications/event, optional AI summary (ADR-024) | COMPLETED |
-| P6-3 | UI: Freelance & Career page (matches, sources, profile) + AI settings card | IN PROGRESS |
+| P6-3 | UI: Freelance & Career page (matches, sources, profile) + AI settings card | COMPLETED |
 
 **Acceptance criteria**
 - With `AI_PROVIDER=disabled` everything works; AI buttons explain why they are unavailable.
@@ -244,6 +244,33 @@ WireGuard deployment guide, Home Assistant node guide.
 ## Session log
 
 _(Completion reports are appended here at the end of each implementation session.)_
+
+### 2026-11-09 — Phase 6 (freelance opportunities + optional AI)
+
+**Implemented**
+- `ai` module (ADR-023): disabled (default) / local Ollama providers, per-workspace feature
+  consent, monthly request budget, usage log incl. refusals, prompt redaction, schema-validated
+  output, no tools. Env: `AI_PROVIDER`, `OLLAMA_BASE_URL`, `OLLAMA_MODEL`, `AI_TIMEOUT_SECONDS`,
+  `AI_MONTHLY_REQUEST_BUDGET`. No paid provider.
+- `opportunities` module (ADR-024): profile, manual listings, user-added RSS/Atom feeds via an
+  SSRF-safe fetcher + defusedxml, deterministic explained scoring, periodic polling, one
+  notification + `opportunities.matched` event per poll, optional AI summary.
+- UI: Freelance & Career page (matches, sources, profile) and an AI card in Settings.
+
+**Verification (executed)**
+- ruff + mypy --strict clean; 217 pytest tests pass; migration upgrade/downgrade/check clean.
+- tsc, ESLint, Prettier clean; 43 Vitest tests; production build OK.
+- Scratch checks: feed parsing, billion-laughs and XXE refused, URL policy incl. DNS→loopback,
+  matching determinism/exclusions/rate, redaction; AI gates against a fake Ollama server (consent,
+  redacted wire request, invalid output, budget, usage log); API + Chromium walkthroughs incl. a
+  real public RSS feed (25 listings, conditional re-poll, no duplicates). Test data removed.
+- Found and fixed during verification: localhost feeds accepted at save time; httpx treats 304 as a
+  redirect (conditional re-poll failed); schema name collisions with shopping/invoicing; profile
+  form remount lost the success message.
+
+**Known limitations**
+- No real local model was run (none installed); Ollama integration is verified by wire format only.
+- DNS-rebinding window between the address check and the connection (ADR-024).
 
 ### 2026-11-09 — Frontend redesign completed + Phase 5
 

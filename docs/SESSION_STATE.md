@@ -128,8 +128,20 @@ Done — shopping (P5-4…P5-6, ADR-022):
 
 **Phase 5 is complete.**
 
+## Phase 6 (2026-11-09) — completed
+
+- `app/modules/ai/` (ADR-023) and `app/modules/opportunities/` (ADR-024); migration
+  `20261109_239e52c36ade_ai_and_opportunities`; new dependency `defusedxml` (+ `types-defusedxml`
+  dev) — after pulling, rebuild: `docker compose build migrate && docker compose up -d`.
+- Frontend `/opportunities` + `src/features/settings/AiCard.tsx`; hooks in `src/api/opportunities.ts`.
+- OpenAPI schema names must be unique across modules (FastAPI renames collisions to
+  `app__modules__…`, breaking existing client types): opportunities uses `Opportunity*` names.
+- To try AI locally: run Ollama, `ollama pull llama3.2`, set `AI_PROVIDER=ollama` (and
+  `OLLAMA_BASE_URL`), recreate backend/worker, then enable the feature in Settings → AI.
+
 Remaining (resume here):
-1. Phase 6 scoping: freelance opportunity discovery + optional AI (PROJECT_SPEC §10, §14).
+1. Phase 7 scoping (Home Assistant, location, health, lifestyle, shared planning) — needs owner
+   input on which integrations exist (Home Assistant URL/token, devices) before building.
 2. Follow-ups: store the provider's gross invoice total so gross payments can auto-match
    (ADR-021 consequence); lazy-load heavy pages (main chunk ~250 KB gzip).
 3. Note for the owner: `docs/CLAUDE.md` §4 still lists "Material UI" under Frontend (§6 already

@@ -153,6 +153,162 @@
         "title": "ActionOut",
         "type": "object"
       },
+      "AiFeatureOut": {
+        "properties": {
+          "data_sent": {
+            "title": "Data Sent",
+            "type": "string"
+          },
+          "description": {
+            "title": "Description",
+            "type": "string"
+          },
+          "enabled": {
+            "title": "Enabled",
+            "type": "boolean"
+          },
+          "key": {
+            "title": "Key",
+            "type": "string"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          }
+        },
+        "required": [
+          "key",
+          "title",
+          "description",
+          "data_sent",
+          "enabled"
+        ],
+        "title": "AiFeatureOut",
+        "type": "object"
+      },
+      "AiFeaturesIn": {
+        "additionalProperties": false,
+        "properties": {
+          "enabled_features": {
+            "items": {
+              "type": "string"
+            },
+            "maxItems": 50,
+            "title": "Enabled Features",
+            "type": "array"
+          }
+        },
+        "required": [
+          "enabled_features"
+        ],
+        "title": "AiFeaturesIn",
+        "type": "object"
+      },
+      "AiStatusOut": {
+        "properties": {
+          "available": {
+            "title": "Available",
+            "type": "boolean"
+          },
+          "budget_limit": {
+            "title": "Budget Limit",
+            "type": "integer"
+          },
+          "budget_used": {
+            "title": "Budget Used",
+            "type": "integer"
+          },
+          "features": {
+            "items": {
+              "$ref": "#/components/schemas/AiFeatureOut"
+            },
+            "title": "Features",
+            "type": "array"
+          },
+          "model": {
+            "title": "Model",
+            "type": "string"
+          },
+          "provider": {
+            "enum": [
+              "disabled",
+              "ollama"
+            ],
+            "title": "Provider",
+            "type": "string"
+          }
+        },
+        "required": [
+          "provider",
+          "model",
+          "available",
+          "budget_limit",
+          "budget_used",
+          "features"
+        ],
+        "title": "AiStatusOut",
+        "type": "object"
+      },
+      "AiUsageOut": {
+        "properties": {
+          "created_at": {
+            "format": "date-time",
+            "title": "Created At",
+            "type": "string"
+          },
+          "duration_ms": {
+            "title": "Duration Ms",
+            "type": "integer"
+          },
+          "error": {
+            "title": "Error",
+            "type": "string"
+          },
+          "feature": {
+            "title": "Feature",
+            "type": "string"
+          },
+          "id": {
+            "format": "uuid",
+            "title": "Id",
+            "type": "string"
+          },
+          "input_tokens": {
+            "title": "Input Tokens",
+            "type": "integer"
+          },
+          "model": {
+            "title": "Model",
+            "type": "string"
+          },
+          "outcome": {
+            "title": "Outcome",
+            "type": "string"
+          },
+          "output_tokens": {
+            "title": "Output Tokens",
+            "type": "integer"
+          },
+          "provider": {
+            "title": "Provider",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "feature",
+          "provider",
+          "model",
+          "outcome",
+          "input_tokens",
+          "output_tokens",
+          "duration_ms",
+          "error",
+          "created_at"
+        ],
+        "title": "AiUsageOut",
+        "type": "object"
+      },
       "AlertOut": {
         "properties": {
           "created_at": {
@@ -2191,6 +2347,71 @@
         "title": "ExpenseOut",
         "type": "object"
       },
+      "FeedPollOut": {
+        "properties": {
+          "error": {
+            "title": "Error",
+            "type": "string"
+          },
+          "new": {
+            "title": "New",
+            "type": "integer"
+          },
+          "status": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Status"
+          }
+        },
+        "required": [
+          "status",
+          "new",
+          "error"
+        ],
+        "title": "FeedPollOut",
+        "type": "object"
+      },
+      "FeedSourceIn": {
+        "additionalProperties": false,
+        "properties": {
+          "enabled": {
+            "default": true,
+            "title": "Enabled",
+            "type": "boolean"
+          },
+          "name": {
+            "maxLength": 100,
+            "minLength": 1,
+            "title": "Name",
+            "type": "string"
+          },
+          "poll_interval_minutes": {
+            "default": 60,
+            "maximum": 1440.0,
+            "minimum": 30.0,
+            "title": "Poll Interval Minutes",
+            "type": "integer"
+          },
+          "url": {
+            "maxLength": 500,
+            "minLength": 8,
+            "title": "Url",
+            "type": "string"
+          }
+        },
+        "required": [
+          "name",
+          "url"
+        ],
+        "title": "FeedSourceIn",
+        "type": "object"
+      },
       "HealthResponse": {
         "properties": {
           "database": {
@@ -2824,6 +3045,53 @@
         "title": "ManualMatchIn",
         "type": "object"
       },
+      "ManualOpportunityIn": {
+        "additionalProperties": false,
+        "properties": {
+          "budget_text": {
+            "default": "",
+            "maxLength": 200,
+            "title": "Budget Text",
+            "type": "string"
+          },
+          "company": {
+            "default": "",
+            "maxLength": 200,
+            "title": "Company",
+            "type": "string"
+          },
+          "description": {
+            "default": "",
+            "maxLength": 20000,
+            "title": "Description",
+            "type": "string"
+          },
+          "title": {
+            "maxLength": 300,
+            "minLength": 1,
+            "title": "Title",
+            "type": "string"
+          },
+          "url": {
+            "anyOf": [
+              {
+                "maxLength": 1000,
+                "pattern": "^https?://",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Url"
+          }
+        },
+        "required": [
+          "title"
+        ],
+        "title": "ManualOpportunityIn",
+        "type": "object"
+      },
       "MatchOut": {
         "properties": {
           "confidence": {
@@ -3198,6 +3466,393 @@
           "note"
         ],
         "title": "ObservationOut",
+        "type": "object"
+      },
+      "OpportunityOut": {
+        "properties": {
+          "ai_summarized_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Ai Summarized At"
+          },
+          "ai_summary": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/OpportunitySummary"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "budget_text": {
+            "title": "Budget Text",
+            "type": "string"
+          },
+          "company": {
+            "title": "Company",
+            "type": "string"
+          },
+          "created_at": {
+            "format": "date-time",
+            "title": "Created At",
+            "type": "string"
+          },
+          "description": {
+            "title": "Description",
+            "type": "string"
+          },
+          "excluded": {
+            "title": "Excluded",
+            "type": "boolean"
+          },
+          "id": {
+            "format": "uuid",
+            "title": "Id",
+            "type": "string"
+          },
+          "posted_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Posted At"
+          },
+          "reasons": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Reasons",
+            "type": "array"
+          },
+          "score": {
+            "title": "Score",
+            "type": "integer"
+          },
+          "source_id": {
+            "format": "uuid",
+            "title": "Source Id",
+            "type": "string"
+          },
+          "status": {
+            "enum": [
+              "new",
+              "saved",
+              "applied",
+              "dismissed"
+            ],
+            "title": "Status",
+            "type": "string"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Url"
+          }
+        },
+        "required": [
+          "id",
+          "source_id",
+          "title",
+          "url",
+          "company",
+          "description",
+          "budget_text",
+          "posted_at",
+          "score",
+          "reasons",
+          "excluded",
+          "status",
+          "ai_summary",
+          "ai_summarized_at",
+          "created_at"
+        ],
+        "title": "OpportunityOut",
+        "type": "object"
+      },
+      "OpportunityProfileIn": {
+        "additionalProperties": false,
+        "properties": {
+          "currency": {
+            "default": "EUR",
+            "pattern": "^[A-Z]{3}$",
+            "title": "Currency",
+            "type": "string"
+          },
+          "exclude_keywords": {
+            "items": {
+              "maxLength": 60,
+              "minLength": 1,
+              "type": "string"
+            },
+            "maxItems": 60,
+            "title": "Exclude Keywords",
+            "type": "array"
+          },
+          "include_keywords": {
+            "items": {
+              "maxLength": 60,
+              "minLength": 1,
+              "type": "string"
+            },
+            "maxItems": 60,
+            "title": "Include Keywords",
+            "type": "array"
+          },
+          "min_hourly_rate": {
+            "anyOf": [
+              {
+                "exclusiveMinimum": 0.0,
+                "type": "number"
+              },
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Min Hourly Rate"
+          },
+          "notify_threshold": {
+            "default": 60,
+            "maximum": 100.0,
+            "minimum": 0.0,
+            "title": "Notify Threshold",
+            "type": "integer"
+          },
+          "remote_only": {
+            "default": true,
+            "title": "Remote Only",
+            "type": "boolean"
+          },
+          "skills": {
+            "items": {
+              "$ref": "#/components/schemas/SkillWeightIn"
+            },
+            "maxItems": 60,
+            "title": "Skills",
+            "type": "array"
+          }
+        },
+        "title": "OpportunityProfileIn",
+        "type": "object"
+      },
+      "OpportunityProfileOut": {
+        "properties": {
+          "configured": {
+            "title": "Configured",
+            "type": "boolean"
+          },
+          "currency": {
+            "title": "Currency",
+            "type": "string"
+          },
+          "exclude_keywords": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Exclude Keywords",
+            "type": "array"
+          },
+          "include_keywords": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Include Keywords",
+            "type": "array"
+          },
+          "min_hourly_rate": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Min Hourly Rate"
+          },
+          "notify_threshold": {
+            "title": "Notify Threshold",
+            "type": "integer"
+          },
+          "remote_only": {
+            "title": "Remote Only",
+            "type": "boolean"
+          },
+          "skills": {
+            "items": {
+              "$ref": "#/components/schemas/SkillWeightIn"
+            },
+            "title": "Skills",
+            "type": "array"
+          }
+        },
+        "required": [
+          "skills",
+          "include_keywords",
+          "exclude_keywords",
+          "min_hourly_rate",
+          "currency",
+          "remote_only",
+          "notify_threshold",
+          "configured"
+        ],
+        "title": "OpportunityProfileOut",
+        "type": "object"
+      },
+      "OpportunitySourceOut": {
+        "properties": {
+          "enabled": {
+            "title": "Enabled",
+            "type": "boolean"
+          },
+          "id": {
+            "format": "uuid",
+            "title": "Id",
+            "type": "string"
+          },
+          "kind": {
+            "enum": [
+              "manual",
+              "feed"
+            ],
+            "title": "Kind",
+            "type": "string"
+          },
+          "last_error": {
+            "title": "Last Error",
+            "type": "string"
+          },
+          "last_polled_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Last Polled At"
+          },
+          "last_status": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Last Status"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "poll_interval_minutes": {
+            "title": "Poll Interval Minutes",
+            "type": "integer"
+          },
+          "url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Url"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "kind",
+          "url",
+          "enabled",
+          "poll_interval_minutes",
+          "last_polled_at",
+          "last_status",
+          "last_error"
+        ],
+        "title": "OpportunitySourceOut",
+        "type": "object"
+      },
+      "OpportunityStatusIn": {
+        "additionalProperties": false,
+        "properties": {
+          "status": {
+            "enum": [
+              "new",
+              "saved",
+              "applied",
+              "dismissed"
+            ],
+            "title": "Status",
+            "type": "string"
+          }
+        },
+        "required": [
+          "status"
+        ],
+        "title": "OpportunityStatusIn",
+        "type": "object"
+      },
+      "OpportunitySummary": {
+        "description": "Structured AI output; validated, stored and shown as plain text only.",
+        "properties": {
+          "concerns": {
+            "items": {
+              "type": "string"
+            },
+            "maxItems": 5,
+            "title": "Concerns",
+            "type": "array"
+          },
+          "fit": {
+            "items": {
+              "type": "string"
+            },
+            "maxItems": 5,
+            "title": "Fit",
+            "type": "array"
+          },
+          "summary": {
+            "maxLength": 800,
+            "title": "Summary",
+            "type": "string"
+          }
+        },
+        "required": [
+          "summary"
+        ],
+        "title": "OpportunitySummary",
         "type": "object"
       },
       "PreviewOut": {
@@ -4358,6 +5013,29 @@
         ],
         "title": "Severity",
         "type": "string"
+      },
+      "SkillWeightIn": {
+        "additionalProperties": false,
+        "properties": {
+          "term": {
+            "maxLength": 60,
+            "minLength": 1,
+            "title": "Term",
+            "type": "string"
+          },
+          "weight": {
+            "default": 3,
+            "maximum": 5.0,
+            "minimum": 1.0,
+            "title": "Weight",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "term"
+        ],
+        "title": "SkillWeightIn",
+        "type": "object"
       },
       "StatusIn": {
         "additionalProperties": false,
@@ -6689,6 +7367,150 @@
         "summary": "Get Workspace",
         "tags": [
           "workspaces"
+        ]
+      }
+    },
+    "/api/v1/workspaces/{workspace_id}/ai": {
+      "get": {
+        "operationId": "ai_status_api_v1_workspaces__workspace_id__ai_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "workspace_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Workspace Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AiStatusOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "4XX": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Client error"
+          }
+        },
+        "summary": "Ai Status",
+        "tags": [
+          "ai"
+        ]
+      }
+    },
+    "/api/v1/workspaces/{workspace_id}/ai/features": {
+      "put": {
+        "description": "Consent: only the listed features may send data to the configured AI provider.",
+        "operationId": "set_ai_features_api_v1_workspaces__workspace_id__ai_features_put",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "workspace_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Workspace Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AiFeaturesIn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AiStatusOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "4XX": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Client error"
+          }
+        },
+        "summary": "Set Ai Features",
+        "tags": [
+          "ai"
+        ]
+      }
+    },
+    "/api/v1/workspaces/{workspace_id}/ai/usage": {
+      "get": {
+        "operationId": "ai_usage_api_v1_workspaces__workspace_id__ai_usage_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "workspace_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Workspace Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/AiUsageOut"
+                  },
+                  "title": "Response Ai Usage Api V1 Workspaces  Workspace Id  Ai Usage Get",
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "4XX": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Client error"
+          }
+        },
+        "summary": "Ai Usage",
+        "tags": [
+          "ai"
         ]
       }
     },
@@ -9396,6 +10218,648 @@
         "summary": "List Invoices",
         "tags": [
           "invoicing"
+        ]
+      }
+    },
+    "/api/v1/workspaces/{workspace_id}/opportunities/listings": {
+      "get": {
+        "operationId": "list_listings_api_v1_workspaces__workspace_id__opportunities_listings_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "workspace_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Workspace Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "status",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "enum": [
+                    "new",
+                    "saved",
+                    "applied",
+                    "dismissed"
+                  ],
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Status"
+            }
+          },
+          {
+            "in": "query",
+            "name": "min_score",
+            "required": false,
+            "schema": {
+              "default": 0,
+              "maximum": 100,
+              "minimum": 0,
+              "title": "Min Score",
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "q",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "maxLength": 100,
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Q"
+            }
+          },
+          {
+            "in": "query",
+            "name": "include_excluded",
+            "required": false,
+            "schema": {
+              "default": false,
+              "title": "Include Excluded",
+              "type": "boolean"
+            }
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 200,
+              "maximum": 500,
+              "minimum": 1,
+              "title": "Limit",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/OpportunityOut"
+                  },
+                  "title": "Response List Listings Api V1 Workspaces  Workspace Id  Opportunities Listings Get",
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "4XX": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Client error"
+          }
+        },
+        "summary": "List Listings",
+        "tags": [
+          "opportunities"
+        ]
+      },
+      "post": {
+        "operationId": "add_listing_api_v1_workspaces__workspace_id__opportunities_listings_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "workspace_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Workspace Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ManualOpportunityIn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OpportunityOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "4XX": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Client error"
+          }
+        },
+        "summary": "Add Listing",
+        "tags": [
+          "opportunities"
+        ]
+      }
+    },
+    "/api/v1/workspaces/{workspace_id}/opportunities/listings/{listing_id}/status": {
+      "put": {
+        "operationId": "set_listing_status_api_v1_workspaces__workspace_id__opportunities_listings__listing_id__status_put",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "listing_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Listing Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "workspace_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Workspace Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OpportunityStatusIn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OpportunityOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "4XX": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Client error"
+          }
+        },
+        "summary": "Set Listing Status",
+        "tags": [
+          "opportunities"
+        ]
+      }
+    },
+    "/api/v1/workspaces/{workspace_id}/opportunities/listings/{listing_id}/summary": {
+      "post": {
+        "description": "Optional AI summary (ADR-023). 409 when AI is unavailable, 502-style message on failure.",
+        "operationId": "summarize_listing_api_v1_workspaces__workspace_id__opportunities_listings__listing_id__summary_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "listing_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Listing Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "workspace_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Workspace Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OpportunityOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "4XX": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Client error"
+          }
+        },
+        "summary": "Summarize Listing",
+        "tags": [
+          "opportunities"
+        ]
+      }
+    },
+    "/api/v1/workspaces/{workspace_id}/opportunities/profile": {
+      "get": {
+        "operationId": "get_profile_api_v1_workspaces__workspace_id__opportunities_profile_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "workspace_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Workspace Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OpportunityProfileOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "4XX": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Client error"
+          }
+        },
+        "summary": "Get Profile",
+        "tags": [
+          "opportunities"
+        ]
+      },
+      "put": {
+        "description": "Saving re-scores every stored listing with the new profile.",
+        "operationId": "save_profile_api_v1_workspaces__workspace_id__opportunities_profile_put",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "workspace_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Workspace Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OpportunityProfileIn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OpportunityProfileOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "4XX": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Client error"
+          }
+        },
+        "summary": "Save Profile",
+        "tags": [
+          "opportunities"
+        ]
+      }
+    },
+    "/api/v1/workspaces/{workspace_id}/opportunities/sources": {
+      "get": {
+        "operationId": "list_sources_api_v1_workspaces__workspace_id__opportunities_sources_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "workspace_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Workspace Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/OpportunitySourceOut"
+                  },
+                  "title": "Response List Sources Api V1 Workspaces  Workspace Id  Opportunities Sources Get",
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "4XX": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Client error"
+          }
+        },
+        "summary": "List Sources",
+        "tags": [
+          "opportunities"
+        ]
+      },
+      "post": {
+        "operationId": "add_feed_api_v1_workspaces__workspace_id__opportunities_sources_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "workspace_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Workspace Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FeedSourceIn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OpportunitySourceOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "4XX": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Client error"
+          }
+        },
+        "summary": "Add Feed",
+        "tags": [
+          "opportunities"
+        ]
+      }
+    },
+    "/api/v1/workspaces/{workspace_id}/opportunities/sources/{source_id}": {
+      "delete": {
+        "description": "Deletes the source and the listings it brought in.",
+        "operationId": "delete_source_api_v1_workspaces__workspace_id__opportunities_sources__source_id__delete",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "source_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Source Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "workspace_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Workspace Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "4XX": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Client error"
+          }
+        },
+        "summary": "Delete Source",
+        "tags": [
+          "opportunities"
+        ]
+      },
+      "put": {
+        "operationId": "update_feed_api_v1_workspaces__workspace_id__opportunities_sources__source_id__put",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "source_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Source Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "workspace_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Workspace Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FeedSourceIn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OpportunitySourceOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "4XX": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Client error"
+          }
+        },
+        "summary": "Update Feed",
+        "tags": [
+          "opportunities"
+        ]
+      }
+    },
+    "/api/v1/workspaces/{workspace_id}/opportunities/sources/{source_id}/poll": {
+      "post": {
+        "operationId": "poll_now_api_v1_workspaces__workspace_id__opportunities_sources__source_id__poll_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "source_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Source Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "workspace_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Workspace Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FeedPollOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "4XX": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Client error"
+          }
+        },
+        "summary": "Poll Now",
+        "tags": [
+          "opportunities"
         ]
       }
     },

@@ -14,6 +14,7 @@ import { CalendarPage } from '@/features/calendar/CalendarPage';
 import { ExecutionsPage } from '@/features/executions/ExecutionsPage';
 import { FinancePage } from '@/features/finance/FinancePage';
 import { IntegrationsPage } from '@/features/integrations/IntegrationsPage';
+import { OpportunitiesPage } from '@/features/opportunities/OpportunitiesPage';
 import { ComingSoonPage } from '@/features/placeholder/ComingSoonPage';
 import { SettingsPage } from '@/features/settings/SettingsPage';
 
@@ -41,6 +42,7 @@ export const routes: RouteObject[] = [
           { path: '/finance', element: <FinancePage /> },
           { path: '/banking', element: <BankingPage /> },
           { path: '/shopping', element: <ShoppingRoute /> },
+          { path: '/opportunities', element: <OpportunitiesPage /> },
           { path: '/calendar', element: <CalendarPage /> },
           { path: '/network', element: <NetworkRoute /> },
           { path: '/workflows', element: <WorkflowBuilderRoute /> },

@@ -626,6 +626,60 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/workspaces/{workspace_id}/ai": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Ai Status */
+        get: operations["ai_status_api_v1_workspaces__workspace_id__ai_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/workspaces/{workspace_id}/ai/features": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /**
+         * Set Ai Features
+         * @description Consent: only the listed features may send data to the configured AI provider.
+         */
+        put: operations["set_ai_features_api_v1_workspaces__workspace_id__ai_features_put"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/workspaces/{workspace_id}/ai/usage": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Ai Usage */
+        get: operations["ai_usage_api_v1_workspaces__workspace_id__ai_usage_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/workspaces/{workspace_id}/automations": {
         parameters: {
             query?: never;
@@ -1247,6 +1301,138 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/workspaces/{workspace_id}/opportunities/listings": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Listings */
+        get: operations["list_listings_api_v1_workspaces__workspace_id__opportunities_listings_get"];
+        put?: never;
+        /** Add Listing */
+        post: operations["add_listing_api_v1_workspaces__workspace_id__opportunities_listings_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/workspaces/{workspace_id}/opportunities/listings/{listing_id}/status": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** Set Listing Status */
+        put: operations["set_listing_status_api_v1_workspaces__workspace_id__opportunities_listings__listing_id__status_put"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/workspaces/{workspace_id}/opportunities/listings/{listing_id}/summary": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Summarize Listing
+         * @description Optional AI summary (ADR-023). 409 when AI is unavailable, 502-style message on failure.
+         */
+        post: operations["summarize_listing_api_v1_workspaces__workspace_id__opportunities_listings__listing_id__summary_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/workspaces/{workspace_id}/opportunities/profile": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Profile */
+        get: operations["get_profile_api_v1_workspaces__workspace_id__opportunities_profile_get"];
+        /**
+         * Save Profile
+         * @description Saving re-scores every stored listing with the new profile.
+         */
+        put: operations["save_profile_api_v1_workspaces__workspace_id__opportunities_profile_put"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/workspaces/{workspace_id}/opportunities/sources": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Sources */
+        get: operations["list_sources_api_v1_workspaces__workspace_id__opportunities_sources_get"];
+        put?: never;
+        /** Add Feed */
+        post: operations["add_feed_api_v1_workspaces__workspace_id__opportunities_sources_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/workspaces/{workspace_id}/opportunities/sources/{source_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** Update Feed */
+        put: operations["update_feed_api_v1_workspaces__workspace_id__opportunities_sources__source_id__put"];
+        post?: never;
+        /**
+         * Delete Source
+         * @description Deletes the source and the listings it brought in.
+         */
+        delete: operations["delete_source_api_v1_workspaces__workspace_id__opportunities_sources__source_id__delete"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/workspaces/{workspace_id}/opportunities/sources/{source_id}/poll": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Poll Now */
+        post: operations["poll_now_api_v1_workspaces__workspace_id__opportunities_sources__source_id__poll_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/workspaces/{workspace_id}/shopping/alerts": {
         parameters: {
             query?: never;
@@ -1565,6 +1751,71 @@ export interface components {
             side_effecting: boolean;
             /** Title */
             title: string;
+        };
+        /** AiFeatureOut */
+        AiFeatureOut: {
+            /** Data Sent */
+            data_sent: string;
+            /** Description */
+            description: string;
+            /** Enabled */
+            enabled: boolean;
+            /** Key */
+            key: string;
+            /** Title */
+            title: string;
+        };
+        /** AiFeaturesIn */
+        AiFeaturesIn: {
+            /** Enabled Features */
+            enabled_features: string[];
+        };
+        /** AiStatusOut */
+        AiStatusOut: {
+            /** Available */
+            available: boolean;
+            /** Budget Limit */
+            budget_limit: number;
+            /** Budget Used */
+            budget_used: number;
+            /** Features */
+            features: components["schemas"]["AiFeatureOut"][];
+            /** Model */
+            model: string;
+            /**
+             * Provider
+             * @enum {string}
+             */
+            provider: "disabled" | "ollama";
+        };
+        /** AiUsageOut */
+        AiUsageOut: {
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /** Duration Ms */
+            duration_ms: number;
+            /** Error */
+            error: string;
+            /** Feature */
+            feature: string;
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Input Tokens */
+            input_tokens: number;
+            /** Model */
+            model: string;
+            /** Outcome */
+            outcome: string;
+            /** Output Tokens */
+            output_tokens: number;
+            /** Provider */
+            provider: string;
         };
         /** AlertOut */
         AlertOut: {
@@ -2309,6 +2560,32 @@ export interface components {
             /** Vendor */
             vendor: string;
         };
+        /** FeedPollOut */
+        FeedPollOut: {
+            /** Error */
+            error: string;
+            /** New */
+            new: number;
+            /** Status */
+            status: string | null;
+        };
+        /** FeedSourceIn */
+        FeedSourceIn: {
+            /**
+             * Enabled
+             * @default true
+             */
+            enabled: boolean;
+            /** Name */
+            name: string;
+            /**
+             * Poll Interval Minutes
+             * @default 60
+             */
+            poll_interval_minutes: number;
+            /** Url */
+            url: string;
+        };
         /** HealthResponse */
         HealthResponse: {
             /**
@@ -2535,6 +2812,28 @@ export interface components {
             target_id: string;
             target_type: components["schemas"]["TargetType"];
         };
+        /** ManualOpportunityIn */
+        ManualOpportunityIn: {
+            /**
+             * Budget Text
+             * @default
+             */
+            budget_text: string;
+            /**
+             * Company
+             * @default
+             */
+            company: string;
+            /**
+             * Description
+             * @default
+             */
+            description: string;
+            /** Title */
+            title: string;
+            /** Url */
+            url?: string | null;
+        };
         /** MatchOut */
         MatchOut: {
             /** Confidence */
@@ -2669,6 +2968,142 @@ export interface components {
             price: string;
             /** Source */
             source: string;
+        };
+        /** OpportunityOut */
+        OpportunityOut: {
+            /** Ai Summarized At */
+            ai_summarized_at: string | null;
+            ai_summary: components["schemas"]["OpportunitySummary"] | null;
+            /** Budget Text */
+            budget_text: string;
+            /** Company */
+            company: string;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /** Description */
+            description: string;
+            /** Excluded */
+            excluded: boolean;
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Posted At */
+            posted_at: string | null;
+            /** Reasons */
+            reasons: string[];
+            /** Score */
+            score: number;
+            /**
+             * Source Id
+             * Format: uuid
+             */
+            source_id: string;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "new" | "saved" | "applied" | "dismissed";
+            /** Title */
+            title: string;
+            /** Url */
+            url: string | null;
+        };
+        /** OpportunityProfileIn */
+        OpportunityProfileIn: {
+            /**
+             * Currency
+             * @default EUR
+             */
+            currency: string;
+            /** Exclude Keywords */
+            exclude_keywords?: string[];
+            /** Include Keywords */
+            include_keywords?: string[];
+            /** Min Hourly Rate */
+            min_hourly_rate?: number | string | null;
+            /**
+             * Notify Threshold
+             * @default 60
+             */
+            notify_threshold: number;
+            /**
+             * Remote Only
+             * @default true
+             */
+            remote_only: boolean;
+            /** Skills */
+            skills?: components["schemas"]["SkillWeightIn"][];
+        };
+        /** OpportunityProfileOut */
+        OpportunityProfileOut: {
+            /** Configured */
+            configured: boolean;
+            /** Currency */
+            currency: string;
+            /** Exclude Keywords */
+            exclude_keywords: string[];
+            /** Include Keywords */
+            include_keywords: string[];
+            /** Min Hourly Rate */
+            min_hourly_rate: string | null;
+            /** Notify Threshold */
+            notify_threshold: number;
+            /** Remote Only */
+            remote_only: boolean;
+            /** Skills */
+            skills: components["schemas"]["SkillWeightIn"][];
+        };
+        /** OpportunitySourceOut */
+        OpportunitySourceOut: {
+            /** Enabled */
+            enabled: boolean;
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /**
+             * Kind
+             * @enum {string}
+             */
+            kind: "manual" | "feed";
+            /** Last Error */
+            last_error: string;
+            /** Last Polled At */
+            last_polled_at: string | null;
+            /** Last Status */
+            last_status: string | null;
+            /** Name */
+            name: string;
+            /** Poll Interval Minutes */
+            poll_interval_minutes: number;
+            /** Url */
+            url: string | null;
+        };
+        /** OpportunityStatusIn */
+        OpportunityStatusIn: {
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "new" | "saved" | "applied" | "dismissed";
+        };
+        /**
+         * OpportunitySummary
+         * @description Structured AI output; validated, stored and shown as plain text only.
+         */
+        OpportunitySummary: {
+            /** Concerns */
+            concerns?: string[];
+            /** Fit */
+            fit?: string[];
+            /** Summary */
+            summary: string;
         };
         /** PreviewOut */
         PreviewOut: {
@@ -3127,6 +3562,16 @@ export interface components {
          * @enum {string}
          */
         Severity: "info" | "success" | "warning" | "error";
+        /** SkillWeightIn */
+        SkillWeightIn: {
+            /** Term */
+            term: string;
+            /**
+             * Weight
+             * @default 3
+             */
+            weight: number;
+        };
         /** StatusIn */
         StatusIn: {
             /** Price */
@@ -4564,6 +5009,103 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["WorkspaceOut"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    ai_status_api_v1_workspaces__workspace_id__ai_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                workspace_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AiStatusOut"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    set_ai_features_api_v1_workspaces__workspace_id__ai_features_put: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                workspace_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AiFeaturesIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AiStatusOut"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    ai_usage_api_v1_workspaces__workspace_id__ai_usage_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                workspace_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AiUsageOut"][];
                 };
             };
             /** @description Client error */
@@ -6106,6 +6648,376 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["InvoiceOut"][];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    list_listings_api_v1_workspaces__workspace_id__opportunities_listings_get: {
+        parameters: {
+            query?: {
+                status?: ("new" | "saved" | "applied" | "dismissed") | null;
+                min_score?: number;
+                q?: string | null;
+                include_excluded?: boolean;
+                limit?: number;
+            };
+            header?: never;
+            path: {
+                workspace_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OpportunityOut"][];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    add_listing_api_v1_workspaces__workspace_id__opportunities_listings_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                workspace_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ManualOpportunityIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OpportunityOut"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    set_listing_status_api_v1_workspaces__workspace_id__opportunities_listings__listing_id__status_put: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                listing_id: string;
+                workspace_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["OpportunityStatusIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OpportunityOut"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    summarize_listing_api_v1_workspaces__workspace_id__opportunities_listings__listing_id__summary_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                listing_id: string;
+                workspace_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OpportunityOut"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    get_profile_api_v1_workspaces__workspace_id__opportunities_profile_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                workspace_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OpportunityProfileOut"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    save_profile_api_v1_workspaces__workspace_id__opportunities_profile_put: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                workspace_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["OpportunityProfileIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OpportunityProfileOut"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    list_sources_api_v1_workspaces__workspace_id__opportunities_sources_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                workspace_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OpportunitySourceOut"][];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    add_feed_api_v1_workspaces__workspace_id__opportunities_sources_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                workspace_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["FeedSourceIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OpportunitySourceOut"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    update_feed_api_v1_workspaces__workspace_id__opportunities_sources__source_id__put: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                source_id: string;
+                workspace_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["FeedSourceIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OpportunitySourceOut"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    delete_source_api_v1_workspaces__workspace_id__opportunities_sources__source_id__delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                source_id: string;
+                workspace_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    poll_now_api_v1_workspaces__workspace_id__opportunities_sources__source_id__poll_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                source_id: string;
+                workspace_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["FeedPollOut"];
                 };
             };
             /** @description Client error */
