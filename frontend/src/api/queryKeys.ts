@@ -24,6 +24,8 @@ export const queryKeys = {
     ['executions', workspaceId, 'list', status ?? 'all'] as const,
   execution: (workspaceId: string, id: string) =>
     ['executions', workspaceId, 'detail', id] as const,
+  automationExecutions: (workspaceId: string, automationId: string) =>
+    ['executions', workspaceId, 'automation', automationId] as const,
   executionsRoot: ['executions'] as const,
   actions: ['automation-actions'] as const,
   controls: ['automation-controls'] as const,

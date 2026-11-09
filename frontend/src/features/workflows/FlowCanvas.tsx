@@ -1,78 +1,71 @@
 import '@xyflow/react/dist/style.css';
 
-import { Box, useTheme } from '@mui/material';
-import { alpha } from '@mui/material/styles';
-import { Background, Controls, ReactFlow, type Edge, type Node } from '@xyflow/react';
+import {
+  Background,
+  Controls,
+  ReactFlow,
+  ReactFlowProvider,
+  useReactFlow,
+  type Edge,
+  type Node,
+  type ReactFlowProps,
+} from '@xyflow/react';
+import { useReducedMotion } from 'motion/react';
+import { useEffect, type ReactNode } from 'react';
 
-/** Themed, read-only React Flow canvas used by the network view and builder preview. */
-export function FlowCanvas({
-  nodes,
-  edges,
-  height = 520,
+import { cn } from '@/lib/cn';
+
+/** Re-fits the viewport whenever `fitKey` changes (e.g. a node was added or removed). */
+function AutoFit({ fitKey }: { fitKey: string }) {
+  const { fitView } = useReactFlow();
+  const reduceMotion = useReducedMotion();
+  useEffect(() => {
+    const frame = requestAnimationFrame(() => {
+      void fitView({ padding: 0.18, duration: reduceMotion ? 0 : 280 });
+    });
+    return () => cancelAnimationFrame(frame);
+  }, [fitKey, fitView, reduceMotion]);
+  return null;
+}
+
+/** Themed React Flow canvas shared by the Workflow Builder and the Automation Network. */
+export function FlowCanvas<N extends Node, E extends Edge>({
   label,
-  onNodeClick,
-}: {
-  nodes: Node[];
-  edges: Edge[];
-  height?: number;
+  className,
+  fitKey,
+  overlay,
+  ...flowProps
+}: ReactFlowProps<N, E> & {
   label: string;
-  onNodeClick?: (node: Node) => void;
+  className?: string;
+  fitKey?: string;
+  overlay?: ReactNode;
 }) {
-  const { palette } = useTheme();
-  const node = {
-    borderRadius: 10,
-    border: `1px solid ${palette.divider}`,
-    background: palette.background.paper,
-    color: palette.text.primary,
-    fontSize: 13,
-    padding: '8px 12px',
-  };
   return (
-    <Box
-      role="img"
+    <div
+      role="group"
       aria-label={label}
-      sx={{
-        height,
-        borderRadius: 2,
-        border: 1,
-        borderColor: 'divider',
-        overflow: 'hidden',
-        '& .react-flow__node': node,
-        '& .pos-node--trigger': { borderColor: palette.secondary.main },
-        '& .pos-node--automation': {
-          borderColor: palette.primary.main,
-          background: alpha(palette.primary.main, 0.12),
-          fontWeight: 600,
-          cursor: onNodeClick ? 'pointer' : 'default',
-        },
-        '& .pos-node--disabled': { opacity: 0.5 },
-        '& .pos-node--integration': { borderStyle: 'dashed' },
-        '& .pos-node--condition': { borderColor: palette.warning.main },
-        '& .pos-node--approval': { borderColor: palette.error.main },
-        '& .pos-node--end': { opacity: 0.7 },
-        '& .react-flow__edge-path': { stroke: alpha(palette.primary.main, 0.7) },
-        '& .react-flow__edge-text': { fill: palette.text.primary },
-        '& .react-flow__edge-textbg': { fill: palette.background.paper },
-        '& .react-flow__controls button': {
-          background: palette.background.paper,
-          color: palette.text.primary,
-          borderColor: palette.divider,
-        },
-      }}
+      className={cn(
+        'relative h-[520px] w-full overflow-hidden rounded-lg border border-line bg-[radial-gradient(ellipse_at_top,rgb(79_125_255/0.10),transparent_60%)]',
+        className,
+      )}
     >
-      <ReactFlow
-        nodes={nodes}
-        edges={edges}
-        fitView
-        nodesDraggable={false}
-        nodesConnectable={false}
-        elementsSelectable={Boolean(onNodeClick)}
-        colorMode={palette.mode}
-        {...(onNodeClick ? { onNodeClick: (_: unknown, n: Node) => onNodeClick(n) } : {})}
-      >
-        <Background gap={24} color={alpha(palette.text.primary, 0.08)} />
-        <Controls showInteractive={false} />
-      </ReactFlow>
-    </Box>
+      <ReactFlowProvider>
+        <ReactFlow<N, E>
+          fitView
+          fitViewOptions={{ padding: 0.18 }}
+          minZoom={0.3}
+          maxZoom={1.75}
+          colorMode="dark"
+          edgesFocusable={false}
+          {...flowProps}
+        >
+          <Background gap={22} size={1.2} color="rgb(120 150 255 / 0.16)" />
+          <Controls showInteractive={false} position="bottom-left" aria-label="Canvas controls" />
+          {fitKey !== undefined && <AutoFit fitKey={fitKey} />}
+        </ReactFlow>
+      </ReactFlowProvider>
+      {overlay}
+    </div>
   );
 }

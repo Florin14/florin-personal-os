@@ -144,6 +144,18 @@ bot (signed interactions, allowlists, approvals, notifications).
 | P4-3 | `documents` module: safe upload storage, metadata, Gmail receipt import, Drive archival, UI | TODO |
 | P4-4 | `expenses` module: expenses from documents, categories, monthly summary, UI | TODO |
 
+## Frontend redesign (owner request 2026-11-08)
+
+MUI → Tailwind v4 + shadcn-style Radix primitives + Motion + Lucide + Recharts + React Flow.
+
+| ID | Task | Status |
+|---|---|---|
+| FR-1 | Design system, command-center shell, neural Command Center | COMPLETED |
+| FR-2 | Migrate auth, settings, approvals, executions, business, integrations, calendar, finance | COMPLETED |
+| FR-3 | Visual Workflow Builder (typed nodes, inspector, drag-to-connect, JSON sync, validation, run overlay) + Automation Network | COMPLETED |
+| FR-4 | Remove `@mui/*` / `@emotion/*`; ESLint + Prettier clean on the whole frontend; existing Vitest suites updated to new markup | IN PROGRESS (deps removed; workflow tests updated) |
+| FR-5 | Docs: ARCHITECTURE §4.4 + new ADR superseding ADR-010 | TODO |
+
 
 
 

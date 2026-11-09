@@ -133,6 +133,27 @@ export function useExecutions(workspaceId: string | undefined, status?: Executio
   });
 }
 
+/** Recent executions of one automation (newest first), for the builder's run overlay. */
+export function useAutomationExecutions(
+  workspaceId: string | undefined,
+  automationId: string | undefined,
+) {
+  return useQuery({
+    queryKey: queryKeys.automationExecutions(workspaceId ?? '', automationId ?? ''),
+    queryFn: () =>
+      unwrap(
+        api.GET('/api/v1/workspaces/{workspace_id}/executions', {
+          params: {
+            path: { workspace_id: workspaceId ?? '' },
+            query: { automation_id: automationId ?? '', limit: 10 },
+          },
+        }),
+      ),
+    enabled: Boolean(workspaceId && automationId),
+    refetchInterval: (query) => (query.state.data?.some((e) => isActive(e.status)) ? 3_000 : false),
+  });
+}
+
 export function useExecution(workspaceId: string | undefined, id: string | undefined) {
   return useQuery({
     queryKey: queryKeys.execution(workspaceId ?? '', id ?? ''),

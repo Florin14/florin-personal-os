@@ -53,6 +53,7 @@ invoicing (profiles, duplicate-safe monthly invoices, SPV) · discord (signed in
 | 2026-11-08 | Phase 2 backend: audit, jobs/worker, events/outbox, notifications, approvals, automation engine, scheduling |
 | 2026-11-08 | Phase 2 UI (approvals, executions, network, builder) |
 | 2026-11-08 | Phase 3: integrations, Oblio, invoicing, Discord, UI |
+| 2026-11-09 | Redesign FR-3: visual Workflow Builder + Automation Network; MUI removed |
 
 ## Blockers
 
@@ -80,15 +81,25 @@ Done (new design):
 - Migrated: auth, settings, approvals, executions (+jobs, emergency stop), business, integrations
   (+Google OAuth connect), calendar & tasks, NEW finance page (documents upload + expenses),
   placeholders, 404.
+- Workflow Builder (2026-11-09, FR-3): `builderModel.ts` (model + editing ops + client
+  validation mirroring `definition.py`), `builderGraph.ts` (longest-path layering + barycentric
+  columns, run overlay mapping), `WorkflowCanvas.tsx` (typed node/edge components),
+  `StepInspector.tsx` (typed forms; action params from the catalog's JSON schema; keys commit on
+  blur/Enter so partial typing never rewires references), `WorkflowEditor.tsx` (definition is the
+  single source of truth; Visual/JSON tabs; drag-to-connect; run panel stays in place and overlays
+  the execution; versions can be loaded back), gallery landing page, Automation Network.
+  `useAutomationExecutions` hook added. Number params stay strings unless typed `integer`
+  (server parses Decimal; never float for money).
+- `@mui/*` and `@emotion/*` removed from package.json; `grep @mui|@emotion src` is empty.
 
 Remaining (resume here):
-1. Workflow Builder redesign: `src/features/workflows/builderModel.ts` is written (model, new
-   step/trigger helpers, successors). Still to do: custom React Flow node component (trigger /
-   condition / action / approval / notify / delay / integration), inspector panel with typed
-   forms synced to JSON, execution-state overlay; then rewrite `WorkflowBuilderPage.tsx`,
-   `WorkflowEditor.tsx`, `FlowCanvas.tsx`, `NetworkPage.tsx` (these 4 still use MUI).
-2. Remove `@mui/*` and `@emotion/*` deps once `grep -rln @mui frontend/src` is empty.
-3. Update existing Vitest tests to the new markup (they were written for MUI and are not
-   expected to pass yet); run ESLint/Prettier on the whole frontend.
-4. Docs: ARCHITECTURE §4.4 + ADR-010 superseded by new ADR for the Tailwind/shadcn stack.
-5. Then continue Phase 5 (bank CSV import, reconciliation, shopping/price tracking).
+1. FR-4: fix the 28 pre-existing ESLint findings (BusinessPage, ProfileDialog, DashboardSections,
+   NeuralCanvas, FinancePage, StatusChip, CommandPalette); update the other Vitest suites to the
+   new markup; Prettier on the whole frontend.
+2. FR-5 docs: ARCHITECTURE §4.4 + ADR superseding ADR-010 for the Tailwind/shadcn stack.
+3. Then continue Phase 5 (bank CSV import, reconciliation, shopping/price tracking).
+
+Dev-server note: an old Vite instance owns 127.0.0.1:3000 (PID shows as 0, cannot be killed from
+here) and its dep cache predates the MUI removal (504 "outdated optimize dep"). For smoke tests
+run `npx vite --config vite.smoke.config.ts` (untracked, port 3101, proxy sends the trusted
+`Origin: http://localhost:3000`), or restart the machine/terminal that owns :3000.
