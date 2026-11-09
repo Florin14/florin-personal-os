@@ -17,7 +17,12 @@ export function EmergencyStopControl({ canChange }: { canChange: boolean }) {
   const [reason, setReason] = useState('');
   const active = controls.data?.emergency_stop ?? false;
 
-  if (!canChange) return active ? <Badge tone="danger" dot>Emergency stop active</Badge> : null;
+  if (!canChange)
+    return active ? (
+      <Badge tone="danger" dot>
+        Emergency stop active
+      </Badge>
+    ) : null;
 
   const confirm = () => {
     setStop.mutate(
@@ -33,7 +38,11 @@ export function EmergencyStopControl({ canChange }: { canChange: boolean }) {
 
   return (
     <>
-      <Button variant={active ? 'success' : 'danger'} onClick={() => setOpen(true)} disabled={controls.isPending}>
+      <Button
+        variant={active ? 'success' : 'danger'}
+        onClick={() => setOpen(true)}
+        disabled={controls.isPending}
+      >
         <OctagonX /> {active ? 'Release emergency stop' : 'Emergency stop'}
       </Button>
       <Modal
@@ -47,8 +56,14 @@ export function EmergencyStopControl({ canChange }: { canChange: boolean }) {
         }
         footer={
           <>
-            <Button variant="ghost" onClick={() => setOpen(false)}>Cancel</Button>
-            <Button variant={active ? 'success' : 'danger'} onClick={confirm} loading={setStop.isPending}>
+            <Button variant="ghost" onClick={() => setOpen(false)}>
+              Cancel
+            </Button>
+            <Button
+              variant={active ? 'success' : 'danger'}
+              onClick={confirm}
+              loading={setStop.isPending}
+            >
               {active ? 'Release' : 'Activate stop'}
             </Button>
           </>
@@ -57,7 +72,14 @@ export function EmergencyStopControl({ canChange }: { canChange: boolean }) {
         <div className="space-y-3">
           {setStop.isError && <Alert tone="danger">{errorMessage(setStop.error)}</Alert>}
           <Field label="Reason">
-            {(p) => <Input {...p} value={reason} onChange={(e) => setReason(e.target.value)} maxLength={500} />}
+            {(p) => (
+              <Input
+                {...p}
+                value={reason}
+                onChange={(e) => setReason(e.target.value)}
+                maxLength={500}
+              />
+            )}
           </Field>
         </div>
       </Modal>

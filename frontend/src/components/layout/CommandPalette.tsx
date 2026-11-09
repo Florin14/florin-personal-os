@@ -91,7 +91,6 @@ export function CommandPalette() {
           <div className="flex items-center gap-3 border-b border-line px-4">
             <Search className="size-4 text-cyan" aria-hidden />
             <input
-              autoFocus
               value={query}
               onChange={(e) => {
                 setQuery(e.target.value);
@@ -117,6 +116,8 @@ export function CommandPalette() {
             {entries.map((entry, i) => {
               const Icon = entry.icon;
               return (
+                // Keyboard selection is handled by the combobox input (aria-activedescendant).
+                // eslint-disable-next-line jsx-a11y/click-events-have-key-events
                 <li
                   key={entry.id}
                   id={`cmd-${entry.id}`}

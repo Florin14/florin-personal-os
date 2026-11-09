@@ -15,7 +15,12 @@ export function FailedJobsPanel() {
     <div className="space-y-4">
       <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
         {(['queued', 'running', 'succeeded', 'failed'] as const).map((key) => (
-          <Metric key={key} label={key} value={stats.data ? stats.data[key] : '—'} tone={key === 'failed' && (stats.data?.failed ?? 0) > 0 ? 'danger' : 'neutral'} />
+          <Metric
+            key={key}
+            label={key}
+            value={stats.data ? stats.data[key] : '—'}
+            tone={key === 'failed' && (stats.data?.failed ?? 0) > 0 ? 'danger' : 'neutral'}
+          />
         ))}
       </div>
       {retry.isError && <Alert tone="danger">{errorMessage(retry.error)}</Alert>}
@@ -44,10 +49,17 @@ export function FailedJobsPanel() {
                   <Td className="font-mono text-xs">{job.kind}</Td>
                   <Td>{job.failure_class ?? '—'}</Td>
                   <Td className="max-w-sm break-words text-ink-muted">{job.last_error ?? '—'}</Td>
-                  <Td className="font-mono">{job.attempts}/{job.max_attempts}</Td>
+                  <Td className="font-mono">
+                    {job.attempts}/{job.max_attempts}
+                  </Td>
                   <Td className="text-ink-dim">{relativeTime(job.updated_at)}</Td>
                   <Td>
-                    <Button size="sm" onClick={() => retry.mutate(job.id)} loading={retry.isPending && retry.variables === job.id} aria-label={`Retry job ${job.kind}`}>
+                    <Button
+                      size="sm"
+                      onClick={() => retry.mutate(job.id)}
+                      loading={retry.isPending && retry.variables === job.id}
+                      aria-label={`Retry job ${job.kind}`}
+                    >
                       Retry
                     </Button>
                   </Td>

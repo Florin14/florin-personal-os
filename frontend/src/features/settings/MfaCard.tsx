@@ -19,8 +19,10 @@ export function MfaCard() {
         )}
         <p className="text-sm text-ink-muted">
           Lost your device? Reset MFA on the server with{' '}
-          <code className="font-mono text-xs text-cyan">python -m app.cli reset-mfa --email &lt;email&gt;</code>.
-          Passkeys and recovery codes are planned.
+          <code className="font-mono text-xs text-cyan">
+            python -m app.cli reset-mfa --email &lt;email&gt;
+          </code>
+          . Passkeys and recovery codes are planned.
         </p>
         {!enabled && (
           <Button asChild variant="primary">

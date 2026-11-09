@@ -92,14 +92,16 @@ Done (new design):
   (server parses Decimal; never float for money).
 - `@mui/*` and `@emotion/*` removed from package.json; `grep @mui|@emotion src` is empty.
 
-Remaining (resume here):
-1. FR-4: fix the 28 pre-existing ESLint findings (BusinessPage, ProfileDialog, DashboardSections,
-   NeuralCanvas, FinancePage, StatusChip, CommandPalette); update the other Vitest suites to the
-   new markup; Prettier on the whole frontend.
-2. FR-5 docs: ARCHITECTURE §4.4 + ADR superseding ADR-010 for the Tailwind/shadcn stack.
-3. Then continue Phase 5 (bank CSV import, reconciliation, shopping/price tracking).
+- FR-4 (2026-11-09): ESLint (0 problems), Prettier and `tsc` clean on the whole frontend; all
+  Vitest suites pass (43 tests; the obsolete theme-switch test was removed — the redesign is
+  dark-only); production build OK; all 13 routes smoke-tested in Chromium with 0 runtime errors.
 
-Dev-server note: an old Vite instance owns 127.0.0.1:3000 (PID shows as 0, cannot be killed from
-here) and its dep cache predates the MUI removal (504 "outdated optimize dep"). For smoke tests
-run `npx vite --config vite.smoke.config.ts` (untracked, port 3101, proxy sends the trusted
-`Origin: http://localhost:3000`), or restart the machine/terminal that owns :3000.
+Remaining (resume here):
+1. FR-5 docs: ARCHITECTURE §4.4 + ADR superseding ADR-010 for the Tailwind/shadcn stack.
+2. Then continue Phase 5 (bank CSV import, reconciliation, shopping/price tracking).
+
+Dev-server note: an old Vite instance owns 127.0.0.1:3000 (PID shows as 0, not killable from the
+agent shell) and its dep cache predates the MUI removal, so it answers 504 "outdated optimize
+dep". Restart whatever owns :3000 (or `docker compose build frontend && docker compose up -d
+frontend`). For agent smoke tests on another port, the backend only trusts
+`Origin: http://localhost:3000`, so the Vite proxy must send that header (`headers: { origin }`).

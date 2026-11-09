@@ -22,7 +22,8 @@ export function ApprovalDetail({ id }: { id: string }) {
   const now = useNow();
 
   if (approval.isPending) return <LoadingState />;
-  if (approval.isError) return <ErrorState error={approval.error} onRetry={() => void approval.refetch()} />;
+  if (approval.isError)
+    return <ErrorState error={approval.error} onRetry={() => void approval.refetch()} />;
   const a = approval.data;
   const pending = a.status === 'pending';
   const expired = pending && new Date(a.expires_at).getTime() <= now;
@@ -30,7 +31,12 @@ export function ApprovalDetail({ id }: { id: string }) {
 
   const send = (decision: 'approve' | 'reject') => {
     decide.mutate(
-      { id: a.id, decision, note, ...(needsCode && decision === 'approve' ? { mfaCode: code } : {}) },
+      {
+        id: a.id,
+        decision,
+        note,
+        ...(needsCode && decision === 'approve' ? { mfaCode: code } : {}),
+      },
       { onSettled: () => setCode('') },
     );
   };
@@ -50,7 +56,8 @@ export function ApprovalDetail({ id }: { id: string }) {
         </div>
         {a.summary && <p className="text-sm">{a.summary}</p>}
         <p className="text-xs text-ink-dim">
-          Action <code className="font-mono text-cyan">{a.action_type}</code> · requested {dateTime(a.created_at)} ·{' '}
+          Action <code className="font-mono text-cyan">{a.action_type}</code> · requested{' '}
+          {dateTime(a.created_at)} ·{' '}
           {pending ? `expires ${relativeTime(a.expires_at)}` : `decided ${dateTime(a.decided_at)}`}
         </p>
         <div>
@@ -63,9 +70,15 @@ export function ApprovalDetail({ id }: { id: string }) {
           </p>
         </div>
         {a.decision_note && <Alert>Note: {a.decision_note}</Alert>}
-        {a.consumed_at && <Alert tone="success">Used by the execution on {dateTime(a.consumed_at)}.</Alert>}
+        {a.consumed_at && (
+          <Alert tone="success">Used by the execution on {dateTime(a.consumed_at)}.</Alert>
+        )}
         {pending && !expired && (
-          <form onSubmit={submit} aria-label="Decision" className="space-y-3 border-t border-line pt-4">
+          <form
+            onSubmit={submit}
+            aria-label="Decision"
+            className="space-y-3 border-t border-line pt-4"
+          >
             {decide.isError && <Alert tone="danger">{errorMessage(decide.error)}</Alert>}
             {needsCode && (
               <Alert tone="warning">
@@ -74,14 +87,31 @@ export function ApprovalDetail({ id }: { id: string }) {
               </Alert>
             )}
             <Field label="Note (optional)">
-              {(p) => <Input {...p} value={note} onChange={(e) => setNote(e.target.value)} maxLength={500} />}
+              {(p) => (
+                <Input
+                  {...p}
+                  value={note}
+                  onChange={(e) => setNote(e.target.value)}
+                  maxLength={500}
+                />
+              )}
             </Field>
             {needsCode && <CodeField value={code} onChange={setCode} />}
             <div className="flex gap-2">
-              <Button type="submit" variant="success" disabled={needsCode && code.length !== 6} loading={deciding === 'approve'}>
+              <Button
+                type="submit"
+                variant="success"
+                disabled={needsCode && code.length !== 6}
+                loading={deciding === 'approve'}
+              >
                 Approve
               </Button>
-              <Button type="button" variant="danger" onClick={() => send('reject')} loading={deciding === 'reject'}>
+              <Button
+                type="button"
+                variant="danger"
+                onClick={() => send('reject')}
+                loading={deciding === 'reject'}
+              >
                 Reject
               </Button>
             </div>

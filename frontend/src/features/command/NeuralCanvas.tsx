@@ -261,7 +261,7 @@ function Canvas({
         const source = states.get(r.source);
         const target = states.get(r.target);
         const planned = !source?.def.available || !target?.def.available;
-        const active = !planned && ((source?.running ?? 0) > 0 || (target?.running ?? 0) > 0);
+        const active = !planned && (source.running > 0 || target.running > 0);
         const highlighted = selected !== null && (r.source === selected || r.target === selected);
         return {
           id: `${r.source}-${r.target}`,

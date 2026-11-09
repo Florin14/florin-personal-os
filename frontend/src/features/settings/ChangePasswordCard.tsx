@@ -37,11 +37,20 @@ export function ChangePasswordCard() {
   return (
     <Panel title="Change password" icon={<LockKeyhole />}>
       <form className="space-y-3" onSubmit={handleSubmit}>
-        {change.isSuccess && <Alert tone="success">Password changed. Other sessions were signed out.</Alert>}
+        {change.isSuccess && (
+          <Alert tone="success">Password changed. Other sessions were signed out.</Alert>
+        )}
         {change.isError && <Alert tone="danger">{errorMessage(change.error)}</Alert>}
         <Field label="Current password" required>
           {(p) => (
-            <Input {...p} type="password" autoComplete="current-password" value={current} onChange={(e) => setCurrent(e.target.value)} required />
+            <Input
+              {...p}
+              type="password"
+              autoComplete="current-password"
+              value={current}
+              onChange={(e) => setCurrent(e.target.value)}
+              required
+            />
           )}
         </Field>
         <Field
@@ -51,12 +60,30 @@ export function ChangePasswordCard() {
           error={tooShort ? `Use at least ${String(MIN_PASSWORD_LENGTH)} characters.` : null}
         >
           {(p) => (
-            <Input {...p} type="password" autoComplete="new-password" value={next} onChange={(e) => setNext(e.target.value)} required />
+            <Input
+              {...p}
+              type="password"
+              autoComplete="new-password"
+              value={next}
+              onChange={(e) => setNext(e.target.value)}
+              required
+            />
           )}
         </Field>
-        <Field label="Confirm new password" required error={mismatch ? 'Passwords do not match.' : null}>
+        <Field
+          label="Confirm new password"
+          required
+          error={mismatch ? 'Passwords do not match.' : null}
+        >
           {(p) => (
-            <Input {...p} type="password" autoComplete="new-password" value={confirm} onChange={(e) => setConfirm(e.target.value)} required />
+            <Input
+              {...p}
+              type="password"
+              autoComplete="new-password"
+              value={confirm}
+              onChange={(e) => setConfirm(e.target.value)}
+              required
+            />
           )}
         </Field>
         <Button type="submit" variant="primary" disabled={!canSubmit} loading={change.isPending}>

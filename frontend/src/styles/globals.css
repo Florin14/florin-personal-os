@@ -7,7 +7,8 @@
  * --------------------------------------------------------------------- */
 @theme {
   --font-sans: 'Inter Variable', 'Inter', ui-sans-serif, system-ui, sans-serif;
-  --font-display: 'Space Grotesk Variable', 'Space Grotesk', 'Inter Variable', ui-sans-serif, sans-serif;
+  --font-display:
+    'Space Grotesk Variable', 'Space Grotesk', 'Inter Variable', ui-sans-serif, sans-serif;
   --font-mono: 'JetBrains Mono Variable', 'JetBrains Mono', ui-monospace, monospace;
 
   --color-void: #04060c;
@@ -107,7 +108,12 @@
     background-size: 22px 22px;
   }
   .text-gradient {
-    background: linear-gradient(90deg, var(--color-electric-soft), var(--color-cyan) 60%, var(--color-violet));
+    background: linear-gradient(
+      90deg,
+      var(--color-electric-soft),
+      var(--color-cyan) 60%,
+      var(--color-violet)
+    );
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;

@@ -26,7 +26,7 @@ const TONES: Record<string, Tone> = {
   high: 'danger',
 };
 
-export function toneFor(status: string): Tone {
+function toneFor(status: string): Tone {
   return TONES[status] ?? 'neutral';
 }
 

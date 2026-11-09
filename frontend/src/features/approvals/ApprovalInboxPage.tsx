@@ -31,7 +31,9 @@ function ApprovalCard({ approval, selected }: { approval: Approval; selected: bo
       <div className="mt-3 flex flex-wrap items-center gap-2">
         <StatusChip status={approval.risk_level} prefix="risk" />
         <span className="text-xs text-ink-dim">
-          {pending ? `Expires ${relativeTime(approval.expires_at)}` : `Requested ${relativeTime(approval.created_at)}`}
+          {pending
+            ? `Expires ${relativeTime(approval.expires_at)}`
+            : `Requested ${relativeTime(approval.created_at)}`}
         </span>
       </div>
     </Link>

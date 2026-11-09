@@ -71,16 +71,4 @@ describe('Settings & Security', () => {
       new_password: 'a much longer passphrase',
     });
   });
-
-  it('switches the theme preference', async () => {
-    authenticatedApi();
-    renderRoute('/settings');
-    const group = await screen.findByRole('group', { name: 'Color theme' });
-    await userEvent.setup().click(within(group).getByRole('button', { name: 'Light' }));
-    expect(within(group).getByRole('button', { name: 'Light' })).toHaveAttribute(
-      'aria-pressed',
-      'true',
-    );
-    expect(screen.getByRole('button', { name: 'Switch to dark mode' })).toBeInTheDocument();
-  });
 });

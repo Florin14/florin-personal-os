@@ -1,4 +1,11 @@
-import { ArrowLeft, CheckCircle2, ChevronDown, CircleDashed, Hourglass, XCircle } from 'lucide-react';
+import {
+  ArrowLeft,
+  CheckCircle2,
+  ChevronDown,
+  CircleDashed,
+  Hourglass,
+  XCircle,
+} from 'lucide-react';
 import { useState } from 'react';
 import { Link } from 'react-router';
 
@@ -27,7 +34,9 @@ function StepItem({ step }: { step: StepRun }) {
   return (
     <li className="relative pl-7">
       <span className="absolute top-3 left-2 h-full w-px bg-line" aria-hidden />
-      <span className="absolute top-2.5 left-0 rounded-full bg-base p-0.5"><StepIcon status={step.status} /></span>
+      <span className="absolute top-2.5 left-0 rounded-full bg-base p-0.5">
+        <StepIcon status={step.status} />
+      </span>
       <button
         type="button"
         onClick={() => setOpen(!open)}
@@ -41,10 +50,16 @@ function StepItem({ step }: { step: StepRun }) {
           {statusLabel(step.status)}
           {step.attempts > 1 ? ` · ${String(step.attempts)} attempts` : ''}
         </span>
-        <ChevronDown className={cn('size-4 text-ink-dim transition-transform', open && 'rotate-180')} aria-hidden />
+        <ChevronDown
+          className={cn('size-4 text-ink-dim transition-transform', open && 'rotate-180')}
+          aria-hidden
+        />
       </button>
       {open && (
-        <div id={`step-${step.step_key}`} className="mb-3 space-y-3 rounded-md border border-line bg-base/50 p-3">
+        <div
+          id={`step-${step.step_key}`}
+          className="mb-3 space-y-3 rounded-md border border-line bg-base/50 p-3"
+        >
           {step.error && <Alert tone="danger">{step.error}</Alert>}
           {step.approval_id && (
             <Button asChild size="sm" variant="outline">
@@ -70,20 +85,29 @@ export function ExecutionDetail({ id }: { id: string }) {
   const execution = useExecution(workspace?.id, id);
   const cancel = useCancelExecution(workspace?.id);
   if (execution.isPending) return <LoadingState />;
-  if (execution.isError) return <ErrorState error={execution.error} onRetry={() => void execution.refetch()} />;
+  if (execution.isError)
+    return <ErrorState error={execution.error} onRetry={() => void execution.refetch()} />;
   const e = execution.data;
   const active = isActive(e.status);
   return (
     <div className="space-y-5">
       <Button asChild variant="ghost" size="sm">
-        <Link to="/executions"><ArrowLeft /> All executions</Link>
+        <Link to="/executions">
+          <ArrowLeft /> All executions
+        </Link>
       </Button>
       <div className="flex flex-wrap items-center gap-3">
         <h1 className="font-display text-2xl font-semibold">Execution</h1>
         <StatusChip status={e.status} />
         {e.dry_run && <Badge tone="violet">dry run</Badge>}
         {active && (
-          <Button className="ml-auto" variant="danger" onClick={() => cancel.mutate(e.id)} disabled={e.cancel_requested} loading={cancel.isPending}>
+          <Button
+            className="ml-auto"
+            variant="danger"
+            onClick={() => cancel.mutate(e.id)}
+            disabled={e.cancel_requested}
+            loading={cancel.isPending}
+          >
             {e.cancel_requested ? 'Cancelling…' : 'Cancel execution'}
           </Button>
         )}
@@ -92,7 +116,11 @@ export function ExecutionDetail({ id }: { id: string }) {
       {e.error && <Alert tone="danger">{e.error}</Alert>}
       {e.status === 'waiting_approval' && (
         <Alert tone="warning">
-          Waiting for an approval. Review it in the <Link className="text-cyan underline" to="/approvals">Approval Inbox</Link>.
+          Waiting for an approval. Review it in the{' '}
+          <Link className="text-cyan underline" to="/approvals">
+            Approval Inbox
+          </Link>
+          .
         </Alert>
       )}
       <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,2fr)]">
@@ -116,10 +144,14 @@ export function ExecutionDetail({ id }: { id: string }) {
         </div>
         <Panel title="Steps">
           {e.steps.length === 0 ? (
-            <p className="text-sm text-ink-dim">{active ? 'Starting…' : 'No steps were executed.'}</p>
+            <p className="text-sm text-ink-dim">
+              {active ? 'Starting…' : 'No steps were executed.'}
+            </p>
           ) : (
             <ol className="space-y-1">
-              {e.steps.map((s) => <StepItem key={s.step_key} step={s} />)}
+              {e.steps.map((s) => (
+                <StepItem key={s.step_key} step={s} />
+              ))}
             </ol>
           )}
         </Panel>

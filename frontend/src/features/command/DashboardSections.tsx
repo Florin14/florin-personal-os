@@ -139,7 +139,7 @@ function Financial({ data }: { data: Data }) {
                   borderRadius: 6,
                 }}
                 formatter={(_value, _name, item) => [
-                  formatMoney(String((item.payload as { total: string }).total), currency),
+                  formatMoney((item.payload as { total: string }).total, currency),
                   'Expenses',
                 ]}
               />
@@ -221,8 +221,12 @@ function SystemStatus({ data }: { data: Data }) {
     },
     ...integrations.map((c) => ({
       label: c.name,
-      tone: (c.status === 'active' ? 'success' : c.status === 'error' ? 'danger' : 'neutral') as
-        'success' | 'danger' | 'neutral',
+      tone:
+        c.status === 'active'
+          ? ('success' as const)
+          : c.status === 'error'
+            ? ('danger' as const)
+            : ('neutral' as const),
       value: c.status,
     })),
   ];

@@ -23,12 +23,17 @@ import { Panel } from '@/components/ui/surface';
 import { useCurrentWorkspace } from '@/hooks/useCurrentWorkspace';
 
 const TZ = Intl.DateTimeFormat().resolvedOptions().timeZone;
-const time = (iso: string) => new Date(iso).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+const time = (iso: string) =>
+  new Date(iso).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
 function groupByDay(events: CalendarEventInfo[]): [string, CalendarEventInfo[]][] {
   const groups = new Map<string, CalendarEventInfo[]>();
   for (const event of events) {
-    const day = new Intl.DateTimeFormat('en-GB', { weekday: 'long', day: 'numeric', month: 'long' }).format(new Date(event.start));
+    const day = new Intl.DateTimeFormat('en-GB', {
+      weekday: 'long',
+      day: 'numeric',
+      month: 'long',
+    }).format(new Date(event.start));
     groups.set(day, [...(groups.get(day) ?? []), event]);
   }
   return [...groups.entries()];
@@ -48,14 +53,23 @@ function NewEventDialog({ workspaceId, onClose }: { workspaceId: string; onClose
       title="New event or reminder"
       footer={
         <>
-          <Button variant="ghost" onClick={onClose}>Cancel</Button>
+          <Button variant="ghost" onClick={onClose}>
+            Cancel
+          </Button>
           <Button
             variant="primary"
             disabled={!summary || !start}
             loading={create.isPending}
             onClick={() =>
               create.mutate(
-                { summary, start: new Date(start).toISOString(), duration_minutes: duration, timezone: TZ, description: '', reminder_minutes: reminder === '' ? null : reminder },
+                {
+                  summary,
+                  start: new Date(start).toISOString(),
+                  duration_minutes: duration,
+                  timezone: TZ,
+                  description: '',
+                  reminder_minutes: reminder === '' ? null : reminder,
+                },
                 { onSuccess: onClose },
               )
             }
@@ -66,12 +80,39 @@ function NewEventDialog({ workspaceId, onClose }: { workspaceId: string; onClose
       }
     >
       <div className="space-y-3">
-        <Field label="Title" required>{(p) => <Input {...p} value={summary} onChange={(e) => setSummary(e.target.value)} />}</Field>
-        <Field label="Start" required>{(p) => <Input {...p} type="datetime-local" value={start} onChange={(e) => setStart(e.target.value)} />}</Field>
+        <Field label="Title" required>
+          {(p) => <Input {...p} value={summary} onChange={(e) => setSummary(e.target.value)} />}
+        </Field>
+        <Field label="Start" required>
+          {(p) => (
+            <Input
+              {...p}
+              type="datetime-local"
+              value={start}
+              onChange={(e) => setStart(e.target.value)}
+            />
+          )}
+        </Field>
         <div className="grid grid-cols-2 gap-3">
-          <Field label="Duration (min)">{(p) => <Input {...p} type="number" value={duration} onChange={(e) => setDuration(Number(e.target.value))} />}</Field>
+          <Field label="Duration (min)">
+            {(p) => (
+              <Input
+                {...p}
+                type="number"
+                value={duration}
+                onChange={(e) => setDuration(Number(e.target.value))}
+              />
+            )}
+          </Field>
           <Field label="Reminder (min before)">
-            {(p) => <Input {...p} type="number" value={reminder} onChange={(e) => setReminder(e.target.value === '' ? '' : Number(e.target.value))} />}
+            {(p) => (
+              <Input
+                {...p}
+                type="number"
+                value={reminder}
+                onChange={(e) => setReminder(e.target.value === '' ? '' : Number(e.target.value))}
+              />
+            )}
           </Field>
         </div>
         {create.isError && <Alert tone="danger">{errorMessage(create.error)}</Alert>}
@@ -87,21 +128,58 @@ function TasksPanel({ workspaceId }: { workspaceId: string }) {
   const [title, setTitle] = useState('');
   const [duration, setDuration] = useState(60);
   const toggle = (task: Task) =>
-    save.mutate({ id: task.id, body: { title: task.title, notes: task.notes, due_date: task.due_date, duration_minutes: task.duration_minutes, status: task.status === 'done' ? 'open' : 'done' } });
+    save.mutate({
+      id: task.id,
+      body: {
+        title: task.title,
+        notes: task.notes,
+        due_date: task.due_date,
+        duration_minutes: task.duration_minutes,
+        status: task.status === 'done' ? 'open' : 'done',
+      },
+    });
   return (
     <Panel title="Tasks" icon={<ListTodo />}>
       <form
         className="mb-3 flex gap-2"
         onSubmit={(e) => {
           e.preventDefault();
-          save.mutate({ body: { title, notes: '', due_date: null, duration_minutes: duration, status: 'open' } }, { onSuccess: () => setTitle('') });
+          save.mutate(
+            {
+              body: {
+                title,
+                notes: '',
+                due_date: null,
+                duration_minutes: duration,
+                status: 'open',
+              },
+            },
+            { onSuccess: () => setTitle('') },
+          );
         }}
       >
-        <Input aria-label="New task" placeholder="New task…" value={title} onChange={(e) => setTitle(e.target.value)} />
-        <Input aria-label="Duration in minutes" type="number" value={duration} onChange={(e) => setDuration(Number(e.target.value))} className="w-20" />
-        <Button type="submit" disabled={!title.trim()}>Add</Button>
+        <Input
+          aria-label="New task"
+          placeholder="New task…"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+        />
+        <Input
+          aria-label="Duration in minutes"
+          type="number"
+          value={duration}
+          onChange={(e) => setDuration(Number(e.target.value))}
+          className="w-20"
+        />
+        <Button type="submit" disabled={!title.trim()}>
+          Add
+        </Button>
       </form>
-      {(save.error ?? schedule.error) && <Alert tone="danger" className="mb-2">{errorMessage(save.error ?? schedule.error)}</Alert>}
+      {(save.error ?? schedule.error) && (
+        <Alert tone="danger" className="mb-2">
+          {errorMessage(save.error ?? schedule.error)}
+        </Alert>
+      )}
       {tasks.isPending ? (
         <LoadingState compact />
       ) : tasks.isError ? (
@@ -111,17 +189,32 @@ function TasksPanel({ workspaceId }: { workspaceId: string }) {
       ) : (
         <ul aria-label="Tasks" className="space-y-1">
           {tasks.data.map((t) => (
-            <li key={t.id} className="flex items-center gap-3 rounded-md px-2 py-2 hover:bg-white/[0.03]">
-              <Checkbox checked={t.status === 'done'} onCheckedChange={() => toggle(t)} aria-label={`Mark ${t.title} done`} />
+            <li
+              key={t.id}
+              className="flex items-center gap-3 rounded-md px-2 py-2 hover:bg-white/[0.03]"
+            >
+              <Checkbox
+                checked={t.status === 'done'}
+                onCheckedChange={() => toggle(t)}
+                aria-label={`Mark ${t.title} done`}
+              />
               <div className="min-w-0 flex-1">
                 <p className="truncate text-sm">{t.title}</p>
                 <p className="text-xs text-ink-dim">
-                  {t.scheduled_start ? `Scheduled ${dateTime(t.scheduled_start)}` : `${String(t.duration_minutes)} min · not scheduled`}
+                  {t.scheduled_start
+                    ? `Scheduled ${dateTime(t.scheduled_start)}`
+                    : `${String(t.duration_minutes)} min · not scheduled`}
                 </p>
               </div>
               {!t.calendar_event_id && (
                 <Tooltip content="Book into the next free slot">
-                  <Button variant="ghost" size="icon-sm" aria-label={`Schedule ${t.title}`} onClick={() => schedule.mutate(t.id)} disabled={schedule.isPending}>
+                  <Button
+                    variant="ghost"
+                    size="icon-sm"
+                    aria-label={`Schedule ${t.title}`}
+                    onClick={() => schedule.mutate(t.id)}
+                    disabled={schedule.isPending}
+                  >
                     <Wand2 />
                   </Button>
                 </Tooltip>
@@ -145,7 +238,13 @@ export function CalendarPage() {
         eyebrow="Domains"
         title="Calendar & Tasks"
         subtitle="Upcoming Google Calendar events and tasks booked into your free time."
-        actions={calendar.data?.connected && <Button variant="primary" onClick={() => setCreating(true)}><CalendarPlus /> New event</Button>}
+        actions={
+          calendar.data?.connected && (
+            <Button variant="primary" onClick={() => setCreating(true)}>
+              <CalendarPlus /> New event
+            </Button>
+          )
+        }
       />
       <div className="grid gap-4 lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)]">
         <Panel title="Next 14 days" icon={<CalendarClock />}>
@@ -157,7 +256,11 @@ export function CalendarPage() {
             <EmptyState
               title="Google Calendar is not connected"
               description="Connect a Google account for this workspace to see and create events."
-              action={<Button asChild variant="outline"><Link to="/integrations">Open integrations</Link></Button>}
+              action={
+                <Button asChild variant="outline">
+                  <Link to="/integrations">Open integrations</Link>
+                </Button>
+              }
             />
           ) : calendar.data.error ? (
             <Alert tone="danger">{calendar.data.error}</Alert>
@@ -170,11 +273,20 @@ export function CalendarPage() {
                   <p className="label-caps mb-1.5">{day}</p>
                   <ul className="space-y-1.5">
                     {events.map((e) => (
-                      <li key={e.id} className="flex gap-3 rounded-md border border-line bg-base/40 px-3 py-2">
-                        <span className="w-24 shrink-0 font-mono text-xs text-cyan">{e.all_day ? 'all day' : `${time(e.start)}–${time(e.end)}`}</span>
+                      <li
+                        key={e.id}
+                        className="flex gap-3 rounded-md border border-line bg-base/40 px-3 py-2"
+                      >
+                        <span className="w-24 shrink-0 font-mono text-xs text-cyan">
+                          {e.all_day ? 'all day' : `${time(e.start)}–${time(e.end)}`}
+                        </span>
                         <span className="min-w-0">
                           <span className="block truncate text-sm">{e.summary}</span>
-                          {e.location && <span className="block truncate text-xs text-ink-dim">{e.location}</span>}
+                          {e.location && (
+                            <span className="block truncate text-xs text-ink-dim">
+                              {e.location}
+                            </span>
+                          )}
                         </span>
                       </li>
                     ))}

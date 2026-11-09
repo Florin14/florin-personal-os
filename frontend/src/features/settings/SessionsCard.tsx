@@ -22,10 +22,16 @@ function SessionRow({ session, timeZone }: { session: SessionInfo; timeZone: str
           Last active {dateTime(session.last_seen_at, timeZone)}
           {session.ip_address ? ` · ${session.ip_address}` : ''}
         </p>
-        {revoke.isError && <Alert tone="danger" className="mt-1">{errorMessage(revoke.error)}</Alert>}
+        {revoke.isError && (
+          <Alert tone="danger" className="mt-1">
+            {errorMessage(revoke.error)}
+          </Alert>
+        )}
       </div>
       {session.current ? (
-        <Badge tone="info" dot>This device</Badge>
+        <Badge tone="info" dot>
+          This device
+        </Badge>
       ) : (
         <Button
           size="sm"

@@ -19,14 +19,29 @@ export function SchemaFields({
         const label = prop.title ?? humanize(key);
         const kind = kindOf(prop);
         if (kind === 'boolean') {
-          return <SwitchField key={key} label={label} checked={Boolean(values[key])} onCheckedChange={(v) => onChange(key, v)} />;
+          return (
+            <SwitchField
+              key={key}
+              label={label}
+              checked={Boolean(values[key])}
+              onCheckedChange={(v) => onChange(key, v)}
+            />
+          );
         }
         if (kind === 'enum') {
           return (
             <Field key={key} label={label} required={required.has(key)}>
               {(p) => (
-                <Select {...p} value={String(values[key] ?? '')} onChange={(e) => onChange(key, e.target.value)}>
-                  {(prop.enum ?? []).map((o) => <option key={String(o)} value={String(o)}>{String(o)}</option>)}
+                <Select
+                  {...p}
+                  value={String(values[key] ?? '')}
+                  onChange={(e) => onChange(key, e.target.value)}
+                >
+                  {(prop.enum ?? []).map((o) => (
+                    <option key={String(o)} value={String(o)}>
+                      {String(o)}
+                    </option>
+                  ))}
                 </Select>
               )}
             </Field>
@@ -35,13 +50,27 @@ export function SchemaFields({
         if (kind === 'json') {
           return (
             <Field key={key} label={`${label} (JSON)`} required={required.has(key)}>
-              {(p) => <Textarea {...p} value={String(values[key] ?? '')} onChange={(e) => onChange(key, e.target.value)} className="font-mono text-xs" />}
+              {(p) => (
+                <Textarea
+                  {...p}
+                  value={String(values[key] ?? '')}
+                  onChange={(e) => onChange(key, e.target.value)}
+                  className="font-mono text-xs"
+                />
+              )}
             </Field>
           );
         }
         return (
           <Field key={key} label={label} required={required.has(key)}>
-            {(p) => <Input {...p} value={String(values[key] ?? '')} onChange={(e) => onChange(key, e.target.value)} required={required.has(key)} />}
+            {(p) => (
+              <Input
+                {...p}
+                value={String(values[key] ?? '')}
+                onChange={(e) => onChange(key, e.target.value)}
+                required={required.has(key)}
+              />
+            )}
           </Field>
         );
       })}

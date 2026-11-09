@@ -36,7 +36,9 @@ function ExecutionList() {
       <Tabs value={filter} onValueChange={(v) => setFilter(v as ExecutionStatus | 'all')}>
         <TabsList aria-label="Status filter">
           {FILTERS.map((f) => (
-            <TabsTrigger key={f.value} value={f.value}>{f.label}</TabsTrigger>
+            <TabsTrigger key={f.value} value={f.value}>
+              {f.label}
+            </TabsTrigger>
           ))}
         </TabsList>
       </Tabs>
@@ -48,7 +50,10 @@ function ExecutionList() {
         ) : executions.isError ? (
           <ErrorState error={executions.error} onRetry={() => void executions.refetch()} />
         ) : executions.data.length === 0 ? (
-          <EmptyState title="No executions yet" description="Run an automation from the Workflow Builder or wait for a trigger." />
+          <EmptyState
+            title="No executions yet"
+            description="Run an automation from the Workflow Builder or wait for a trigger."
+          />
         ) : (
           <Table aria-label="Executions">
             <thead>
@@ -75,10 +80,14 @@ function ExecutionList() {
                     {names.get(e.automation_id) ?? 'Automation'} · v{e.version}
                     {e.dry_run && <Badge className="ml-2">dry run</Badge>}
                   </Td>
-                  <Td><StatusChip status={e.status} /></Td>
+                  <Td>
+                    <StatusChip status={e.status} />
+                  </Td>
                   <Td className="text-ink-muted">{e.trigger_type}</Td>
                   <Td className="text-ink-dim">{relativeTime(e.created_at)}</Td>
-                  <Td className="font-mono text-ink-dim">{duration(e.started_at, e.finished_at)}</Td>
+                  <Td className="font-mono text-ink-dim">
+                    {duration(e.started_at, e.finished_at)}
+                  </Td>
                 </Tr>
               ))}
             </tbody>
