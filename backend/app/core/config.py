@@ -8,7 +8,7 @@ from __future__ import annotations
 
 from enum import StrEnum
 from functools import lru_cache
-from typing import Annotated
+from typing import Annotated, Literal
 
 from cryptography.fernet import Fernet
 from pydantic import Field, SecretStr, field_validator, model_validator
@@ -58,6 +58,13 @@ class Settings(BaseSettings):
     worker_poll_interval_seconds: float = Field(default=2.0, gt=0)
     worker_batch_size: int = Field(default=5, ge=1, le=100)
     event_relay_interval_seconds: float = Field(default=1.0, gt=0)
+
+    # Optional AI (ADR-023). Disabled by default; never configured from user input.
+    ai_provider: Literal["disabled", "ollama"] = "disabled"
+    ollama_base_url: str = "http://ollama:11434"
+    ollama_model: str = "llama3.2"
+    ai_timeout_seconds: float = Field(default=90.0, gt=0, le=600)
+    ai_monthly_request_budget: int = Field(default=200, ge=0)
 
     # Retention
     job_retention_days: int = Field(default=30, ge=1)

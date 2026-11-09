@@ -144,6 +144,24 @@ bot (signed interactions, allowlists, approvals, notifications).
 | P4-3 | `documents` module: safe upload storage, metadata, Gmail receipt import, Drive archival, UI | TODO |
 | P4-4 | `expenses` module: expenses from documents, categories, monthly summary, UI | TODO |
 
+## Phase 6 — Freelance opportunities & optional AI
+
+| ID | Task | Status |
+|---|---|---|
+| P6-1 | `ai` module: disabled/Ollama providers, per-workspace feature consent, monthly budget, usage log, redaction, structured outputs (ADR-023) | COMPLETED |
+| P6-2 | `opportunities` module: profile, manual + RSS/Atom sources with SSRF-safe fetching, deterministic matching, notifications/event, optional AI summary (ADR-024) | COMPLETED |
+| P6-3 | UI: Freelance & Career page (matches, sources, profile) + AI settings card | IN PROGRESS |
+
+**Acceptance criteria**
+- With `AI_PROVIDER=disabled` everything works; AI buttons explain why they are unavailable.
+- No AI call happens unless the provider is configured, the feature is enabled for the workspace and
+  the monthly budget has room; every attempt (including refusals) is recorded.
+- Prompts are redacted; non-conforming AI output is rejected; AI output is never executed.
+- Feed URLs that are not https, contain credentials or resolve to non-public addresses are refused
+  (also after redirects); oversized or non-XML responses are refused; XML entities are not expanded.
+- Re-polling a feed never duplicates listings; scores are deterministic and come with reasons;
+  excluded keywords always win.
+
 ## Frontend redesign (owner request 2026-11-08)
 
 MUI → Tailwind v4 + shadcn-style Radix primitives + Motion + Lucide + Recharts + React Flow.

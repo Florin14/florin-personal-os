@@ -162,3 +162,22 @@ Do not edit an accepted ADR's decision silently. Add a new ADR that supersedes i
   * Alerts are computed deterministically when a newer observation is recorded (back-filled history never alerts): *below target* (price ≤ the product's purchase threshold, same currency, at most one open alert), *price drop* (≥ the product's drop % versus the listing's previous observation), *back in stock*. Each alert creates in-app notifications and publishes `shopping.price_alert`.
   * Confirmation workflow: the `shopping.approve_purchase` action **requires an approval** (engine-enforced). A workflow template wires `shopping.price_alert` → approval → decision recorded. Approving records the decision ("buy at X") and stops alerts; there is no checkout — the user buys manually and marks the product purchased.
 * **Consequences:** + Fully compliant, no external calls, auditable decisions. − Prices are only as fresh as the user's entries until a compliant source exists.
+
+## ADR-023 — Optional AI behind a budgeted provider interface
+
+* **Status:** Accepted (2026-11-09)
+* **Decision:**
+  * `AI_PROVIDER=disabled` (default) or `ollama` (local, free; `OLLAMA_BASE_URL`, `OLLAMA_MODEL`), configured by environment only — never from user input. A cloud provider slot exists in the interface but **no paid provider is implemented or enabled**: doing so needs the owner's explicit approval and a budget (CLAUDE.md §14).
+  * Every AI feature is registered by key and is **off per workspace until an admin enables it** (consent). Each call is checked against a per-workspace monthly request budget (`AI_MONTHLY_REQUEST_BUDGET`) and recorded in `ai_usage` (feature, provider, model, outcome, tokens, duration) — including refusals.
+  * Prompts are redacted before leaving the process (emails, IBANs, card-like and phone numbers). Outputs must match a JSON schema and are validated with Pydantic; anything else is a failure, never partially used. AI output is untrusted data: it is displayed as plain text, never executed, and the AI has **no tools** — it cannot trigger actions, approvals or financial operations.
+  * Every AI-assisted feature has a deterministic path that works with AI disabled.
+* **Consequences:** + €0 by default, no data leaves the server unless a local model is configured. − Quality depends on the local model; cloud models need a later, approved ADR.
+
+## ADR-024 — Freelance opportunity sources and SSRF-safe feed fetching
+
+* **Status:** Accepted (2026-11-09)
+* **Decision:**
+  * Sources are **manual entries** and **RSS/Atom feeds the user adds** (feeds a site publishes for that purpose). No HTML scraping, no logins, no captcha/anti-bot circumvention, no assumed private APIs.
+  * Feeds are fetched by the worker only: `https` only, no credentials in URLs, every resolved address must be public (private, loopback, link-local, reserved, multicast and CGNAT ranges are refused), redirects are followed manually (max 3) with the same checks, 15 s timeout, 2 MB cap, XML content types only, conditional GET (ETag / Last-Modified), minimum poll interval 30 min, generic User-Agent without personal data. XML is parsed with `defusedxml` (no entity expansion, no external entities). Residual risk: DNS rebinding between check and connect — mitigated by the private-network deployment (no secrets reachable without auth) and documented.
+  * Matching is deterministic and explainable: weighted skill phrases (title counts double), include keywords, hard exclusions, optional remote-only and minimum-rate checks → score 0–100 with reasons. Listings are de-duplicated per source by GUID/link. Scores ≥ the profile threshold produce one in-app notification per poll and an `opportunities.matched` event.
+  * Optional AI summary (ADR-023 feature `opportunities.summary`) explains fit; it never changes the score.
